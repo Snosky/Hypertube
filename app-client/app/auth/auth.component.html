@@ -1,0 +1,116 @@
+<div class="row">
+    <div class="auth align-self-center col col-xs-12 col-md-4 col-lg-2 offset-md-4 offset-lg-5">
+        <h1 class="text-center display-4">Sign in with</h1>
+            <app-social-auth></app-social-auth>
+
+        <div class="strike">
+            <span>OR</span>
+        </div>
+
+        <ngb-tabset class="nav-fill">
+            <ngb-tab title="SIGN IN">
+                <ng-template ngbTabContent>
+                    <div class="col-xs-12">
+                        <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+                            <div class="form-group"
+                                 [class.has-success]="loginForm.get('username').dirty && loginForm.get('username').valid"
+                                 [class.has-danger]="loginForm.get('username').dirty && !loginForm.get('username').valid"
+                            >
+                                <label for="usernameLogin" class="form-control-label">Username</label>
+                                <input type="text" id="usernameLogin" formControlName="username" required class="form-control"
+                                    [class.form-control-success]="loginForm.get('username').dirty && loginForm.get('username').valid"
+                                    [class.form-control-danger]="loginForm.get('username').dirty && !loginForm.get('username').valid"
+                                >
+                                <div class="form-control-feedback" *ngIf="loginFormErrors.username">
+                                    {{ loginFormErrors.username }}
+                                </div>
+                            </div>
+                            <div class="form-group"
+                                 [class.has-success]="loginForm.get('password').dirty && !loginFormErrors.password"
+                                 [class.has-danger]="loginFormErrors.password"
+                            >
+                                <label for="passwordLogin">Password</label>
+                                <input type="password" id="passwordLogin" formControlName="password" required class="form-control"
+                                    [class.form-control-success]="loginForm.get('password').dirty && !loginFormErrors.password"
+                                    [class.form-control-danger]="loginFormErrors.password"
+                                >
+                                <div class="form-control-feedback" *ngIf="loginFormErrors.password">
+                                    {{ loginFormErrors.password }}
+                                </div>
+                            </div>
+                            <button [disabled]="!loginForm.valid" class="btn btn-block">
+                                <span *ngIf="!loading">Login</span>
+                                <span *ngIf="loading">Loading...</span>
+                            </button>
+                        </form>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab title="SIGN UP">
+                <ng-template ngbTabContent>
+                    <div class="col-xs-12">
+                        <h2>Register</h2>
+                        <form [formGroup]="registerForm" (ngSubmit)="submitRegister()">
+                            <div class="form-group"
+                                 [class.has-success]="registerForm.get('username').dirty && !registerFormErrors.username"
+                                 [class.has-danger]="registerFormErrors.username"
+                            >
+                                <label for="username2">Username</label>
+                                <input type="text" id="username2"  formControlName="username" required class="form-control"
+                                    [class.form-control-success]="registerForm.get('username').dirty && !registerFormErrors.username"
+                                    [class.form-control-danger]="registerFormErrors.username"
+                                >
+                                <div class="form-control-label" *ngIf="registerFormErrors.username">
+                                    {{ registerFormErrors.username }}
+                                </div>
+                            </div>
+                            <div class="form-group"
+                                 [class.has-success]="registerForm.get('email').dirty && !registerFormErrors.email"
+                                 [class.has-danger]="registerFormErrors.email"
+                            >
+                                <label for="email">Email</label>
+                                <input type="email" id="email" formControlName="email" required class="form-control"
+                                       [class.form-control-success]="registerForm.get('email').dirty && !registerFormErrors.email"
+                                       [class.form-control-danger]="registerFormErrors.email"
+                                >
+                                <div class="form-control-label" *ngIf="registerFormErrors.email">
+                                    {{ registerFormErrors.email }}
+                                </div>
+                            </div>
+                            <div class="form-group"
+                                 [class.has-success]="registerForm.get('password').dirty && !registerFormErrors.password"
+                                 [class.has-danger]="registerFormErrors.password"
+                            >
+                                <label for="password2">Password</label>
+                                <input type="password" id="password2" formControlName="password" required class="form-control"
+                                       [class.form-control-success]="registerForm.get('password').dirty && !registerFormErrors.password"
+                                       [class.form-control-danger]="registerFormErrors.password"
+                                >
+                                <div class="form-control-label" *ngIf="registerFormErrors.password">
+                                    {{ registerFormErrors.password }}
+                                </div>
+                            </div>
+                            <div class="form-group"
+                                 [class.has-success]="registerForm.get('passwordConf').dirty && !registerFormErrors.passwordConf"
+                                 [class.has-danger]="registerFormErrors.passwordConf"
+                            >
+                                <label for="passwordConf">Password confirmation</label>
+                                <input type="password" id="passwordConf" formControlName="passwordConf" required class="form-control"
+                                       [class.form-control-success]="registerForm.get('passwordConf').dirty && !registerFormErrors.passwordConf"
+                                       [class.form-control-danger]="registerFormErrors.passwordConf"
+                                >
+                                <div class="form-control-label" *ngIf="registerFormErrors.passwordConf">
+                                    {{ registerFormErrors.passwordConf }}
+                                </div>
+                            </div>
+                            <button [disabled]="!registerForm.valid" class="btn btn-block">
+                                <span *ngIf="!loading">Register</span>
+                                <span *ngIf="loading">Loading...</span>
+                            </button>
+                        </form>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+    </div>
+</div>

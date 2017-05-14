@@ -1,0 +1,34 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "project": {
+    "name": "hypertube"
+  },
+  "apps": [
+    {
+      "root": "app-client",
+      "outDir": "dist",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
+      "index": "index.html",
+      "main": "main.ts",
+      "tsconfig": "tsconfig.json",
+      "prefix": "app",
+      "styles": [
+          "style.css"
+      ],
+      "scripts": []
+    }
+  ],
+  "lint": [
+    {
+      "project": "app-client/tsconfig.json"
+    }
+  ],
+  "defaults": {
+    "styleExt": "css",
+    "component": {
+    }
+  }
+}

@@ -1,0 +1,44 @@
+/* { color: #d6d6d6; }
+body { background-color: #222222; }
+
+/* TABS
+ul.tabs { list-style: none; }
+    ul.tabs li { display: inline-block; }
+*/
+
+body {
+    background-color: #333;
+    color: #FFF;
+}
+
+.strike {
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.strike > span {
+    position: relative;
+    display: inline-block;
+}
+
+.strike > span:before,
+.strike > span:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 9999px;
+    height: 1px;
+    background: #FFF;
+}
+
+.strike > span:before {
+    right: 100%;
+    margin-right: 15px;
+}
+
+.strike > span:after {
+    left: 100%;
+    margin-left: 15px;
+}
