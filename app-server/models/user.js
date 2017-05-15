@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const config = require('../config/config');
 
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
@@ -8,6 +9,9 @@ const userSchema = mongoose.Schema({
     username: { type: String, required: true, unique: true, uniqueCaseInsensitive: true },
     email: { type: String, required: true, unique: true, uniqueCaseInsensitive: true },
     password: { type: String },
+    firstname: { type: String },
+    lastname: { type: String },
+    pic: { type: String },
     facebookId: { type: String, },
     fortytwoId: { type: String, }
 });
@@ -47,8 +51,10 @@ userSchema.methods.generateJwt = function() {
         _id: this._id,
         email: this.email,
         username: this.username,
+        lastname: this.lastname,
+        firstname: this.firstname,
         exp: parseInt(expiry.getTime() / 1000)
-    }, "MY_SECRET"); //TODO : Change secret
+    }, config.TOKEN_SECRET);
 };
 
 

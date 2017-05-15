@@ -46,7 +46,6 @@ var SocialAuthService = (function () {
     };
     SocialAuthService.prototype.fortytwo = function (code) {
         var _this = this;
-        console.log(code);
         return this.http.post(this.config.apiUrl + '/auth/42', { code: code })
             .toPromise()
             .then(function (response) {

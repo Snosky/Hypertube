@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {User} from "./_models/user";
 import {Http, Response } from "@angular/http";
 import {AppConfig} from "./app.config";
+import {tokenNotExpired} from "angular2-jwt";
 
 import 'rxjs/add/operator/toPromise';
 
@@ -30,21 +31,13 @@ export class AuthService {
         const user = new User();
         user.username = payload.username;
         user.email = payload.email;
+        user.lastname = payload.lastname;
+        user.firstname = payload.firstname;
         return user;
     }
 
     isLoggedIn() {
-        const token = this.getToken();
-        let payload;
-
-        if (token) {
-            payload = token.split('.')[1];
-            payload = atob(payload);
-            payload = JSON.parse(payload);
-
-            return payload.exp > Date.now() / 1000;
-        }
-        return false;
+        return tokenNotExpired('meanToken');
     }
 
     register(user: User): Promise<User> {

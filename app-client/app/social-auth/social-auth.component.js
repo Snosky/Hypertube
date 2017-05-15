@@ -25,7 +25,6 @@ var SocialAuthComponent = (function () {
         var _this = this;
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         var provider = this.route.snapshot.params['provider'];
-        console.log(this.route.snapshot.queryParams);
         if (provider)
             this.socialAuthService.login(provider, this.route.snapshot.queryParams)
                 .then(function (success) {
@@ -33,7 +32,6 @@ var SocialAuthComponent = (function () {
                     _this.flash.success('You are now logged in.', true);
                     _this.router.navigate([_this.returnUrl]);
                 }
-                console.log('success');
             })
                 .catch(function (error) {
                 _this.flash.error('An error occurred. Please retry.');

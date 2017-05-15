@@ -11,10 +11,12 @@ var router_1 = require("@angular/router");
 var home_component_1 = require("../home/home.component");
 var auth_component_1 = require("../auth/auth.component");
 var auth_guard_1 = require("../auth.guard");
+var my_profile_component_1 = require("../my-profile/my-profile.component");
 var routes = [
     { path: '', component: home_component_1.HomeComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'auth', component: auth_component_1.AuthComponent },
     { path: 'auth/:provider', component: auth_component_1.AuthComponent },
+    { path: 'profile', component: my_profile_component_1.MyProfileComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: '**', redirectTo: '' }
 ];
 var AppRoutingModule = (function () {

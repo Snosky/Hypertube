@@ -35,8 +35,6 @@ var AuthService = (function () {
         var user = new user_1.User();
         user.username = payload.username;
         user.email = payload.email;
-        user.lastname = payload.lastname;
-        user.firstname = payload.firstname;
         return user;
     };
     AuthService.prototype.isLoggedIn = function () {
@@ -86,4 +84,4 @@ AuthService = __decorate([
         http_1.Http])
 ], AuthService);
 exports.AuthService = AuthService;
-//# sourceMappingURL=auth.service.js.map
+//# sourceMappingURL=authsdad.service.js.map

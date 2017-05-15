@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('express-jwt');
+const config = require('../config/config');
 const jwtauth = jwt({
-    secret: 'MY_SECRET', // TODO : Change, for more security put it in ENV
+    secret: config.TOKEN_SECRET,
     userProperty: 'payload'
 });
 // TODO : Auth aussi sur register
@@ -15,5 +16,7 @@ router.post('/auth', user.auth);
 const auth = require('./auth');
 router.post('/auth/facebook', auth.facebook);
 router.post('/auth/42', auth.fortytwo);
+
+router.post('/user/update', jwtauth, user.update);
 
 module.exports = router;

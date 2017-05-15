@@ -24,7 +24,6 @@ export class SocialAuthComponent implements OnInit {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
         let provider = this.route.snapshot.params['provider'];
-        console.log(this.route.snapshot.queryParams);
         if (provider)
             this.socialAuthService.login(provider, this.route.snapshot.queryParams)
                 .then((success) => {
@@ -32,7 +31,6 @@ export class SocialAuthComponent implements OnInit {
                         this.flash.success('You are now logged in.', true);
                         this.router.navigate([this.returnUrl]);
                     }
-                    console.log('success');
                 })
                 .catch((error) => {
                     this.flash.error('An error occurred. Please retry.');

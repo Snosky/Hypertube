@@ -10,10 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var auth_service_1 = require("../auth.service");
 var HomeComponent = (function () {
-    function HomeComponent() {
+    function HomeComponent(authService) {
+        this.authService = authService;
     }
     HomeComponent.prototype.ngOnInit = function () {
+        this.currentUser = this.authService.currentUser();
     };
     return HomeComponent;
 }());
@@ -23,7 +26,7 @@ HomeComponent = __decorate([
         templateUrl: './home.component.html',
         styleUrls: ['./home.component.css']
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], HomeComponent);
 exports.HomeComponent = HomeComponent;
 //# sourceMappingURL=home.component.js.map

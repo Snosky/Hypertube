@@ -1,6 +1,6 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
+import {Http, HttpModule, RequestOptions} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 import { AppComponent }  from './app.component';
@@ -15,6 +15,17 @@ import {AuthGuard} from "./auth.guard";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { FlashComponent } from './flash/flash.component';
 import {FlashService} from "./flash.service";
+import { MyProfileComponent } from './my-profile/my-profile.component';
+import {UserService} from "./user.service";
+import { AuthHttp, AuthConfig } from 'angular2-jwt';
+
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+    return new AuthHttp(new AuthConfig({
+        tokenName: 'meanToken',
+        tokenGetter: (() => localStorage.getItem('meanToken')),
+        globalHeaders: [{'Content-Type':'application/json'}],
+    }), http, options);
+}
 
 @NgModule({
     imports:      [
@@ -30,14 +41,21 @@ import {FlashService} from "./flash.service";
         SocialAuthComponent,
         HomeComponent,
         AuthComponent,
-        FlashComponent
+        FlashComponent,
+        MyProfileComponent
     ],
     providers: [
         AppConfig,
+        {
+            provide: AuthHttp,
+            useFactory: authHttpServiceFactory,
+            deps: [Http, RequestOptions]
+        },
         AuthGuard,
         FlashService,
         SocialAuthService,
-        AuthService
+        AuthService,
+        UserService
     ],
     bootstrap:    [ AppComponent]
 })

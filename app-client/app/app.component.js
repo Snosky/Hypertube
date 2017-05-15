@@ -10,8 +10,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var auth_service_1 = require("./auth.service");
+var router_1 = require("@angular/router");
 var AppComponent = (function () {
-    function AppComponent() {
+    function AppComponent(authService, router) {
+        var _this = this;
+        this.authService = authService;
+        this.router = router;
+        router.events.subscribe(function (val) {
+            if (authService.isLoggedIn())
+                _this.currentUser = _this.authService.currentUser();
+            else
+                _this.currentUser = null;
+        });
     }
     AppComponent.prototype.ngOnInit = function () {
     };
@@ -23,7 +34,8 @@ AppComponent = __decorate([
         templateUrl: './app.component.html',
         styleUrls: ['./app.component.css']
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        router_1.Router])
 ], AppComponent);
 exports.AppComponent = AppComponent;
 //# sourceMappingURL=app.component.js.map

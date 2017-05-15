@@ -23,23 +23,25 @@
       '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
 
-        '@ng-bootstrap/ng-bootstrap': 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
+        '@ng-bootstrap/ng-bootstrap': 'npm:@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
+
+        'angular2-jwt': 'npm:angular2-jwt/angular2-jwt.js',
       // other libraries
       'rxjs':                      'npm:rxjs',
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
-      app: {
-        defaultExtension: 'js',
-        meta: {
-          './*.js': {
-            loader: 'systemjs-angular-loader.js'
-          }
+        app: {
+            defaultExtension: 'js',
+            meta: {
+                './*.js': {
+                    loader: 'systemjs-angular-loader.js'
+                }
+            }
+        },
+        rxjs: {
+            defaultExtension: 'js'
         }
-      },
-      rxjs: {
-        defaultExtension: 'js'
-      }
     }
   });
 })(this);

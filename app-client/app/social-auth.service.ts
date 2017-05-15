@@ -41,7 +41,6 @@ export class SocialAuthService {
     }
 
     private fortytwo(code: string) {
-        console.log(code);
         return this.http.post(this.config.apiUrl + '/auth/42', {code: code})
             .toPromise()
             .then((response: Response) => {

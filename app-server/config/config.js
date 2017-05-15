@@ -1,7 +1,7 @@
 module.exports = {
     // MongoDB settings
     MONGO_URI: process.env.MONGO_URI || 'mongodb://localhost/hypertube',
-    TOKEN_SECRET: process.env.TOKEN_SECRET || '',
+    TOKEN_SECRET: process.env.TOKEN_SECRET || 'SUPER_SECRET',
 
     // OAuth
     FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || 'b37c1a7ceeff5d5e71509a61201fbbb7',

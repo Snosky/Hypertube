@@ -1,45 +1,30 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import {User} from "../_models/user";
 import {AuthService} from "../auth.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {FlashService} from "../flash.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import {UserService} from "../user.service";
 
 @Component({
-  selector: 'app-auth',
-  templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+  selector: 'app-my-profile',
+  templateUrl: './my-profile.component.html',
+  styleUrls: ['./my-profile.component.css']
 })
-export class AuthComponent implements OnInit {
-    loading = false;
-    returnUrl: string;
+export class MyProfileComponent implements OnInit {
+    currentUser: User;
 
-    loginModel: any = {};
-    loginForm: FormGroup;
-
-    registerModel: any = {};
     registerForm: FormGroup;
+    registerModel: any = {};
+    loading = false;
 
     constructor(
-        private fb: FormBuilder,
         private authService: AuthService,
-        private flash: FlashService,
-        private router: Router,
-        private route: ActivatedRoute
+        private fb: FormBuilder,
+        private userService: UserService,
+        private flash: FlashService
     ) { }
 
     buildForm(): void {
-        this.loginForm = this.fb.group({
-            'username': [this.loginModel.username, [
-                Validators.required
-            ]],
-            'password': [this.loginModel.password, [
-                Validators.required
-            ]]
-        });
-        this.loginForm.valueChanges
-            .subscribe(data => this.loginOnValueChange(data));
-        this.loginOnValueChange();
-
         this.registerForm = this.fb.group({
             'username': [this.registerModel.username, [
                 Validators.required,
@@ -57,14 +42,12 @@ export class AuthComponent implements OnInit {
                 Validators.required
             ]],
             'password': [this.registerModel.password, [
-                Validators.required,
                 Validators.minLength(6),
                 Validators.pattern(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/)
             ]],
-            'passwordConf': [this.registerModel.passwordConf, [
-                Validators.required
-            ]]
+            'passwordConf': [this.registerModel.passwordConf]
         });
+
         this.registerForm.valueChanges
             .subscribe(data => this.registerOnValueChange(data));
         this.registerOnValueChange();
@@ -76,7 +59,6 @@ export class AuthComponent implements OnInit {
         'firstname': '',
         'lastname': '',
         'password': '',
-        'passwordConf': ''
     };
 
     registerValidationMessages = {
@@ -96,12 +78,8 @@ export class AuthComponent implements OnInit {
             'required': 'Password confirmation is required.',
         },
         'password': {
-            'required': 'Password is required.',
             'minlength': 'Password must be at least 6 characters long.',
             'pattern': 'Password must contains at least 1 number and 1 uppercase'
-        },
-        'passwordConf': {
-            'required': 'Password confirmation is required.',
         }
     };
 
@@ -123,46 +101,24 @@ export class AuthComponent implements OnInit {
         }
     }
 
-    loginFormErrors = {
-        'username': '',
-        'password': ''
-    };
-
-    loginOnValueChange(data?: any) {
-        if (!this.loginForm) { return; }
-        const form = this.loginForm;
-
-        for (const field in this.loginFormErrors) {
-            // Clear previous error message
-            this.loginFormErrors[field] = '';
-            const control = form.get(field);
-
-            if (control && control.dirty && !control.valid) {
-                const messages = this.registerValidationMessages[field];
-                for (const key in control.errors)
-                    this.loginFormErrors[field] += messages[key] + ' ';
-            }
-        }
-    }
-
     ngOnInit() {
-        this.authService.logout();
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-        this.buildForm()
+        this.currentUser = this.authService.currentUser();
+        this.registerModel.username = this.currentUser.username;
+        this.registerModel.email = this.currentUser.email;
+        this.registerModel.lastname = this.currentUser.lastname;
+        this.registerModel.firstname = this.currentUser.firstname;
+        this.buildForm();
     }
 
-
-    submitRegister() {
-        // TODO : Image uplaod ng2-file-upload
-        this.loading = true;
+    formSubmit() {
         this.registerModel = this.registerForm.value;
-
-        this.authService.register(this.registerModel)
+        this.loading = true;
+        this.userService.update(this.registerModel)
             .then(data => {
                 this.loading = false;
-                this.flash.success('Registration successful. You can no sign in.');
-                this.loginForm.get('username').setValue(this.registerForm.get('username').value);
-                this.registerForm.reset();
+                this.flash.success('Your profile have been successfully update.');
+                this.registerForm.get('password').reset();
+                this.registerForm.get('passwordConf').reset();
             })
             .catch(error => {
                 if (error.username && error.username.kind === 'unique')
@@ -174,30 +130,6 @@ export class AuthComponent implements OnInit {
                     this.registerForm.get('passwordConf').reset();
                 }
                 this.loading = false;
-                //console.log(error);
-            });
-    }
-
-    submitLogin() {
-        this.loading = true;
-        this.loginModel = this.loginForm.value;
-        this.authService.login(this.loginModel.username, this.loginModel.password)
-            .then(data => {
-                this.loading = false;
-                if (data === true) {
-                    this.flash.success('You are now logged in.', true);
-                    this.router.navigate([this.returnUrl]);
-                }
-                else if (data === false)
-                    this.flash.error('An error occurred. Please retry.');
             })
-            .catch(error => {
-                this.loading = false;
-                if (error.kind === 'invalid_password') {
-                    this.loginForm.get('password').reset();
-                    this.loginFormErrors.password = 'Password not valid. Or wrong username.';
-                }
-            });
     }
-
 }

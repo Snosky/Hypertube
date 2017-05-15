@@ -22,6 +22,17 @@ var auth_guard_1 = require("./auth.guard");
 var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
 var flash_component_1 = require("./flash/flash.component");
 var flash_service_1 = require("./flash.service");
+var my_profile_component_1 = require("./my-profile/my-profile.component");
+var user_service_1 = require("./user.service");
+var angular2_jwt_1 = require("angular2-jwt");
+function authHttpServiceFactory(http, options) {
+    return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
+        tokenName: 'meanToken',
+        tokenGetter: (function () { return localStorage.getItem('meanToken'); }),
+        globalHeaders: [{ 'Content-Type': 'application/json' }],
+    }), http, options);
+}
+exports.authHttpServiceFactory = authHttpServiceFactory;
 var AppModule = (function () {
     function AppModule() {
     }
@@ -42,14 +53,21 @@ AppModule = __decorate([
             social_auth_component_1.SocialAuthComponent,
             home_component_1.HomeComponent,
             auth_component_1.AuthComponent,
-            flash_component_1.FlashComponent
+            flash_component_1.FlashComponent,
+            my_profile_component_1.MyProfileComponent
         ],
         providers: [
             app_config_1.AppConfig,
+            {
+                provide: angular2_jwt_1.AuthHttp,
+                useFactory: authHttpServiceFactory,
+                deps: [http_1.Http, http_1.RequestOptions]
+            },
             auth_guard_1.AuthGuard,
             flash_service_1.FlashService,
             social_auth_service_1.SocialAuthService,
-            auth_service_1.AuthService
+            auth_service_1.AuthService,
+            user_service_1.UserService
         ],
         bootstrap: [app_component_1.AppComponent]
     })

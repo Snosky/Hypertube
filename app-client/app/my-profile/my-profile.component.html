@@ -1,0 +1,87 @@
+<form [formGroup]="registerForm" (ngSubmit)="formSubmit()">
+    <div class="form-group"
+         [class.has-success]="registerForm.get('username').dirty && !registerFormErrors.username"
+         [class.has-danger]="registerFormErrors.username"
+    >
+        <label for="username2">Username</label>
+        <input type="text" id="username2"  formControlName="username" required class="form-control"
+               [class.form-control-success]="registerForm.get('username').dirty && !registerFormErrors.username"
+               [class.form-control-danger]="registerFormErrors.username"
+        >
+        <div class="form-control-label" *ngIf="registerFormErrors.username">
+            {{ registerFormErrors.username }}
+        </div>
+    </div>
+    <div class="form-group"
+         [class.has-success]="registerForm.get('email').dirty && !registerFormErrors.email"
+         [class.has-danger]="registerFormErrors.email"
+    >
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" required class="form-control"
+               [class.form-control-success]="registerForm.get('email').dirty && !registerFormErrors.email"
+               [class.form-control-danger]="registerFormErrors.email"
+        >
+        <div class="form-control-label" *ngIf="registerFormErrors.email">
+            {{ registerFormErrors.email }}
+        </div>
+    </div>
+
+    <div class="form-group"
+         [class.has-success]="registerForm.get('firstname').dirty && !registerFormErrors.firstname"
+         [class.has-danger]="registerFormErrors.firstname"
+    >
+        <label for="firstname">First name</label>
+        <input type="text" id="firstname" formControlName="firstname" required class="form-control"
+               [class.form-control-success]="registerForm.get('firstname').dirty && !registerFormErrors.firstname"
+               [class.form-control-danger]="registerFormErrors.firstname"
+        >
+        <div class="form-control-label" *ngIf="registerFormErrors.firstname">
+            {{ registerFormErrors.firstname }}
+        </div>
+    </div>
+
+    <div class="form-group"
+         [class.has-success]="registerForm.get('lastname').dirty && !registerFormErrors.lastname"
+         [class.has-danger]="registerFormErrors.lastname"
+    >
+        <label for="lastname">Last name</label>
+        <input type="text" id="lastname" formControlName="lastname" required class="form-control"
+               [class.form-control-success]="registerForm.get('lastname').dirty && !registerFormErrors.lastname"
+               [class.form-control-danger]="registerFormErrors.lastname"
+        >
+        <div class="form-control-label" *ngIf="registerFormErrors.lastname">
+            {{ registerFormErrors.lastname }}
+        </div>
+    </div>
+
+    <div class="form-group"
+         [class.has-success]="registerForm.get('password').dirty && !registerFormErrors.password"
+         [class.has-danger]="registerFormErrors.password"
+    >
+        <label for="password2">Password</label>
+        <input type="password" id="password2" formControlName="password" class="form-control"
+               [class.form-control-success]="registerForm.get('password').dirty && !registerFormErrors.password"
+               [class.form-control-danger]="registerFormErrors.password"
+        >
+        <div class="form-control-label" *ngIf="registerFormErrors.password">
+            {{ registerFormErrors.password }}
+        </div>
+    </div>
+    <div class="form-group"
+         [class.has-success]="registerForm.get('passwordConf').dirty && !registerFormErrors.passwordConf"
+         [class.has-danger]="registerFormErrors.passwordConf"
+    >
+        <label for="passwordConf">Password confirmation</label>
+        <input type="password" id="passwordConf" formControlName="passwordConf" class="form-control"
+               [class.form-control-success]="registerForm.get('passwordConf').dirty && !registerFormErrors.passwordConf"
+               [class.form-control-danger]="registerFormErrors.passwordConf"
+        >
+        <div class="form-control-label" *ngIf="registerFormErrors.passwordConf">
+            {{ registerFormErrors.passwordConf }}
+        </div>
+    </div>
+    <button [disabled]="!registerForm.valid" class="btn btn-block">
+        <span *ngIf="!loading">Register</span>
+        <span *ngIf="loading">Loading...</span>
+    </button>
+</form>
