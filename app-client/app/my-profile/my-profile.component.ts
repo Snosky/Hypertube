@@ -132,4 +132,9 @@ export class MyProfileComponent implements OnInit {
                 this.loading = false;
             })
     }
+
+    profilePicChange(e: any) {
+        //console.log(e.target.files);
+        console.log(this.registerForm.value);
+    }
 }

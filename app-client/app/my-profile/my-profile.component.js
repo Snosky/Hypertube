@@ -128,6 +128,10 @@ var MyProfileComponent = (function () {
             _this.loading = false;
         });
     };
+    MyProfileComponent.prototype.profilePicChange = function (e) {
+        //console.log(e.target.files);
+        console.log(this.registerForm.value);
+    };
     return MyProfileComponent;
 }());
 MyProfileComponent = __decorate([
