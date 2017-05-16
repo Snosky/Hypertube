@@ -18,6 +18,7 @@ import {FlashService} from "./flash.service";
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import {UserService} from "./user.service";
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import {FileUploadModule} from "ng2-file-upload";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
