@@ -136,5 +136,6 @@ export class MyProfileComponent implements OnInit {
     profilePicChange(e: any) {
         //console.log(e.target.files);
         console.log(this.registerForm.value);
+        // TODO : Profile Pics
     }
 }
