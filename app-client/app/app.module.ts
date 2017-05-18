@@ -1,5 +1,5 @@
-import { NgModule }      from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule, Pipe}      from '@angular/core';
+import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
 import {Http, HttpModule, RequestOptions} from '@angular/http';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
@@ -18,7 +18,8 @@ import {FlashService} from "./flash.service";
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import {UserService} from "./user.service";
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
-import {FileUploadModule} from "ng2-file-upload";
+import {YtsService} from "./yts.service";
+import { InfiniteScrollerDirective } from './infinite-scroller.directive';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
@@ -35,7 +36,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         FormsModule,
         ReactiveFormsModule,
         AppRoutingModule,
-        NgbModule.forRoot()
+        NgbModule.forRoot(),
     ],
     declarations: [
         AppComponent,
@@ -43,7 +44,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         HomeComponent,
         AuthComponent,
         FlashComponent,
-        MyProfileComponent
+        MyProfileComponent,
+        InfiniteScrollerDirective
     ],
     providers: [
         AppConfig,
@@ -56,7 +58,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         FlashService,
         SocialAuthService,
         AuthService,
-        UserService
+        UserService,
+        YtsService
     ],
     bootstrap:    [ AppComponent]
 })

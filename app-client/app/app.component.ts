@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 })
 export class AppComponent implements OnInit {
     currentUser: User;
+    route: any = '';
 
     constructor(
         private authService: AuthService,
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
             else
                 this.currentUser = null;
         })
+        this.route = router.url;
     }
 
     ngOnInit() {

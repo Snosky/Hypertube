@@ -1,1 +1,28 @@
-{{currentUser.username}}
+<div class="row">
+    <div class="col-sm-2 ">
+        <h3>Filters</h3>
+        <div class="form-group">
+            <input type="text" placeholder="Search a movie" class="form-control" #searchBox (keyup)="search(searchBox.value)">
+        </div>
+    </div>
+
+    <div class="col-sm-10" id="moviesContainer"
+         (window:resize)="onResize($event)"
+         [style.height.px]="moviesContainerHeight"
+         appInfiniteScroller
+         [scrollPercent]="85"
+         [immediateCallback]="false"
+         [scrollCallback]="scrollCallback"
+    >
+        <div class="row">
+            <div class="col-xs-2 col-sm-4 col-md-3 col-lg-2 movie"
+                 *ngFor="let movie of movies | async">
+                <img [src]="movie.large_cover_image || movie.medium_cover_image || small_cover_image" class="img-fluid">
+                <div class="movie-info">
+                    {{movie.title}}
+                    <span>({{movie.year}})</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -17,12 +17,14 @@ var AppComponent = (function () {
         var _this = this;
         this.authService = authService;
         this.router = router;
+        this.route = '';
         router.events.subscribe(function (val) {
             if (authService.isLoggedIn())
                 _this.currentUser = _this.authService.currentUser();
             else
                 _this.currentUser = null;
         });
+        this.route = router.url;
     }
     AppComponent.prototype.ngOnInit = function () {
     };
