@@ -22,9 +22,7 @@ import {toPromise} from "rxjs/operator/toPromise";
 export class HomeComponent implements OnInit, AfterViewInit {
     currentUser: User;
 
-    //movies: Observable<any[]> = Observable.of<any[]>([]);
     movies: any[] = [];
-
 
     scrollCallback: any;
     moviesContainerHeight: number = 0;
@@ -56,12 +54,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             .map(term => {
                 this.term = term;
                 return { query_term: term, page: 1 };
-                //return this.ytsService.search({ query_term: this.term })
             });
-            /*.catch((error: any) => {
-                console.warn(error);
-                return Observable.of<any[]>([]);
-            });*/
 
         const pageSource = this.pageStream.map(pageNumber => {
             this.page = pageNumber;

@@ -25,7 +25,6 @@ var HomeComponent = (function () {
     function HomeComponent(authService, ytsService) {
         this.authService = authService;
         this.ytsService = ytsService;
-        //movies: Observable<any[]> = Observable.of<any[]>([]);
         this.movies = [];
         this.moviesContainerHeight = 0;
         this.pageStream = new Subject_1.Subject();
@@ -47,12 +46,7 @@ var HomeComponent = (function () {
             .map(function (term) {
             _this.term = term;
             return { query_term: term, page: 1 };
-            //return this.ytsService.search({ query_term: this.term })
         });
-        /*.catch((error: any) => {
-            console.warn(error);
-            return Observable.of<any[]>([]);
-        });*/
         var pageSource = this.pageStream.map(function (pageNumber) {
             _this.page = pageNumber;
             return { query_term: _this.term, page: pageNumber };
