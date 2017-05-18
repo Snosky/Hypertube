@@ -18,54 +18,71 @@ require("rxjs/add/operator/catch");
 require("rxjs/add/operator/debounceTime");
 require("rxjs/add/operator/distinctUntilChanged");
 require("rxjs/add/operator/concat");
+require("rxjs/add/operator/merge");
+require("rxjs/add/operator/share");
 var Subject_1 = require("rxjs/Subject");
 var HomeComponent = (function () {
     function HomeComponent(authService, ytsService) {
-        var _this = this;
         this.authService = authService;
         this.ytsService = ytsService;
-        this.page = 1;
+        //movies: Observable<any[]> = Observable.of<any[]>([]);
+        this.movies = [];
         this.moviesContainerHeight = 0;
-        this.searchTerm = new Subject_1.Subject();
-        this.processMovies = function (movies) {
-            _this.movies = _this.movies.concat(movies);
-        };
-        this.scrollCallback = this.getMovies.bind(this);
+        this.pageStream = new Subject_1.Subject();
+        this.page = 1;
+        this.searchTerms = new Subject_1.Subject();
+        this.term = '';
+        this.scrollCallback = this.getNextPage.bind(this);
     }
     HomeComponent.prototype.search = function (term) {
-        this.searchTerm.next(term);
+        this.page = 1;
+        this.searchTerms.next(term);
     };
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.currentUser = this.authService.currentUser();
-        this.movies = this.searchTerm
+        var searchSource = this.searchTerms
             .debounceTime(300)
             .distinctUntilChanged()
-            .switchMap(function (term) { return _this.ytsService.search({ query_term: term }); })
+            .map(function (term) {
+            _this.term = term;
+            return { query_term: term, page: 1 };
+            //return this.ytsService.search({ query_term: this.term })
+        });
+        /*.catch((error: any) => {
+            console.warn(error);
+            return Observable.of<any[]>([]);
+        });*/
+        var pageSource = this.pageStream.map(function (pageNumber) {
+            _this.page = pageNumber;
+            return { query_term: _this.term, page: pageNumber };
+        });
+        var source = pageSource
+            .merge(searchSource)
+            .startWith({ query_term: this.term, page: this.page })
+            .switchMap(function (params) {
+            return _this.ytsService.search(params);
+        })
             .catch(function (error) {
             console.warn(error);
             return Observable_1.Observable.of([]);
         });
+        source.subscribe(function (movies) {
+            if (!movies)
+                return false;
+            if (_this.page > 1)
+                _this.movies = _this.movies.concat(movies);
+            else
+                _this.movies = movies;
+        });
     };
     HomeComponent.prototype.ngAfterViewInit = function () {
         this.moviesContainerHeight = document.documentElement.clientHeight - 56;
-        this.getMovies();
     };
-    HomeComponent.prototype.getMovies = function () {
-        /*this.ytsService.getDefault(this.page)
-            .toPromise()
-            .then((movies) => {
-                if (this.movies[0])
-                    this.movies = this.movies.concat(movies);
-                else
-                    this.movies = movies;
-            });
-        this.page++;
-        /*return this.ytsService.getDefault(this.page)
-            .then((movies) => {
-                this.processMovies(movies);
-
-            })*/
+    HomeComponent.prototype.getNextPage = function () {
+        this.pageStream.next(this.page + 1);
+        return this.ytsService.search({ query_term: this.term, page: this.page + 1 });
+        // TODO : Change this to someting better
     };
     HomeComponent.prototype.onResize = function (e) {
         this.moviesContainerHeight = document.documentElement.clientHeight - 56;

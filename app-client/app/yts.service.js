@@ -17,16 +17,6 @@ var YtsService = (function () {
         this.http = http;
         this.url = 'https://yts.ag/api/v2/';
     }
-    YtsService.prototype.getDefault = function (page) {
-        var params = new http_1.URLSearchParams();
-        params.set('limit', '24');
-        params.set('page', page.toString());
-        return this.http.get(this.url + 'list_movies.json', { search: params })
-            .map(function (res) { return res.json().data.movies; });
-        /*.toPromise()
-        .then(response => response.json().data.movies || [])
-        .catch(this.handleError);*/
-    };
     YtsService.prototype.search = function (params) {
         var httpparams = new http_1.URLSearchParams();
         httpparams.set('limit', '24');
@@ -34,13 +24,8 @@ var YtsService = (function () {
             httpparams.set('page', params.page.toString());
         if (params.query_term)
             httpparams.set('query_term', params.query_term);
-        console.log(httpparams.toString());
         return this.http.get(this.url + 'list_movies.json', { search: httpparams })
             .map(function (res) { return res.json().data.movies; });
-    };
-    YtsService.prototype.handleError = function (error) {
-        console.error('An error occured', error);
-        return Promise.reject(error.message || error);
     };
     return YtsService;
 }());
