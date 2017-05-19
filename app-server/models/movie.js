@@ -2,24 +2,23 @@ const mongoose = require('mongoose');
 
 
 const movieSchema = mongoose.Schema({
-    id : ObjectId,
-    imdb_code: String,
-    title: String,
-    slug: String,
-    year: Number,
-    rating: Number,
-    genres: Array,
-    description_intro: String,
-    description_full: String,
-    yt_trailer_code: String,
-    language: String,
-    mpa_rating: String,
-    background_image: String,
-    background_image_original: String,
-    small_cover_image: String,
-    medium_cover_image: String,
-    large_cover_image: String
+    imdb_code: { type: String },
+    title: { type: String },
+    slug: { type: String },
+    year: { type: Number },
+    rating: { type: Number },
+    genres: { type: Array },
+    description_intro: { type: String },
+    description_full: { type: String },
+    yt_trailer_code: { type: String },
+    language: { type: String },
+    mpa_rating: { type: String },
+    background_image: { type: String },
+    background_image_original: { type: String },
+    small_cover_image: { type: String },
+    medium_cover_image: { type: String },
+    large_cover_image: { type: String }
 });
 
 
-module.exports = mongoose.model('movie', movieSchema);
+module.exports = mongoose.model('Movie', movieSchema);

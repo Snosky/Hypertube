@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const episodeTorrentSchema = mongoose.Schema({
-    episode_id: { type: ObjectId },
+const episodeTorrentSchema = Schema({
+    episode_id: { type: Schema.Types.ObjectId, ref: 'Episode' },
     peers: { type: Number },
     seeds: { type: Number },
     url: { type: String },
