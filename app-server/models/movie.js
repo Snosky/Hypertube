@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-torrentSchema = require('./torrent.js');
 
 
 const movieSchema = mongoose.Schema({
@@ -23,3 +22,4 @@ const movieSchema = mongoose.Schema({
 });
 
 
+module.exports = mongoose.model('movie', movieSchema);
