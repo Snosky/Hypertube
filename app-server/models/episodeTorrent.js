@@ -3,10 +3,13 @@ const Schema = mongoose.Schema;
 
 const episodeTorrentSchema = Schema({
     episode_id: { type: Schema.Types.ObjectId, ref: 'Episode' },
-    peers: { type: Number },
-    seeds: { type: Number },
     url: { type: String },
-    quality: { type: String }
+    hash: { type: String },
+    quality: { type: String },
+    seeds: { type: Number },
+    peers: { type: Number },
+    size: { type: String },
+    size_bytes: { type: Number }
 });
 
 module.exports = mongoose.model('EpisodeTorrent', episodeTorrentSchema);
