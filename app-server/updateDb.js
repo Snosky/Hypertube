@@ -17,14 +17,6 @@ mongoose.connect(config.MONGO_URI);
 const movie_api = 'https://yts.ag/api/v2/list_movies.json';
 let pagesUrl = [];
 let page = 1;
-let maxPage = 0;
-let json;
-
-/*
-const movieQueue = async.queue(function(url, done) {
-
-});
-*/
 
 // Get movie count to get page count
 request(movie_api + '?limit=1', function(err, res, body){
@@ -38,7 +30,7 @@ request(movie_api + '?limit=1', function(err, res, body){
         return false;
     }
 
-    json = JSON.parse(body);
+    let json = JSON.parse(body);
     if (json.status !== "ok") {
         console.error(json.status_message);
         return false;
@@ -49,7 +41,7 @@ request(movie_api + '?limit=1', function(err, res, body){
         return false;
     }
 
-    maxPage = Math.ceil(json.data.movie_count / 50);
+    let maxPage = Math.ceil(json.data.movie_count / 50);
 
     while (page <= maxPage) {
         pagesUrl.push(movie_api + '?limit=50&page=' + page);
