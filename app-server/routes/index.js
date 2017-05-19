@@ -7,7 +7,7 @@ const jwtauth = jwt({
     userProperty: 'payload'
 });
 // TODO : Auth aussi sur register
-// Sur angular si pas co on demande juste un token au serveur que l'on utilise pour accede a register
+
 const user = require('./user');
 
 router.post('/register', user.register);
