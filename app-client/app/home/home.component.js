@@ -21,39 +21,53 @@ require("rxjs/add/operator/concat");
 require("rxjs/add/operator/merge");
 require("rxjs/add/operator/share");
 var Subject_1 = require("rxjs/Subject");
+var router_1 = require("@angular/router");
 var HomeComponent = (function () {
-    function HomeComponent(authService, ytsService) {
+    function HomeComponent(authService, ytsService, router) {
         this.authService = authService;
         this.ytsService = ytsService;
+        this.router = router;
         this.movies = [];
         this.moviesContainerHeight = 0;
         this.pageStream = new Subject_1.Subject();
         this.page = 1;
         this.searchTerms = new Subject_1.Subject();
         this.term = '';
+        this.genreTerm = new Subject_1.Subject();
+        this.genre = '';
         this.scrollCallback = this.getNextPage.bind(this);
     }
     HomeComponent.prototype.search = function (term) {
         this.page = 1;
         this.searchTerms.next(term);
     };
+    HomeComponent.prototype.filterGenre = function (term) {
+        this.page = 1;
+        this.genreTerm.next(term);
+    };
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.currentUser = this.authService.currentUser();
+        var genreSource = this.genreTerm
+            .map(function (genre) {
+            _this.genre = genre;
+            return { query_term: _this.term, page: 1, genre: genre };
+        });
+        var pageSource = this.pageStream
+            .map(function (pageNumber) {
+            _this.page = pageNumber;
+            return { query_term: _this.term, page: pageNumber, genre: _this.genre };
+        });
         var searchSource = this.searchTerms
             .debounceTime(300)
             .distinctUntilChanged()
             .map(function (term) {
             _this.term = term;
-            return { query_term: term, page: 1 };
-        });
-        var pageSource = this.pageStream.map(function (pageNumber) {
-            _this.page = pageNumber;
-            return { query_term: _this.term, page: pageNumber };
+            return { query_term: term, page: 1, genre: _this.genre };
         });
         var source = pageSource
-            .merge(searchSource)
-            .startWith({ query_term: this.term, page: this.page })
+            .merge(searchSource, genreSource)
+            .startWith({ query_term: this.term, page: this.page, genre: this.genre })
             .switchMap(function (params) {
             return _this.ytsService.search(params);
         })
@@ -81,6 +95,10 @@ var HomeComponent = (function () {
     HomeComponent.prototype.onResize = function (e) {
         this.moviesContainerHeight = document.documentElement.clientHeight - 56;
     };
+    HomeComponent.prototype.goToMovie = function (slug) {
+        console.log(slug);
+        this.router.navigate(['/slug', slug]);
+    };
     return HomeComponent;
 }());
 HomeComponent = __decorate([
@@ -90,7 +108,8 @@ HomeComponent = __decorate([
         styleUrls: ['./home.component.css']
     }),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
-        yts_service_1.YtsService])
+        yts_service_1.YtsService,
+        router_1.Router])
 ], HomeComponent);
 exports.HomeComponent = HomeComponent;
 //# sourceMappingURL=home.component.js.map

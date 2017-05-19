@@ -12,7 +12,7 @@ import 'rxjs/add/operator/concat';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/share';
 import {Subject} from "rxjs/Subject";
-import {toPromise} from "rxjs/operator/toPromise";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -33,14 +33,23 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private searchTerms = new Subject<string>();
     term: string = '';
 
+    private genreTerm = new Subject<string>();
+    genre: string = '';
+
     search(term: string): void {
         this.page = 1;
         this.searchTerms.next(term);
     }
 
+    filterGenre(term: string): void {
+        this.page = 1;
+        this.genreTerm.next(term);
+    }
+
     constructor(
         private authService: AuthService,
-        private ytsService: YtsService
+        private ytsService: YtsService,
+        private router: Router
     ) {
         this.scrollCallback = this.getNextPage.bind(this);
     }
@@ -48,23 +57,30 @@ export class HomeComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.currentUser = this.authService.currentUser();
 
+        const genreSource = this.genreTerm
+            .map(genre => {
+                this.genre = genre;
+                return { query_term: this.term, page: 1, genre: genre };
+            });
+
+        const pageSource = this.pageStream
+            .map(pageNumber => {
+                this.page = pageNumber;
+                return { query_term: this.term, page: pageNumber, genre: this.genre };
+            });
+
         const searchSource = this.searchTerms
             .debounceTime(300)
             .distinctUntilChanged()
             .map(term => {
                 this.term = term;
-                return { query_term: term, page: 1 };
+                return { query_term: term, page: 1, genre: this.genre };
             });
 
-        const pageSource = this.pageStream.map(pageNumber => {
-            this.page = pageNumber;
-            return { query_term: this.term, page: pageNumber };
-        });
-
         const source = pageSource
-            .merge(searchSource)
-            .startWith({ query_term: this.term, page: this.page })
-            .switchMap((params: { query_term: string, page: number }) => {
+            .merge(searchSource, genreSource)
+            .startWith({ query_term: this.term, page: this.page, genre: this.genre })
+            .switchMap((params: { query_term: string, page: number, genre: string }) => {
                 return this.ytsService.search(params);
             })
             .catch((error: any) => {
@@ -79,8 +95,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 this.movies = this.movies.concat(movies);
             else
                 this.movies = movies;
-        })
-
+        });
     }
 
     ngAfterViewInit() {
@@ -96,4 +111,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     onResize(e: any) {
         this.moviesContainerHeight = document.documentElement.clientHeight - 56;
     }
+
+    goToMovie(slug: string) {
+        console.log(slug);
+        this.router.navigate(['/slug', slug]);
+    }
 }
+
+
+

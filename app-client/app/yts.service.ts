@@ -19,7 +19,17 @@ export class YtsService {
             httpparams.set('page', params.page.toString());
         if (params.query_term)
             httpparams.set('query_term', params.query_term);
+        if (params.genre)
+            httpparams.set('genre', params.genre);
         return this.http.get(this.url + 'list_movies.json', { search: httpparams })
             .map(res => <any[]> res.json().data.movies)
+    }
+
+    getOne(id: number) {
+        let params = new URLSearchParams();
+        params.set('movie_id', id.toString());
+        return this.http.get(this.url + 'movie_details.json', { search: params })
+            .toPromise()
+            .then(movie => movie.json().data.movie)
     }
 }

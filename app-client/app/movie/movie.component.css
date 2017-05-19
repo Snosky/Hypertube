@@ -1,0 +1,22 @@
+.container-fluid { padding-left: 0; padding-right: 0; }
+
+.movie-container { height: 100%; }
+.movie-header { /*height: 50%;*/ background: no-repeat center center; background-size: cover; }
+
+.movie-title { font-weight: bold; font-size: 34px; text-shadow: 0 0 20px #000; margin-bottom: 15px; }
+    .movie-title .movie-year { font-size: 25px; color: #999999; }
+    .movie-title .movie-mpa { display: inline-block; font-size: 12px; padding: 2px 4px 1px 4px; border: solid 1px #FFF; border-radius: 2px; vertical-align: middle; }
+
+.movie-info-one { background: rgba(0, 0, 0, 0.75); color: #FFF; font-size: 18px; font-weight: bold; padding: 15px 0; }
+    .movie-info-one-content { padding-left: 35px; }
+
+.left { margin-top: -18%; }
+    .left img { box-shadow: 0 0 20px 0 #666666 }
+@media screen and (max-width: 576px) {
+    .left { margin-top: -40%; }
+}
+
+
+.movie-info-two ul { list-style: none; padding-left: 5px; margin-top: 10px; }
+    .movie-info-two ul li { display: inline-block; margin-right: 20px; }
+        .movie-info-two ul li span { text-transform: uppercase; color: #999999; margin-right: 5px; }

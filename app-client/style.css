@@ -5,6 +5,8 @@ body { background-color: #222222; }
 ul.tabs { list-style: none; }
     ul.tabs li { display: inline-block; }
 */
+html, body, .container-fluid { height: 100%; }
+
 body {
     background-color: #333;
     color: #FFF;

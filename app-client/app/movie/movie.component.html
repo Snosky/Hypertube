@@ -1,0 +1,45 @@
+<div class="row movie-container" *ngIf="movie">
+    <div class="col-12 movie-header" [style.background-image]="'url(' + movie.background_image + ')'">
+        <div class="row align-items-end" style="height: 100%;">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-8 col-sm-10 offset-4 offset-sm-2">
+                        <div class="movie-title">
+                            {{movie.title}}
+                            <span class="movie-year">{{movie.year}}</span>
+                            <span class="movie-mpa">{{movie.mpa_rating}}</span>
+                        </div>
+                    </div>
+                    <div class="col-12 movie-info-one">
+                        <div class="row">
+                            <div class="col-8 col-sm-10 offset-4 offset-sm-2 movie-info-one-content">
+                                {{movie.rating * 10}}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-sm-2 left">
+        <img [src]="movie.medium_cover_image" alt="" class="img-fluid">
+    </div>
+    <div class="col-8 col-sm-10">
+        <div class="movie-info-two">
+            <ul>
+                <li>
+                    <span>Runtime</span>
+                    {{movie.runtime}} mins
+                </li>
+                <li>
+                    <span>Genres</span>
+                    {{movie.genres.join(', ')}}
+                </li>
+            </ul>
+        </div>
+
+        <div class="movie-desc">
+            {{movie.description_full}}
+        </div>
+    </div>
+</div>

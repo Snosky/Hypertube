@@ -27,6 +27,8 @@ var user_service_1 = require("./user.service");
 var angular2_jwt_1 = require("angular2-jwt");
 var yts_service_1 = require("./yts.service");
 var infinite_scroller_directive_1 = require("./infinite-scroller.directive");
+var movie_component_1 = require("./movie/movie.component");
+var safe_html_pipe_1 = require("./safe-html.pipe");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -57,7 +59,9 @@ AppModule = __decorate([
             auth_component_1.AuthComponent,
             flash_component_1.FlashComponent,
             my_profile_component_1.MyProfileComponent,
-            infinite_scroller_directive_1.InfiniteScrollerDirective
+            infinite_scroller_directive_1.InfiniteScrollerDirective,
+            movie_component_1.MovieComponent,
+            safe_html_pipe_1.SafeHtmlPipe
         ],
         providers: [
             app_config_1.AppConfig,

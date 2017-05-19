@@ -24,8 +24,17 @@ var YtsService = (function () {
             httpparams.set('page', params.page.toString());
         if (params.query_term)
             httpparams.set('query_term', params.query_term);
+        if (params.genre)
+            httpparams.set('genre', params.genre);
         return this.http.get(this.url + 'list_movies.json', { search: httpparams })
             .map(function (res) { return res.json().data.movies; });
+    };
+    YtsService.prototype.getOne = function (id) {
+        var params = new http_1.URLSearchParams();
+        params.set('movie_id', id.toString());
+        return this.http.get(this.url + 'movie_details.json', { search: params })
+            .toPromise()
+            .then(function (movie) { return movie.json().data.movie; });
     };
     return YtsService;
 }());

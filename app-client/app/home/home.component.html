@@ -4,6 +4,31 @@
         <div class="form-group">
             <input type="text" placeholder="Search a movie" class="form-control" #searchBox (keyup)="search(searchBox.value)">
         </div>
+        <select  class="form-control" #genreBox (change)="filterGenre(genreBox.value)">
+            <option value="all">All Genre</option>
+            <option>Action</option>
+            <option>Adventure</option>
+            <option>Animation</option>
+            <option>Biography</option>
+            <option>Comedy</option>
+            <option>Crime</option>
+            <option>Documentary</option>
+            <option>Drama</option>
+            <option>Family</option>
+            <option>Fantasy</option>
+            <option>Film-Noir</option>
+            <option>History</option>
+            <option>Horror</option>
+            <option>Music</option>
+            <option>Musical</option>
+            <option>Mystery</option>
+            <option>Romance</option>
+            <option>Sci-Fi</option>
+            <option>Sport</option>
+            <option>Thriller</option>
+            <option>War</option>
+            <option>Western</option>
+        </select>
     </div>
 
     <div class="col-sm-10" id="moviesContainer"
@@ -16,12 +41,16 @@
     >
         <div class="row">
             <div class="col-xs-2 col-sm-4 col-md-3 col-lg-2 movie"
+                 (click)="goToMovie(movie.slug)"
                  *ngFor="let movie of movies">
-                <img [src]="movie.large_cover_image || movie.medium_cover_image || small_cover_image" class="img-fluid">
-                <div class="movie-info">
-                    {{movie.title}}
-                    <span>({{movie.year}})</span>
-                </div>
+                <a [routerLink]="['movie', movie.id]">
+                    <img [src]="movie.large_cover_image || movie.medium_cover_image || small_cover_image" class="img-fluid">
+                    <div class="movie-info">
+                        {{movie.title}}
+                        <span>({{movie.year}})</span>
+                        {{movie.rating}}
+                    </div>
+                </a>
             </div>
         </div>
     </div>
