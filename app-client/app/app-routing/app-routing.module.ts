@@ -11,7 +11,7 @@ const routes: Routes = [
     { path: 'auth', component: AuthComponent },
     { path: 'auth/:provider', component: AuthComponent },
     { path: 'profile', component: MyProfileComponent, canActivate: [AuthGuard] },
-    { path: 'movie/:id', component: MovieComponent, canActivate: [AuthGuard] },
+    { path: 'movie/:slug', component: MovieComponent, canActivate: [AuthGuard] },
     { path: '**', redirectTo: '' }
 ];
 

@@ -4,13 +4,13 @@ const Promise = require('bluebird');
 
 const config = require('./config/config');
 
-// Models
-const Movie = require('./models/movie');
-const MovieTorrent = require('./models/movieTorrent');
-
 // Configuration db
 mongoose.Promise = Promise;
 mongoose.connect(config.MONGO_URI);
+
+// Models
+const Movie = require('./models/movie');
+const MovieTorrent = require('./models/movieTorrent');
 
 
 // Update movies and movies torrents
@@ -64,6 +64,10 @@ request(movie_api + '?limit=1', function(err, res, body){
                     return reject('No data');
 
                 Promise.each(json.data.movies, function(movie){
+                    // If no torrent no save
+                    if (!movie.torrents)
+                        return resolve();
+
                     return new Promise(function(resolve, reject){
                         // Save a movie
                         Movie.findOneAndUpdate(
@@ -74,6 +78,7 @@ request(movie_api + '?limit=1', function(err, res, body){
                                 slug: movie.slug,
                                 year: movie.year,
                                 rating: movie.rating,
+                                runtime: movie.runtime,
                                 genres: movie.genres,
                                 description_intro: movie.description_intro,
                                 description_full: movie.description_full,
@@ -91,9 +96,6 @@ request(movie_api + '?limit=1', function(err, res, body){
                                 if (err)
                                     return reject(err);
                                 let id = result._id;
-                                // Save movie torrents
-                                if (!movie.torrents)
-                                    return resolve();
 
                                 Promise.each(movie.torrents, function(torrent){
                                     return new Promise(function(resolve, reject){

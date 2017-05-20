@@ -8,6 +8,7 @@ html, body { overflow: hidden; }
 .movie img { width: 100%; }
 
 .movie .movie-info { background: rgba(41, 43, 44, .7); padding: 10px; font-size: 14px; position: absolute; z-index: 2; bottom: 0; left: 0; right: 0;text-shadow: 1px 1px 3px #000; }
+    .movie a { color: #FFF;}
     .movie .movie-info span { color: rgba(255,255,255,.5); }
 
 #moviesContainer::-webkit-scrollbar {

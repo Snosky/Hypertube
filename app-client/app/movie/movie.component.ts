@@ -1,28 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import {YtsService} from "../yts.service";
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {DomSanitizer} from "@angular/platform-browser";
+import {MovieService} from "../movie.service";
+import {Movie} from "../_models/movie";
+import {MovieTorrent} from "../_models/movieTorrent";
+import {MovieTorrentService} from "../movie-torrent.service";
 
 @Component({
   selector: 'app-movie',
   templateUrl: './movie.component.html',
   styleUrls: ['./movie.component.css']
 })
-export class MovieComponent implements OnInit {
+export class MovieComponent implements OnInit, AfterViewInit {
 
-    movie: any;
+    slug: string;
+    movie: Movie;
+    torrents: MovieTorrent[];
 
     constructor(
         private route: ActivatedRoute,
-        private ytsService: YtsService,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private movieService: MovieService,
+        private movieTorrentService: MovieTorrentService
     ) { }
 
     ngOnInit() {
-        let id = this.route.snapshot.params['id'];
+        this.slug = this.route.snapshot.params['slug'];
 
-        this.ytsService.getOne(id)
-            .then( (movie:any) => this.movie = movie )
+        this.movieService.getOne(this.slug)
+            .then( (movie: Movie) => this.movie = movie )
+    }
+
+    ngAfterViewInit() {
+        this.movieTorrentService.getMovieTorrents(this.slug)
+            .then( (torrents: MovieTorrent[]) => this.torrents = torrents );
     }
 
     youtubeTrailer() {

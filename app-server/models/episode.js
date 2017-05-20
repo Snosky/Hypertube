@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const episodeSchema = mongoose.Schema({
-    show_id: { type: ObjectId },
+const episodeSchema = Schema({
+    tvdb_id: { type: String },
+    show_id: { type: Schema.Types.ObjectId, ref: 'Show' },
     title: { type: String },
-    synopsis: { type: String },
+    description_full: { type: String },
     season: { type: Number },
     episode: { type: Number },
-    firstAired: { type: Number }
+    first_aired: { type: Number }
 });
 
 module.exports = mongoose.model('Episode', episodeSchema);

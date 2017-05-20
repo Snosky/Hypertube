@@ -10,20 +10,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var yts_service_1 = require("../yts.service");
 var router_1 = require("@angular/router");
 var platform_browser_1 = require("@angular/platform-browser");
+var movie_service_1 = require("../movie.service");
+var movie_torrent_service_1 = require("../movie-torrent.service");
 var MovieComponent = (function () {
-    function MovieComponent(route, ytsService, sanitizer) {
+    function MovieComponent(route, sanitizer, movieService, movieTorrentService) {
         this.route = route;
-        this.ytsService = ytsService;
         this.sanitizer = sanitizer;
+        this.movieService = movieService;
+        this.movieTorrentService = movieTorrentService;
     }
     MovieComponent.prototype.ngOnInit = function () {
         var _this = this;
-        var id = this.route.snapshot.params['id'];
-        this.ytsService.getOne(id)
+        this.slug = this.route.snapshot.params['slug'];
+        this.movieService.getOne(this.slug)
             .then(function (movie) { return _this.movie = movie; });
+    };
+    MovieComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.movieTorrentService.getMovieTorrents(this.slug)
+            .then(function (torrents) { return _this.torrents = torrents; });
     };
     MovieComponent.prototype.youtubeTrailer = function () {
         return this.sanitizer.bypassSecurityTrustResourceUrl('//www.youtube.com/embed/' + this.movie.yt_trailer_code + '?rel=0');
@@ -37,8 +44,9 @@ MovieComponent = __decorate([
         styleUrls: ['./movie.component.css']
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute,
-        yts_service_1.YtsService,
-        platform_browser_1.DomSanitizer])
+        platform_browser_1.DomSanitizer,
+        movie_service_1.MovieService,
+        movie_torrent_service_1.MovieTorrentService])
 ], MovieComponent);
 exports.MovieComponent = MovieComponent;
 //# sourceMappingURL=movie.component.js.map

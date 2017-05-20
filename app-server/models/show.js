@@ -1,16 +1,19 @@
 const mongoose = require('mongoose');
 
 const showSchema = mongoose.Schema({
-    imdb_id: { type: String },
+    imdb_code: { type: String },
     title: { type: String },
-    year: { type: Number },
     slug: { type: String },
-    synopsis: { type: String },
-    runtime: { type: Number },
+    year: { type: String },
     rating: { type: Number },
+    runtime: { type: String },
+    genres: { type: Array },
+    description_full: { type: String },
     country: { type: String },
     network: { type: String },
-    status: { type: Boolean },
+    air_day: { type: String },
+    air_time: { type: String },
+    status: { type: String },
     cover_image: { type: String },
     background_image: { type: String }
 });

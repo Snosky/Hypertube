@@ -1,7 +1,6 @@
-import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, OnInit } from '@angular/core';
 import {User} from "../_models/user";
 import {AuthService} from "../auth.service";
-import {YtsService} from "../yts.service";
 import {Observable} from "rxjs/Observable";
 
 import 'rxjs/add/observable/of';
@@ -13,6 +12,8 @@ import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/share';
 import {Subject} from "rxjs/Subject";
 import {Router} from "@angular/router";
+import {MovieService} from "../movie.service";
+import {Movie} from "../_models/movie";
 
 @Component({
   selector: 'app-home',
@@ -34,7 +35,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     term: string = '';
 
     private genreTerm = new Subject<string>();
-    genre: string = '';
+    genres: string = '';
 
     search(term: string): void {
         this.page = 1;
@@ -48,7 +49,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     constructor(
         private authService: AuthService,
-        private ytsService: YtsService,
+        private movieService: MovieService,
         private router: Router
     ) {
         this.scrollCallback = this.getNextPage.bind(this);
@@ -58,15 +59,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.currentUser = this.authService.currentUser();
 
         const genreSource = this.genreTerm
-            .map(genre => {
-                this.genre = genre;
-                return { query_term: this.term, page: 1, genre: genre };
+            .map(genres => {
+                this.genres = genres;
+                return { query_term: this.term, page: 1, genres: genres };
             });
 
         const pageSource = this.pageStream
             .map(pageNumber => {
                 this.page = pageNumber;
-                return { query_term: this.term, page: pageNumber, genre: this.genre };
+                return { query_term: this.term, page: pageNumber, genres: this.genres };
             });
 
         const searchSource = this.searchTerms
@@ -74,18 +75,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
             .distinctUntilChanged()
             .map(term => {
                 this.term = term;
-                return { query_term: term, page: 1, genre: this.genre };
+                return { query_term: term, page: 1, genres: this.genres };
             });
 
         const source = pageSource
             .merge(searchSource, genreSource)
-            .startWith({ query_term: this.term, page: this.page, genre: this.genre })
-            .switchMap((params: { query_term: string, page: number, genre: string }) => {
-                return this.ytsService.search(params);
+            .startWith({ query_term: this.term, page: this.page, genres: this.genres })
+            .switchMap((params: { query_term: string, page: number, genres: string }) => {
+                return this.movieService.search(params);
             })
             .catch((error: any) => {
                 console.warn(error);
-                return Observable.of<any[]>([]);
+                return Observable.of<Movie[]>([]);
             });
 
         source.subscribe(movies => {
@@ -104,17 +105,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     private getNextPage() {
         this.pageStream.next(this.page + 1);
-        return this.ytsService.search({ query_term: this.term, page: this.page + 1 })
+        return this.movieService.search({ query_term: this.term, page: this.page + 1 })
         // TODO : Change this to someting better
     }
 
     onResize(e: any) {
         this.moviesContainerHeight = document.documentElement.clientHeight - 56;
-    }
-
-    goToMovie(slug: string) {
-        console.log(slug);
-        this.router.navigate(['/slug', slug]);
     }
 }
 

@@ -1,45 +1,41 @@
-<div class="row movie-container" *ngIf="movie">
-    <div class="col-12 movie-header" [style.background-image]="'url(' + movie.background_image + ')'">
-        <div class="row align-items-end" style="height: 100%;">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-8 col-sm-10 offset-4 offset-sm-2">
-                        <div class="movie-title">
-                            {{movie.title}}
-                            <span class="movie-year">{{movie.year}}</span>
-                            <span class="movie-mpa">{{movie.mpa_rating}}</span>
-                        </div>
-                    </div>
-                    <div class="col-12 movie-info-one">
-                        <div class="row">
-                            <div class="col-8 col-sm-10 offset-4 offset-sm-2 movie-info-one-content">
-                                {{movie.rating * 10}}%
-                            </div>
-                        </div>
+<div *ngIf="movie" class="row h-100 movie-container" [style.background-image]="'url(' + movie.background_image + ')'">
+    <div class="col-12">
+        <div class="row bg">
+            <div class="col-12 col-sm-3 movie-image-container">
+                <img [src]="movie.large_cover_image" alt="" class="img-fluid movie-image">
+            </div>
+            <div class="col-12 col-sm-9 movie-info-container">
+                <h1 class="display-3 ">{{movie.title}}</h1>
+                <div class="movie-info">
+                    {{movie.year}}
+                    <span class="bull-sep">&bull;</span>
+                    {{movie.runtime}} min
+                    <span class="bull-sep">&bull;</span>
+                    {{movie.genres.join(' / ')}}
+                    <span class="bull-sep">&bull;</span>
+                    <a [href]="'http://www.imdb.com/title/' + movie.imdb_code">
+                        <img src="assets/img/imdb.png" alt="IMDB" class="imdb">
+                    </a>
+                    <span class="bull-sep">&bull;</span>
+                    {{movie.rating * 10}}%
+                    <span class="bull-sep">&bull;</span>
+                    <div class="movie-mpa">
+                        {{movie.mpa_rating}}
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-4 col-sm-2 left">
-        <img [src]="movie.medium_cover_image" alt="" class="img-fluid">
-    </div>
-    <div class="col-8 col-sm-10">
-        <div class="movie-info-two">
-            <ul>
-                <li>
-                    <span>Runtime</span>
-                    {{movie.runtime}} mins
-                </li>
-                <li>
-                    <span>Genres</span>
-                    {{movie.genres.join(', ')}}
-                </li>
-            </ul>
-        </div>
+                <div class="movie-desc">
+                    {{movie.description_full}}
+                </div>
 
-        <div class="movie-desc">
-            {{movie.description_full}}
+                <div class="movie-watch" *ngIf="torrents">
+                    <div ngbRadioGroup>
+                        <label class="btn btn-quality" *ngFor="let torrent of torrents" placement="top" ngbTooltip="{{torrent.size}}">
+                            <input type="radio" [value]="torrent._id"> {{torrent.quality}}
+                        </label>
+                    </div>
+                    <button class="btn watch">Watch !</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

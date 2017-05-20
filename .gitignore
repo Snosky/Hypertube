@@ -68,3 +68,4 @@ typings/
 *.iml
 out
 gen
+/shows.json

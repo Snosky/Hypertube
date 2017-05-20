@@ -1,22 +1,25 @@
-.container-fluid { padding-left: 0; padding-right: 0; }
+.movie-container { background-repeat: no-repeat; background-position: center center; background-size: cover; }
+    .movie-container .bg { background-color: rgba(0, 0, 0, 0.7); padding-top: 50px; min-height: 100%; }
 
-.movie-container { height: 100%; }
-.movie-header { /*height: 50%;*/ background: no-repeat center center; background-size: cover; }
+    .movie-image-container { position: relative; }
+        .movie-image { position: fixed; max-width: inherit; }
 
-.movie-title { font-weight: bold; font-size: 34px; text-shadow: 0 0 20px #000; margin-bottom: 15px; }
-    .movie-title .movie-year { font-size: 25px; color: #999999; }
-    .movie-title .movie-mpa { display: inline-block; font-size: 12px; padding: 2px 4px 1px 4px; border: solid 1px #FFF; border-radius: 2px; vertical-align: middle; }
+    .movie-info-container { padding-left: 30px; }
 
-.movie-info-one { background: rgba(0, 0, 0, 0.75); color: #FFF; font-size: 18px; font-weight: bold; padding: 15px 0; }
-    .movie-info-one-content { padding-left: 35px; }
+    .movie-info { padding: 15px; font-size: 14px; }
+        .imdb { max-width: 35px; }
+        .movie-info .movie-mpa { display: inline-block; font-size: 12px; padding: 2px 4px 1px 4px; border: solid 1px #FFF; border-radius: 2px; vertical-align: middle; }
 
-.left { margin-top: -18%; }
-    .left img { box-shadow: 0 0 20px 0 #666666 }
+    .movie-desc { font-size: 16px; white-space: pre-line; }
+
+    .bull-sep { display: inline-block; padding: 0 10px; }
+
+    .movie-watch { margin-top: 25px; }
+    .movie-watch button.watch { vertical-align: top; }
+    .btn-quality { background: #333; }
+    .btn-quality.active { background: #FFF; color: #333; }
+
 @media screen and (max-width: 576px) {
-    .left { margin-top: -40%; }
+    .movie-image { position: relative; }
+    .movie-info-container { padding-left: 15px; }
 }
-
-
-.movie-info-two ul { list-style: none; padding-left: 5px; margin-top: 10px; }
-    .movie-info-two ul li { display: inline-block; margin-right: 20px; }
-        .movie-info-two ul li span { text-transform: uppercase; color: #999999; margin-right: 5px; }

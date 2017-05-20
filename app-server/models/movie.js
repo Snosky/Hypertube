@@ -7,6 +7,7 @@ const movieSchema = mongoose.Schema({
     slug: { type: String },
     year: { type: Number },
     rating: { type: Number },
+    runtime: { type: Number },
     genres: { type: Array },
     description_intro: { type: String },
     description_full: { type: String },

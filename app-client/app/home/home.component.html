@@ -41,14 +41,13 @@
     >
         <div class="row">
             <div class="col-xs-2 col-sm-4 col-md-3 col-lg-2 movie"
-                 (click)="goToMovie(movie.slug)"
                  *ngFor="let movie of movies">
-                <a [routerLink]="['movie', movie.id]">
+                <a [routerLink]="['movie', movie.slug]">
                     <img [src]="movie.large_cover_image || movie.medium_cover_image || small_cover_image" class="img-fluid">
                     <div class="movie-info">
                         {{movie.title}}
                         <span>({{movie.year}})</span>
-                        {{movie.rating}}
+                        {{movie.rating * 10}}%
                     </div>
                 </a>
             </div>

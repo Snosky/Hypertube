@@ -25,10 +25,11 @@ var flash_service_1 = require("./flash.service");
 var my_profile_component_1 = require("./my-profile/my-profile.component");
 var user_service_1 = require("./user.service");
 var angular2_jwt_1 = require("angular2-jwt");
-var yts_service_1 = require("./yts.service");
 var infinite_scroller_directive_1 = require("./infinite-scroller.directive");
 var movie_component_1 = require("./movie/movie.component");
 var safe_html_pipe_1 = require("./safe-html.pipe");
+var movie_service_1 = require("./movie.service");
+var movie_torrent_service_1 = require("./movie-torrent.service");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -75,7 +76,8 @@ AppModule = __decorate([
             social_auth_service_1.SocialAuthService,
             auth_service_1.AuthService,
             user_service_1.UserService,
-            yts_service_1.YtsService
+            movie_service_1.MovieService,
+            movie_torrent_service_1.MovieTorrentService
         ],
         bootstrap: [app_component_1.AppComponent]
     })

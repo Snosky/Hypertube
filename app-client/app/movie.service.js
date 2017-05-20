@@ -10,37 +10,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
+var app_config_1 = require("./app.config");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
-var YtsService = (function () {
-    function YtsService(http) {
+var MovieService = (function () {
+    function MovieService(config, http) {
+        this.config = config;
         this.http = http;
-        this.url = 'https://yts.ag/api/v2/';
     }
-    YtsService.prototype.search = function (params) {
+    MovieService.prototype.search = function (params) {
         var httpparams = new http_1.URLSearchParams();
         httpparams.set('limit', '24');
         if (params.page)
             httpparams.set('page', params.page.toString());
         if (params.query_term)
             httpparams.set('query_term', params.query_term);
-        if (params.genre)
-            httpparams.set('genre', params.genre);
-        return this.http.get(this.url + 'list_movies.json', { search: httpparams })
-            .map(function (res) { return res.json().data.movies; });
+        if (params.genres)
+            httpparams.set('genres', params.genres);
+        return this.http.get(this.config.apiUrl + '/movies', { search: httpparams })
+            .map(function (res) { return res.json(); });
     };
-    YtsService.prototype.getOne = function (id) {
-        var params = new http_1.URLSearchParams();
-        params.set('movie_id', id.toString());
-        return this.http.get(this.url + 'movie_details.json', { search: params })
+    MovieService.prototype.getOne = function (slug) {
+        return this.http.get(this.config.apiUrl + '/movie/' + slug)
             .toPromise()
-            .then(function (movie) { return movie.json().data.movie; });
+            .then(function (movie) { return movie.json(); });
     };
-    return YtsService;
+    return MovieService;
 }());
-YtsService = __decorate([
+MovieService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.Http])
-], YtsService);
-exports.YtsService = YtsService;
-//# sourceMappingURL=yts.service.js.map
+    __metadata("design:paramtypes", [app_config_1.AppConfig,
+        http_1.Http])
+], MovieService);
+exports.MovieService = MovieService;
+//# sourceMappingURL=movie.service.js.map
