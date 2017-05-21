@@ -8,12 +8,14 @@ const jwtauth = jwt({
 });
 // TODO : Auth aussi sur register
 
+const upload = require('../middleware/upload');
+
 const user = require('./user');
 const auth = require('./auth');
 const movie = require('./movie');
 
 // User
-router.post('/register', user.register);
+router.post('/register', user.picValidation, user.register);
 router.post('/auth', user.auth);
 router.post('/auth/facebook', auth.facebook);
 router.post('/auth/42', auth.fortytwo);

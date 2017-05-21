@@ -49,8 +49,17 @@
             <ngb-tab title="SIGN UP">
                 <ng-template ngbTabContent>
                     <div class="col-xs-12">
+                        {{registerFormValid}}
                         <h2>Register</h2>
                         <form [formGroup]="registerForm" (ngSubmit)="submitRegister()">
+                            <div class="form-group">
+                                <label for="pic">Avatar</label>
+                                <input type="file" name="pic" id="pic" (change)="picChangeEvent($event)">
+                                <div class="form-control-label" *ngIf="registerFormErrors.pic">
+                                    {{ registerFormErrors.pic }}
+                                </div>
+                            </div>
+
                             <div class="form-group"
                                  [class.has-success]="registerForm.get('username').dirty && !registerFormErrors.username"
                                  [class.has-danger]="registerFormErrors.username"
@@ -132,7 +141,7 @@
                                     {{ registerFormErrors.passwordConf }}
                                 </div>
                             </div>
-                            <button [disabled]="!registerForm.valid" class="btn btn-block">
+                            <button [disabled]="!registerFormValid" class="btn btn-block">
                                 <span *ngIf="!loading">Register</span>
                                 <span *ngIf="loading">Loading...</span>
                             </button>

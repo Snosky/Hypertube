@@ -27,7 +27,6 @@ var user_service_1 = require("./user.service");
 var angular2_jwt_1 = require("angular2-jwt");
 var infinite_scroller_directive_1 = require("./infinite-scroller.directive");
 var movie_component_1 = require("./movie/movie.component");
-var safe_html_pipe_1 = require("./safe-html.pipe");
 var movie_service_1 = require("./movie.service");
 var movie_torrent_service_1 = require("./movie-torrent.service");
 function authHttpServiceFactory(http, options) {
@@ -61,8 +60,7 @@ AppModule = __decorate([
             flash_component_1.FlashComponent,
             my_profile_component_1.MyProfileComponent,
             infinite_scroller_directive_1.InfiniteScrollerDirective,
-            movie_component_1.MovieComponent,
-            safe_html_pipe_1.SafeHtmlPipe
+            movie_component_1.MovieComponent
         ],
         providers: [
             app_config_1.AppConfig,

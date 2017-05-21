@@ -20,7 +20,6 @@ import {UserService} from "./user.service";
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
 import { InfiniteScrollerDirective } from './infinite-scroller.directive';
 import { MovieComponent } from './movie/movie.component';
-import { SafeHtmlPipe } from './safe-html.pipe';
 import {MovieService} from "./movie.service";
 import {MovieTorrentService} from "./movie-torrent.service";
 
@@ -49,8 +48,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         FlashComponent,
         MyProfileComponent,
         InfiniteScrollerDirective,
-        MovieComponent,
-        SafeHtmlPipe
+        MovieComponent
     ],
     providers: [
         AppConfig,

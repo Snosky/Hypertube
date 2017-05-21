@@ -53,6 +53,7 @@ userSchema.methods.generateJwt = function() {
         username: this.username,
         lastname: this.lastname,
         firstname: this.firstname,
+        pic: this.pic,
         exp: parseInt(expiry.getTime() / 1000)
     }, config.TOKEN_SECRET);
 };

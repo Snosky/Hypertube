@@ -24,13 +24,17 @@ var AuthComponent = (function () {
         this.loading = false;
         this.loginModel = {};
         this.registerModel = {};
+        this.registerFormValid = false;
+        this.imageValid = false;
+        this.image = null;
         this.registerFormErrors = {
             'username': '',
             'email': '',
             'firstname': '',
             'lastname': '',
             'password': '',
-            'passwordConf': ''
+            'passwordConf': '',
+            'pic': '',
         };
         this.registerValidationMessages = {
             'username': {
@@ -55,6 +59,11 @@ var AuthComponent = (function () {
             },
             'passwordConf': {
                 'required': 'Password confirmation is required.',
+            },
+            'pic': {
+                'required': 'Please select an avatar.',
+                'type': 'File type not allowed. Only png and jpeg are allowed.',
+                'size': 'File is too big. 5Mo max.'
             }
         };
         this.loginFormErrors = {
@@ -104,6 +113,27 @@ var AuthComponent = (function () {
             .subscribe(function (data) { return _this.registerOnValueChange(data); });
         this.registerOnValueChange();
     };
+    AuthComponent.prototype.picChangeEvent = function (fileInput) {
+        this.registerFormErrors.pic = '';
+        if (fileInput.target.files[0] === undefined) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.required;
+        }
+        else if (['image/jpeg', 'image/jpg', 'image/png'].indexOf(fileInput.target.files[0].type) === -1) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.type;
+        }
+        else if (fileInput.target.files[0].size > 5242880) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.size;
+        }
+        else {
+            console.log(fileInput.target.files[0]);
+            this.image = fileInput.target.files[0];
+            this.imageValid = true;
+        }
+        this.registerFormValid = this.registerForm.valid && this.imageValid;
+    };
     AuthComponent.prototype.registerOnValueChange = function (data) {
         if (!this.registerForm) {
             return;
@@ -121,6 +151,7 @@ var AuthComponent = (function () {
                 }
             }
         }
+        this.registerFormValid = this.registerForm.valid && this.imageValid;
     };
     AuthComponent.prototype.loginOnValueChange = function (data) {
         if (!this.loginForm) {
@@ -145,9 +176,14 @@ var AuthComponent = (function () {
     };
     AuthComponent.prototype.submitRegister = function () {
         var _this = this;
-        // TODO : Image uplaod ng2-file-upload
+        // TODO : Return messages not good
         this.loading = true;
         this.registerModel = this.registerForm.value;
+        this.registerModel.pic = this.image;
+        if (this.registerFormValid === false) {
+            return;
+        }
+        console.log(this.registerModel);
         this.authService.register(this.registerModel)
             .then(function (data) {
             _this.loading = false;

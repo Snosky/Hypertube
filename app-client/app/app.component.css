@@ -1,5 +1,7 @@
 body { background-color: #102027; position: relative; }
 
+nav img { max-height: 20px; width: auto; }
+
 .pushTop { padding-top: 56px; }
 /*
 html,body,.container-fluid {

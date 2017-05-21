@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const fs = require('fs');
 
 /**
  * Registration route
@@ -18,6 +19,9 @@ module.exports.register = function(req, res) {
 
     req.getValidationResult().then(function(result) {
         if (!result.isEmpty()) {
+            fs.unlink(req.file.path, function(err) {
+                console.error('FS', err);
+            });
             return res.status(400).json({ errors: result.useFirstErrorOnly().mapped() });
         }
 
@@ -27,10 +31,16 @@ module.exports.register = function(req, res) {
         user.firstname = req.body.firstname;
         user.lastname = req.body.lastname;
         user.password = req.body.password;
+        user.pic = req.file.filename;
         user.hashPassword()
             .then(function() {
                 user.save(function(err) {
-                    if (err) return res.status(400).json(err);
+                    if (err) {
+                        fs.unlink(req.file.path, function(err){
+                            console.error('FS', err);
+                        });
+                        return res.status(400).json(err);
+                    }
 
                     const token = user.generateJwt();
                     res.status(200).json({ token: token });
@@ -38,9 +48,24 @@ module.exports.register = function(req, res) {
             })
             .catch(function(err) {
                 console.log('bcrypt', err);
+                fs.unlink(req.file.path, function(err) {
+                    console.error('FS', err);
+                });
                 return res.status(400).json(err);
             });
     });
+};
+
+module.exports.picValidation = function(req, res, next) {
+    const upload = require('../middleware/upload');
+
+    upload.single('pic')(req, res, (err) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send('Server error');
+        }
+        next();
+    })
 };
 
 /**

@@ -18,7 +18,10 @@
         </ul>
         <div class="navbar-nav my-2 my-lg-0">
             <div ngbDropdown>
-                <a class="nav-link dropdown-toggle" id="dropdown1" ngbDropdownToggle>{{currentUser.username}}</a>
+                <a class="nav-link dropdown-toggle" id="dropdown1" ngbDropdownToggle>
+                    <img src="{{currentUser.pic.indexOf('http') !== -1 ? currentUser.pic : 'http://localhost:3000/userpics/' + currentUser.pic}}" alt="">
+                    {{currentUser.username}}
+                </a>
                 <div class="dropdown-menu" aria-labelledby="dropdown1">
                     <a class="dropdown-item" routerLink="/profile">My Profile</a>
                     <a class="dropdown-item" routerLink="/auth">Log out</a>

@@ -18,6 +18,9 @@ export class AuthComponent implements OnInit {
 
     registerModel: any = {};
     registerForm: FormGroup;
+    registerFormValid = false;
+    imageValid = false;
+    image: any = null;
 
     constructor(
         private fb: FormBuilder,
@@ -76,7 +79,8 @@ export class AuthComponent implements OnInit {
         'firstname': '',
         'lastname': '',
         'password': '',
-        'passwordConf': ''
+        'passwordConf': '',
+        'pic': '',
     };
 
     registerValidationMessages = {
@@ -102,8 +106,35 @@ export class AuthComponent implements OnInit {
         },
         'passwordConf': {
             'required': 'Password confirmation is required.',
+        },
+        'pic': {
+            'required': 'Please select an avatar.',
+            'type': 'File type not allowed. Only png and jpeg are allowed.',
+            'size': 'File is too big. 5Mo max.'
         }
     };
+
+    picChangeEvent(fileInput: any){
+        this.registerFormErrors.pic = '';
+        if (fileInput.target.files[0] === undefined) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.required;
+        }
+        else if (['image/jpeg', 'image/jpg', 'image/png'].indexOf(fileInput.target.files[0].type) === -1) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.type;
+        }
+        else if (fileInput.target.files[0].size > 5242880) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.size;
+        }
+        else {
+            console.log(fileInput.target.files[0]);
+            this.image = fileInput.target.files[0];
+            this.imageValid = true;
+        }
+        this.registerFormValid = this.registerForm.valid && this.imageValid;
+    }
 
     registerOnValueChange(data?: any) {
         if (!this.registerForm) { return; }
@@ -121,6 +152,7 @@ export class AuthComponent implements OnInit {
                 }
             }
         }
+        this.registerFormValid = this.registerForm.valid && this.imageValid;
     }
 
     loginFormErrors = {
@@ -153,9 +185,15 @@ export class AuthComponent implements OnInit {
 
 
     submitRegister() {
-        // TODO : Image uplaod ng2-file-upload
+        // TODO : Return messages not good
         this.loading = true;
         this.registerModel = this.registerForm.value;
+        this.registerModel.pic = this.image;
+
+        if (this.registerFormValid === false) {
+            return;
+        }
+        console.log(this.registerModel);
 
         this.authService.register(this.registerModel)
             .then(data => {

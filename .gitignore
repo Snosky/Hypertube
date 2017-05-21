@@ -69,3 +69,5 @@ typings/
 out
 gen
 /shows.json
+/app-server/public/userpics/
+!/app-server/public/userpics/.gitkeep

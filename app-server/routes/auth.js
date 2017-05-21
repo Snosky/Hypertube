@@ -45,10 +45,12 @@ module.exports.facebook = function(req, res) {
                     })
                 }
                 else {
+                    console.log(profile);
                     let user = new User();
                     user.facebookId = profile.id;
                     user.username = profile.name;
                     user.email = profile.email;
+                    user.pic = profile.picture.data.url;
                     user.save(function(err){
                         if (err)
                             return res.status(500).json(err);
@@ -99,9 +101,12 @@ module.exports.fortytwo = function(req, res) {
                 }
                 else {
                     let user = new User();
+                    console.log(profile);
+
                     user.fortytwoId = body.access_token;
                     user.username = profile.login;
                     user.email = profile.email;
+                    user.pic = profile.image_url;
                     user.save(function(err){
                         if (err)
                             return res.status(500).json(err);

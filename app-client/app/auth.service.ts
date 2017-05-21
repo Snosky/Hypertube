@@ -33,6 +33,7 @@ export class AuthService {
         user.email = payload.email;
         user.lastname = payload.lastname;
         user.firstname = payload.firstname;
+        user.pic = payload.pic;
         return user;
     }
 
@@ -41,12 +42,37 @@ export class AuthService {
     }
 
     register(user: User): Promise<User> {
-        return this.http.post(this.config.apiUrl + '/register', user)
-            .toPromise()
-            .then((response: Response) => {
-                return response.json()
-            })
-            .catch(this.handleError);
+        return new Promise((resolve, reject) => {
+            let formData: any = new FormData();
+            let xhr = new XMLHttpRequest();
+            formData.append('username', user.username);
+            formData.append('email', user.email);
+            formData.append('password', user.password);
+            formData.append('passwordConf', user.passwordConf);
+            formData.append('lastname', user.lastname);
+            formData.append('firstname', user.firstname);
+            formData.append('pic', user.pic, user.pic.name);
+
+            xhr.onreadystatechange = function () {
+                console.log(xhr);
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        resolve(JSON.parse(xhr.response));
+                    } else {
+                        reject(xhr.response);
+                    }
+                }
+            };
+            xhr.open('POST', this.config.apiUrl + '/register', true);
+            xhr.send(formData);
+        })
+        .then((response: Response) => {
+            return response.json()
+        })
+        .catch(this.handleError);
+        /*return this.http.post(this.config.apiUrl + '/register', user)
+            .toPromise()*/
+
     }
 
     login(username: string, password: string) {
@@ -73,7 +99,8 @@ export class AuthService {
             const body = error.json();
             err = body.errors || JSON.stringify(body);
         } else {
-            err = error.message ? error.message : error.toString();
+            err = JSON.parse(error).errors;
+            //err = error.message ? error.message : error.toString();
         }
         return Promise.reject(err);
     }
