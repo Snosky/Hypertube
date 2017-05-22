@@ -34,6 +34,7 @@ var shows_component_1 = require("./shows/shows.component");
 var show_service_1 = require("./show.service");
 var default_image_directive_1 = require("./default-image.directive");
 var show_component_1 = require("./show/show.component");
+var omdb_service_1 = require("./omdb.service");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -85,7 +86,8 @@ AppModule = __decorate([
             user_service_1.UserService,
             movie_service_1.MovieService,
             movie_torrent_service_1.MovieTorrentService,
-            show_service_1.ShowService
+            show_service_1.ShowService,
+            omdb_service_1.OmdbService
         ],
         bootstrap: [app_component_1.AppComponent]
     })

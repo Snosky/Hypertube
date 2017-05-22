@@ -12,16 +12,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var show_service_1 = require("../show.service");
+var omdb_service_1 = require("../omdb.service");
 var ShowComponent = (function () {
-    function ShowComponent(route, showService) {
+    function ShowComponent(route, showService, omdbService) {
         this.route = route;
         this.showService = showService;
+        this.omdbService = omdbService;
     }
     ShowComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.slug = this.route.snapshot.params['slug'];
         this.showService.getOne(this.slug)
-            .then(function (show) { return _this.show = show; });
+            .then(function (show) {
+            _this.show = show;
+            _this.omdbService.getMoreInfo(_this.show.imdb_code)
+                .then(function (info) { return _this.info = info; });
+        });
     };
     return ShowComponent;
 }());
@@ -32,7 +38,8 @@ ShowComponent = __decorate([
         styleUrls: ['./show.component.css']
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute,
-        show_service_1.ShowService])
+        show_service_1.ShowService,
+        omdb_service_1.OmdbService])
 ], ShowComponent);
 exports.ShowComponent = ShowComponent;
 //# sourceMappingURL=show.component.js.map

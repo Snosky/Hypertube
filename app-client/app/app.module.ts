@@ -27,6 +27,7 @@ import { ShowsComponent } from './shows/shows.component';
 import {ShowService} from "./show.service";
 import { DefaultImageDirective } from './default-image.directive';
 import { ShowComponent } from './show/show.component';
+import {OmdbService} from "./omdb.service";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
@@ -73,7 +74,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         UserService,
         MovieService,
         MovieTorrentService,
-        ShowService
+        ShowService,
+        OmdbService
     ],
     bootstrap:    [ AppComponent]
 })
