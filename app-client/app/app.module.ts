@@ -23,6 +23,10 @@ import { MovieComponent } from './movie/movie.component';
 import {MovieService} from "./movie.service";
 import {MovieTorrentService} from "./movie-torrent.service";
 import {NouisliderModule} from "ng2-nouislider";
+import { ShowsComponent } from './shows/shows.component';
+import {ShowService} from "./show.service";
+import { DefaultImageDirective } from './default-image.directive';
+import { ShowComponent } from './show/show.component';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
@@ -50,7 +54,10 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         FlashComponent,
         MyProfileComponent,
         InfiniteScrollerDirective,
-        MovieComponent
+        MovieComponent,
+        ShowsComponent,
+        DefaultImageDirective,
+        ShowComponent
     ],
     providers: [
         AppConfig,
@@ -65,7 +72,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         AuthService,
         UserService,
         MovieService,
-        MovieTorrentService
+        MovieTorrentService,
+        ShowService
     ],
     bootstrap:    [ AppComponent]
 })

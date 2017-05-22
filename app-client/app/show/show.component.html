@@ -1,0 +1,41 @@
+<div *ngIf="show" class="row h-100 movie-container" [style.background-image]="'url(' + show.background_image + ')'">
+    <div class="col-12">
+        <div class="row bg">
+            <div class="col-12 col-sm-3 movie-image-container">
+                <img [src]="show.cover_image" [default]="'assets/img/poster.png'" alt="" class="img-fluid movie-image">
+            </div>
+            <div class="col-12 col-sm-9 movie-info-container">
+                <h1 class="display-3 ">{{show.title}}</h1>
+                <div class="movie-info">
+                    {{show.year}}
+                    <span class="bull-sep">&bull;</span>
+                    {{show.runtime}} min
+                    <span class="bull-sep">&bull;</span>
+                    {{show.genres.join(' / ')}}
+                    <span class="bull-sep">&bull;</span>
+                    <a [href]="'http://www.imdb.com/title/' + show.imdb_code">
+                        <img src="assets/img/imdb.png" alt="IMDB" class="imdb">
+                    </a>
+                    <span class="bull-sep">&bull;</span>
+                    {{show.rating}}%
+                    <span class="bull-sep">&bull;</span>
+                    {{show.country.toUpperCase()}}
+                    <span class="bull-sep">&bull;</span>
+                    {{show.status}}
+                </div>
+                <div class="movie-desc">
+                    {{show.description_full}}
+                </div>
+
+                <div class="movie-watch" *ngIf="torrents">
+                    <div ngbRadioGroup>
+                        <label class="btn btn-quality" *ngFor="let torrent of torrents" placement="top" ngbTooltip="{{torrent.size}}">
+                            <input type="radio" [value]="torrent._id"> {{torrent.quality}}
+                        </label>
+                    </div>
+                    <button class="btn watch">Watch !</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

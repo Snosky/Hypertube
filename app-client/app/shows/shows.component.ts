@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, OnInit } from '@angular/core';
-import {User} from "../_models/user";
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AuthService} from "../auth.service";
-import {Observable} from "rxjs/Observable";
+import {User} from "../_models/user";
 import {Subject} from "rxjs/Subject";
-import {MovieService} from "../movie.service";
-import {Movie} from "../_models/movie";
+import {ShowService} from "../show.service";
+import {Show} from "../_models/show";
+import {Observable} from "rxjs/Observable";
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
@@ -14,16 +14,15 @@ import 'rxjs/add/operator/concat';
 import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/share';
 
-
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-shows',
+  templateUrl: './shows.component.html',
+  styleUrls: ['./shows.component.css']
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class ShowsComponent implements OnInit, AfterViewInit {
     currentUser: User;
 
-    movies: any[] = [];
+    shows: Show[] = [];
 
     scrollCallback: any;
     moviesContainerHeight: number = 0;
@@ -39,7 +38,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     term: string = '';
 
     private genreTerm = new Subject<Array<string>>();
-    genres: Array<String> = [];
+    genres: Array<string> = [];
 
     private years = new Subject<Array<number>>();
     private rating = new Subject<Array<number>>();
@@ -78,7 +77,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     constructor(
         private authService: AuthService,
-        private movieService: MovieService
+        private showService: ShowService
     ) {
         this.scrollCallback = this.getNextPage.bind(this);
     }
@@ -87,9 +86,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.currentUser = this.authService.currentUser();
 
         // Get years range
-        this.movieService.yearsRange()
+        this.showService.yearsRange()
             .then( range => {
                 this.yearsRange = range;
+                console.log(range);
                 this.yearsRangeFormat = [range.min, range.max]
             });
 
@@ -135,20 +135,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
             .merge(searchSource, genreSource, yearsSource, ratingSource, orderSource)
             .startWith({ query_term: this.term, page: this.page, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat, order: this.order })
             .switchMap((params: { query_term: string, page: number, genres: Array<string>, years: Array<number>, rating: Array<number>, order: string }) => {
-                return this.movieService.search(params);
+                return this.showService.search(params);
             })
             .catch((error: any) => {
                 console.warn(error);
-                return Observable.of<Movie[]>([]);
+                return Observable.of<Show[]>([]);
             });
 
-        source.subscribe(movies => {
-            if (!movies)
+        source.subscribe(shows => {
+            if (!shows)
                 return false;
             if (this.page > 1)
-                this.movies = this.movies.concat(movies);
+                this.shows = this.shows.concat(shows);
             else
-                this.movies = movies;
+                this.shows = shows;
         });
     }
 
@@ -158,7 +158,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     private getNextPage() {
         this.pageStream.next(this.page + 1);
-        return this.movieService.search({ query_term: this.term, page: this.page + 1, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat })
+        return this.showService.search({ query_term: this.term, page: this.page + 1, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat })
         // TODO : Change this to someting better
     }
 
@@ -166,6 +166,3 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.moviesContainerHeight = document.documentElement.clientHeight - 56;
     }
 }
-
-
-

@@ -1,0 +1,25 @@
+.movie-container { background-repeat: no-repeat; background-position: center center; background-size: cover; }
+.movie-container .bg { background-color: rgba(0, 0, 0, 0.7); padding-top: 50px; min-height: 100%; }
+
+.movie-image-container { position: relative; }
+.movie-image { position: fixed; max-width: inherit; }
+
+.movie-info-container { padding-left: 30px; }
+
+.movie-info { padding: 15px; font-size: 14px; }
+.imdb { max-width: 35px; }
+.movie-info .movie-mpa { display: inline-block; font-size: 12px; padding: 2px 4px 1px 4px; border: solid 1px #FFF; border-radius: 2px; vertical-align: middle; }
+
+.movie-desc { font-size: 16px; white-space: pre-line; }
+
+.bull-sep { display: inline-block; padding: 0 10px; }
+
+.movie-watch { margin-top: 25px; }
+.movie-watch button.watch { vertical-align: top; }
+.btn-quality { background: #333; }
+.btn-quality.active { background: #FFF; color: #333; }
+
+@media screen and (max-width: 576px) {
+    .movie-image { position: relative; }
+    .movie-info-container { padding-left: 15px; }
+}

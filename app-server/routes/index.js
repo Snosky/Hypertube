@@ -8,11 +8,10 @@ const jwtauth = jwt({
 });
 // TODO : Auth aussi sur register
 
-const upload = require('../middleware/upload');
-
 const user = require('./user');
 const auth = require('./auth');
 const movie = require('./movie');
+const show = require('./show');
 
 // User
 router.post('/register', user.picValidation, user.register);
@@ -28,6 +27,9 @@ router.get('/movies', jwtauth, movie.getAll);
 router.get('/movie/:slug', jwtauth, movie.getOne);
 router.get('/movie/:slug/torrents', jwtauth, movie.getTorrents);
 
-
+// Shows
+router.get('/shows', jwtauth, show.getAll);
+router.get('/shows/years', jwtauth, show.yearsRange);
+router.get('/show/:slug', jwtauth, show.getOne);
 
 module.exports = router;

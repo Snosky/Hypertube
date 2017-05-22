@@ -30,6 +30,10 @@ var movie_component_1 = require("./movie/movie.component");
 var movie_service_1 = require("./movie.service");
 var movie_torrent_service_1 = require("./movie-torrent.service");
 var ng2_nouislider_1 = require("ng2-nouislider");
+var shows_component_1 = require("./shows/shows.component");
+var show_service_1 = require("./show.service");
+var default_image_directive_1 = require("./default-image.directive");
+var show_component_1 = require("./show/show.component");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -62,7 +66,10 @@ AppModule = __decorate([
             flash_component_1.FlashComponent,
             my_profile_component_1.MyProfileComponent,
             infinite_scroller_directive_1.InfiniteScrollerDirective,
-            movie_component_1.MovieComponent
+            movie_component_1.MovieComponent,
+            shows_component_1.ShowsComponent,
+            default_image_directive_1.DefaultImageDirective,
+            show_component_1.ShowComponent
         ],
         providers: [
             app_config_1.AppConfig,
@@ -77,7 +84,8 @@ AppModule = __decorate([
             auth_service_1.AuthService,
             user_service_1.UserService,
             movie_service_1.MovieService,
-            movie_torrent_service_1.MovieTorrentService
+            movie_torrent_service_1.MovieTorrentService,
+            show_service_1.ShowService
         ],
         bootstrap: [app_component_1.AppComponent]
     })

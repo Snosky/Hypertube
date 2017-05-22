@@ -1,5 +1,4 @@
-const Movie = require('../models/movie');
-const MovieTorrent = require('../models/movieTorrent');
+const Show = require('../models/show');
 const url = require('url');
 
 module.exports.getAll = function(req, res){
@@ -23,14 +22,16 @@ module.exports.getAll = function(req, res){
     }
     if (params.rating) {
         let rating = params.rating.split(',');
-        config['rating'] = { $gt: parseInt(rating[0]) / 10 - 0.1, $lt: parseInt(rating[1]) / 10 + 0.1 };
+        config['rating'] = { $gt: parseInt(rating[0]) - 0.1, $lt: parseInt(rating[1]) + 0.1 };
     }
 
     let sort = '';
     if (params.order && params.order !== 'default')
         sort = params.order;
 
-    Movie.find(config).skip(offset).limit(limit).sort(sort)
+    console.log(config);
+
+    Show.find(config).skip(offset).limit(limit).sort(sort)
         .exec(function(err, movies){
             if (err)
                 return res.status(500).json(err);
@@ -39,44 +40,26 @@ module.exports.getAll = function(req, res){
         });
 };
 
-module.exports.getOne = function(req, res) {
+module.exports.getOne = function(req, res){
     let slug = req.params.slug;
 
-    Movie.findOne({ slug: slug}, function(err, movie){
-        if (err)
-            return res.status(500).json(err);
+    Show.findOne({ slug: slug }, function(err, show){
+        if (err) return res.status(500).json(err);
 
-        return res.status(200).json(movie);
-    });
-};
-
-module.exports.getTorrents = function(req, res) {
-    let slug = req.params.slug;
-
-    Movie.findOne({slug: slug}, function(err, movie){
-        if (err)
-            return res.status(500).json(err);
-
-        if (!movie)
-            return res.status(401).json('movie not found');
-
-        MovieTorrent.find({id_movie: movie._id}, function(err, torrents){
-            if (err)
-                return res.status(500).json(err);
-
-            return res.status(200).json(torrents);
-        })
-    });
+        return res.status(200).json(show);
+    })
 };
 
 module.exports.yearsRange = function(req, res){
-    Movie.findOne().sort({year: -1}).exec(function(err, max){
+    Show.findOne().where('year').ne(null).sort({year: -1}).exec(function(err, max){
         if (err)
             return res.status(500).json(err);
 
-        Movie.findOne().sort({year: 1}).exec(function(err, min){
+        Show.findOne().where('year').ne(null).sort({year: 1}).exec(function(err, min){
             if (err)
                 return res.status(500).json(err);
+
+            console.log(min.year, max.year);
 
             return res.status(200).json({max: max.year, min: min.year});
         });

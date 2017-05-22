@@ -18,7 +18,7 @@ const EpisodeTorrent = require('./models/episodeTorrent');
 
 const saveShow = function(show) {
     return new Promise(function(resolve, reject){
-        if (show.num_seasons === 0 || show.episodes === [])
+        if (show.num_seasons === 0 || show.episodes === [] || show.year === null)
             return resolve();
 
         Show.findOneAndUpdate(

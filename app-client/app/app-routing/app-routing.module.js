@@ -13,12 +13,16 @@ var auth_component_1 = require("../auth/auth.component");
 var auth_guard_1 = require("../auth.guard");
 var my_profile_component_1 = require("../my-profile/my-profile.component");
 var movie_component_1 = require("../movie/movie.component");
+var shows_component_1 = require("../shows/shows.component");
+var show_component_1 = require("../show/show.component");
 var routes = [
     { path: '', component: home_component_1.HomeComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'auth', component: auth_component_1.AuthComponent },
     { path: 'auth/:provider', component: auth_component_1.AuthComponent },
     { path: 'profile', component: my_profile_component_1.MyProfileComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'movie/:slug', component: movie_component_1.MovieComponent, canActivate: [auth_guard_1.AuthGuard] },
+    { path: 'shows', component: shows_component_1.ShowsComponent, canActivate: [auth_guard_1.AuthGuard] },
+    { path: 'show/:slug', component: show_component_1.ShowComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: '**', redirectTo: '' }
 ];
 var AppRoutingModule = (function () {

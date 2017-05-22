@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import {AppConfig} from "./app.config";
-import {Http} from "@angular/http";
 import {MovieTorrent} from "./_models/movieTorrent";
+import {AuthHttp} from "angular2-jwt";
 
 @Injectable()
 export class MovieTorrentService {
 
     constructor(
         private config: AppConfig,
-        private http: Http
+        private authHttp: AuthHttp
     ) { }
 
     getMovieTorrents(slug: string): Promise<MovieTorrent[]>{
-        return this.http.get(this.config.apiUrl + '/movie/' + slug + '/torrents')
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + slug + '/torrents')
             .toPromise()
             .then(torrents => torrents.json() as MovieTorrent[])
     }

@@ -10,24 +10,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var app_config_1 = require("./app.config");
-var angular2_jwt_1 = require("angular2-jwt");
-var MovieTorrentService = (function () {
-    function MovieTorrentService(config, authHttp) {
-        this.config = config;
-        this.authHttp = authHttp;
+var DefaultImageDirective = (function () {
+    function DefaultImageDirective() {
     }
-    MovieTorrentService.prototype.getMovieTorrents = function (slug) {
-        return this.authHttp.get(this.config.apiUrl + '/movie/' + slug + '/torrents')
-            .toPromise()
-            .then(function (torrents) { return torrents.json(); });
+    DefaultImageDirective.prototype.updateUrl = function () {
+        this.src = this.default;
     };
-    return MovieTorrentService;
+    return DefaultImageDirective;
 }());
-MovieTorrentService = __decorate([
-    core_1.Injectable(),
-    __metadata("design:paramtypes", [app_config_1.AppConfig,
-        angular2_jwt_1.AuthHttp])
-], MovieTorrentService);
-exports.MovieTorrentService = MovieTorrentService;
-//# sourceMappingURL=movie-torrent.service.js.map
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", String)
+], DefaultImageDirective.prototype, "src", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", String)
+], DefaultImageDirective.prototype, "default", void 0);
+DefaultImageDirective = __decorate([
+    core_1.Directive({
+        selector: 'img[default]',
+        host: {
+            '(error)': 'updateUrl()',
+            '[src]': 'src'
+        }
+    })
+], DefaultImageDirective);
+exports.DefaultImageDirective = DefaultImageDirective;
+//# sourceMappingURL=default-image.directive.js.map

@@ -2,32 +2,39 @@
     <div class="col-sm-2 ">
         <h3>Filters</h3>
         <div class="form-group">
-            <input type="text" placeholder="Search a movie" class="form-control" #searchBox (keyup)="search(searchBox.value)">
+            <input type="text" placeholder="Search a show" class="form-control" #searchBox (keyup)="search(searchBox.value)">
         </div>
         <select  class="form-control" #genreBox (change)="filterGenre($event)" multiple>
             <option value="all">All Genre</option>
-            <option>Action</option>
-            <option>Adventure</option>
-            <option>Animation</option>
-            <option>Biography</option>
-            <option>Comedy</option>
-            <option>Crime</option>
-            <option>Documentary</option>
-            <option>Drama</option>
-            <option>Family</option>
-            <option>Fantasy</option>
-            <option>Film-Noir</option>
-            <option>History</option>
-            <option>Horror</option>
-            <option>Music</option>
-            <option>Musical</option>
-            <option>Mystery</option>
-            <option>Romance</option>
-            <option>Sci-Fi</option>
-            <option>Sport</option>
-            <option>Thriller</option>
-            <option>War</option>
-            <option>Western</option>
+            <option value="action">Action</option>
+            <option value="adventure">Adventure</option>
+            <option value="animation">Animation</option>
+            <option value="comedy">Comedy</option>
+            <option value="crime">Crime</option>
+            <option value="disaster">Disaster</option>
+            <option value="documentary">Documentary</option>
+            <option value="drama">Drama</option>
+            <option value="eastern">Eastern</option>
+            <option value="family">Family</option>
+            <option value="fan-film">Fan-film</option>
+            <option value="fantasy">Fantasy</option>
+            <option value="film-noir">Film-Noir</option>
+            <option value="history">History</option>
+            <option value="horror">Horror</option>
+            <option value="indie">Indie</option>
+            <option value="music">Music</option>
+            <option value="mystery">Mystery</option>
+            <option value="road">Road</option>
+            <option value="romance">Romance</option>
+            <option value="science-fiction">Sci-Fi</option>
+            <option value="short">Short</option>
+            <option value="sports">Sport</option>
+            <option value="sporting-event">Sporting event</option>
+            <option value="suspense">Suspense</option>
+            <option value="thriller">Thriller</option>
+            <option value="tv-movie">TV movie</option>
+            <option value="war">War</option>
+            <option value="western">Western</option>
         </select>
         <div class="form-control"  *ngIf="yearsRange">
             <label>Years range</label>
@@ -60,13 +67,13 @@
     >
         <div class="row">
             <div class="col-xs-2 col-sm-4 col-md-3 col-lg-2 movie"
-                 *ngFor="let movie of movies">
-                <a [routerLink]="['movie', movie.slug]">
-                    <img [src]="movie.large_cover_image || movie.medium_cover_image || small_cover_image" [default]="'assets/img/poster.png'"class="img-fluid">
+                 *ngFor="let show of shows">
+                <a [routerLink]="['/show', show.slug]">
+                    <img [src]="show.cover_image" [default]="'assets/img/poster.png'" class="img-fluid" [alt]="show.title">
                     <div class="movie-info">
-                        {{movie.title}}
-                        <span>({{movie.year}})</span>
-                        {{movie.rating * 10}}%
+                        {{show.title}}
+                        <span>({{show.year}})</span>
+                        {{show.rating}}%
                     </div>
                 </a>
             </div>
