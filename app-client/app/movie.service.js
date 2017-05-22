@@ -13,10 +13,12 @@ var core_1 = require("@angular/core");
 var app_config_1 = require("./app.config");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
+var angular2_jwt_1 = require("angular2-jwt");
 var MovieService = (function () {
-    function MovieService(config, http) {
+    function MovieService(config, http, authHttp) {
         this.config = config;
         this.http = http;
+        this.authHttp = authHttp;
     }
     MovieService.prototype.search = function (params) {
         var httpparams = new http_1.URLSearchParams();
@@ -27,20 +29,30 @@ var MovieService = (function () {
             httpparams.set('query_term', params.query_term);
         if (params.genres)
             httpparams.set('genres', params.genres);
-        return this.http.get(this.config.apiUrl + '/movies', { search: httpparams })
+        if (params.years)
+            httpparams.set('years', params.years);
+        if (params.rating)
+            httpparams.set('rating', params.rating);
+        return this.authHttp.get(this.config.apiUrl + '/movies', { search: httpparams })
             .map(function (res) { return res.json(); });
     };
     MovieService.prototype.getOne = function (slug) {
-        return this.http.get(this.config.apiUrl + '/movie/' + slug)
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + slug)
             .toPromise()
             .then(function (movie) { return movie.json(); });
+    };
+    MovieService.prototype.yearsRange = function () {
+        return this.authHttp.get(this.config.apiUrl + '/movies/years')
+            .toPromise()
+            .then(function (range) { return range.json(); });
     };
     return MovieService;
 }());
 MovieService = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [app_config_1.AppConfig,
-        http_1.Http])
+        http_1.Http,
+        angular2_jwt_1.AuthHttp])
 ], MovieService);
 exports.MovieService = MovieService;
 //# sourceMappingURL=movie.service.js.map

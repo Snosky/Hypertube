@@ -29,6 +29,14 @@
             <option>War</option>
             <option>Western</option>
         </select>
+        <div class="form-control"  *ngIf="yearsRange">
+            <label>Years range</label>
+            <nouislider [connect]="true" [tooltips]="true" [min]="yearsRange.min" [max]="yearsRange.max" [step]="1" [(ngModel)]="yearsRangeFormat" (ngModelChange)="yearsRangeChange($event)" class="test"></nouislider>
+        </div>
+        <div class="form-control">
+            <label>Rating range</label>
+            <nouislider [connect]="true" [tooltips]="true" [min]="0" [max]="100" [step]="1" [(ngModel)]="ratingRangeFormat" (ngModelChange)="ratingRangeChange($event)"></nouislider>
+        </div>
     </div>
 
     <div class="col-sm-10" id="moviesContainer"

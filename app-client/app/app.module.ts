@@ -22,6 +22,7 @@ import { InfiniteScrollerDirective } from './infinite-scroller.directive';
 import { MovieComponent } from './movie/movie.component';
 import {MovieService} from "./movie.service";
 import {MovieTorrentService} from "./movie-torrent.service";
+import {NouisliderModule} from "ng2-nouislider";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
@@ -39,6 +40,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         ReactiveFormsModule,
         AppRoutingModule,
         NgbModule.forRoot(),
+        NouisliderModule
     ],
     declarations: [
         AppComponent,

@@ -28,6 +28,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     scrollCallback: any;
     moviesContainerHeight: number = 0;
 
+    yearsRange: any;
+    yearsRangeFormat: any;
+    ratingRangeFormat = [0, 100];
+
     private pageStream = new Subject<number>();
     page: number = 1;
 
@@ -37,6 +41,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private genreTerm = new Subject<string>();
     genres: string = '';
 
+    private years = new Subject<Array<number>>();
+    private rating = new Subject<Array<number>>();
+
     search(term: string): void {
         this.page = 1;
         this.searchTerms.next(term);
@@ -45,6 +52,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     filterGenre(term: string): void {
         this.page = 1;
         this.genreTerm.next(term);
+    }
+
+    yearsRangeChange(e: Array<number>) {
+        this.page = 1;
+        this.years.next(e);
+    };
+
+    ratingRangeChange(e: Array<number>) {
+        this.page = 1;
+        this.rating.next(e);
     }
 
     constructor(
@@ -58,16 +75,35 @@ export class HomeComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.currentUser = this.authService.currentUser();
 
+        // Get years range
+        this.movieService.yearsRange()
+            .then( range => {
+                this.yearsRange = range;
+                this.yearsRangeFormat = [range.min, range.max]
+            });
+
         const genreSource = this.genreTerm
             .map(genres => {
                 this.genres = genres;
-                return { query_term: this.term, page: 1, genres: genres };
+                return { query_term: this.term, page: 1, genres: genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat };
             });
 
         const pageSource = this.pageStream
             .map(pageNumber => {
                 this.page = pageNumber;
-                return { query_term: this.term, page: pageNumber, genres: this.genres };
+                return { query_term: this.term, page: pageNumber, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat };
+            });
+
+        const yearsSource = this.years
+            .map(range => {
+                this.yearsRangeFormat = range;
+                return { query_term: this.term, page: this.page, genres: this.genres, years: range, rating: this.ratingRangeFormat }
+            });
+
+        const ratingSource = this.rating
+            .map(range => {
+                this.ratingRangeFormat = range;
+                return { query_term: this.term, page: this.page, genres: this.genres, years: this.yearsRangeFormat, rating: range }
             });
 
         const searchSource = this.searchTerms
@@ -75,13 +111,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
             .distinctUntilChanged()
             .map(term => {
                 this.term = term;
-                return { query_term: term, page: 1, genres: this.genres };
+                return { query_term: term, page: 1, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat };
             });
 
         const source = pageSource
-            .merge(searchSource, genreSource)
-            .startWith({ query_term: this.term, page: this.page, genres: this.genres })
-            .switchMap((params: { query_term: string, page: number, genres: string }) => {
+            .merge(searchSource, genreSource, yearsSource, ratingSource)
+            .startWith({ query_term: this.term, page: this.page, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat })
+            .switchMap((params: { query_term: string, page: number, genres: string, years: Array<number>, rating: Array<number> }) => {
                 return this.movieService.search(params);
             })
             .catch((error: any) => {

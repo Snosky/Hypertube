@@ -5,12 +5,14 @@ import {Observable} from "rxjs/Observable";
 import {Movie} from "./_models/movie";
 
 import 'rxjs/add/operator/toPromise';
+import {AuthHttp} from "angular2-jwt";
 
 @Injectable()
 export class MovieService {
     constructor(
       private config: AppConfig,
-      private http: Http
+      private http: Http,
+      private authHttp: AuthHttp
     ) { }
 
     search(params: any): Observable<Movie[]> {
@@ -22,15 +24,25 @@ export class MovieService {
             httpparams.set('query_term', params.query_term);
         if (params.genres)
             httpparams.set('genres', params.genres);
+        if (params.years)
+            httpparams.set('years', params.years);
+        if (params.rating)
+            httpparams.set('rating', params.rating);
 
-        return this.http.get(this.config.apiUrl + '/movies', { search: httpparams })
+        return this.authHttp.get(this.config.apiUrl + '/movies', { search: httpparams })
             .map(res => res.json() as Movie[])
     }
 
     getOne(slug: string): Promise<Movie> {
-        return this.http.get(this.config.apiUrl + '/movie/' + slug)
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + slug)
             .toPromise()
             .then(movie => movie.json() as Movie)
+    }
+
+    yearsRange(): Promise<any> {
+        return this.authHttp.get(this.config.apiUrl + '/movies/years')
+            .toPromise()
+            .then(range => range.json());
     }
 
 }

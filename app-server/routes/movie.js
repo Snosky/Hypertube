@@ -15,6 +15,15 @@ module.exports.getAll = function(req, res){
     if (params.genres)
         config['genres'] = { $in: Array.isArray(params.genres) ? params.genres : [params.genres] };
 
+    if (params.years) {
+        let years = params.years.split(',');
+        config['year'] = { $gt: parseInt(years[0]) - 1, $lt: parseInt(years[1]) + 1 };
+    }
+    if (params.rating) {
+        let rating = params.rating.split(',');
+        config['rating'] = { $gt: parseInt(rating[0]) / 10 - 0.1, $lt: parseInt(rating[1]) / 10 + 0.1 };
+    }
+
     Movie.find(config).skip(offset).limit(limit)
         .exec(function(err, movies){
             if (err)
@@ -52,4 +61,18 @@ module.exports.getTorrents = function(req, res) {
             return res.status(200).json(torrents);
         })
     });
+};
+
+module.exports.yearsRange = function(req, res){
+    Movie.findOne().sort({year: -1}).exec(function(err, max){
+        if (err)
+            return res.status(500).json(err);
+
+        Movie.findOne().sort({year: 1}).exec(function(err, min){
+            if (err)
+                return res.status(500).json(err);
+
+            return res.status(200).json({max: max.year, min: min.year});
+        });
+    })
 };

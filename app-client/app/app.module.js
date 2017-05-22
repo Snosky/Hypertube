@@ -29,6 +29,7 @@ var infinite_scroller_directive_1 = require("./infinite-scroller.directive");
 var movie_component_1 = require("./movie/movie.component");
 var movie_service_1 = require("./movie.service");
 var movie_torrent_service_1 = require("./movie-torrent.service");
+var ng2_nouislider_1 = require("ng2-nouislider");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -51,6 +52,7 @@ AppModule = __decorate([
             forms_1.ReactiveFormsModule,
             app_routing_module_1.AppRoutingModule,
             ng_bootstrap_1.NgbModule.forRoot(),
+            ng2_nouislider_1.NouisliderModule
         ],
         declarations: [
             app_component_1.AppComponent,

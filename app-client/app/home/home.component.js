@@ -29,12 +29,15 @@ var HomeComponent = (function () {
         this.router = router;
         this.movies = [];
         this.moviesContainerHeight = 0;
+        this.ratingRangeFormat = [0, 100];
         this.pageStream = new Subject_1.Subject();
         this.page = 1;
         this.searchTerms = new Subject_1.Subject();
         this.term = '';
         this.genreTerm = new Subject_1.Subject();
         this.genres = '';
+        this.years = new Subject_1.Subject();
+        this.rating = new Subject_1.Subject();
         this.scrollCallback = this.getNextPage.bind(this);
     }
     HomeComponent.prototype.search = function (term) {
@@ -45,29 +48,54 @@ var HomeComponent = (function () {
         this.page = 1;
         this.genreTerm.next(term);
     };
+    HomeComponent.prototype.yearsRangeChange = function (e) {
+        this.page = 1;
+        this.years.next(e);
+    };
+    ;
+    HomeComponent.prototype.ratingRangeChange = function (e) {
+        this.page = 1;
+        this.rating.next(e);
+    };
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.currentUser = this.authService.currentUser();
+        // Get years range
+        this.movieService.yearsRange()
+            .then(function (range) {
+            _this.yearsRange = range;
+            _this.yearsRangeFormat = [range.min, range.max];
+        });
         var genreSource = this.genreTerm
             .map(function (genres) {
             _this.genres = genres;
-            return { query_term: _this.term, page: 1, genres: genres };
+            return { query_term: _this.term, page: 1, genres: genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat };
         });
         var pageSource = this.pageStream
             .map(function (pageNumber) {
             _this.page = pageNumber;
-            return { query_term: _this.term, page: pageNumber, genres: _this.genres };
+            return { query_term: _this.term, page: pageNumber, genres: _this.genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat };
+        });
+        var yearsSource = this.years
+            .map(function (range) {
+            _this.yearsRangeFormat = range;
+            return { query_term: _this.term, page: _this.page, genres: _this.genres, years: range, rating: _this.ratingRangeFormat };
+        });
+        var ratingSource = this.rating
+            .map(function (range) {
+            _this.ratingRangeFormat = range;
+            return { query_term: _this.term, page: _this.page, genres: _this.genres, years: _this.yearsRangeFormat, rating: range };
         });
         var searchSource = this.searchTerms
             .debounceTime(300)
             .distinctUntilChanged()
             .map(function (term) {
             _this.term = term;
-            return { query_term: term, page: 1, genres: _this.genres };
+            return { query_term: term, page: 1, genres: _this.genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat };
         });
         var source = pageSource
-            .merge(searchSource, genreSource)
-            .startWith({ query_term: this.term, page: this.page, genres: this.genres })
+            .merge(searchSource, genreSource, yearsSource, ratingSource)
+            .startWith({ query_term: this.term, page: this.page, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat })
             .switchMap(function (params) {
             return _this.movieService.search(params);
         })

@@ -26,6 +26,8 @@
         '@ng-bootstrap/ng-bootstrap': 'npm:@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
 
         'angular2-jwt': 'npm:angular2-jwt/angular2-jwt.js',
+        'nouislider': 'npm:nouislider/distribute/nouislider.js',
+        'ng2-nouislider': 'npm:ng2-nouislider/src/nouislider.js',
       // other libraries
       'rxjs':                      'npm:rxjs',
     },
@@ -41,7 +43,9 @@
         },
         rxjs: {
             defaultExtension: 'js'
-        }
+        },
+        //'nouislider': { main: 'distribute/nouislider.js', defaultExtension: 'js' },
+        //'ng2-nouislider': { main: 'src/nouislider.js', defaultExtension: 'js' },
     }
   });
 })(this);
