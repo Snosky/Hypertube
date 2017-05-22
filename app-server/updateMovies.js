@@ -99,11 +99,12 @@ request(movie_api + '?limit=1', function(err, res, body){
 
                                 Promise.each(movie.torrents, function(torrent){
                                     return new Promise(function(resolve, reject){
+                                        let magnet = 'magnet:?xt=urn:btih:'+torrent.hash+'&dn='+torrent.url+'&tr=udp://tracker.openbittorrent.com:80&tr=udp://glotorrents.pw:6969/announce';
                                         MovieTorrent.findOneAndUpdate(
                                             { hash: torrent.hash },
                                             { $set: {
                                                 id_movie: id,
-                                                url: torrent.url,
+                                                url: magnet,
                                                 hash: torrent.hash,
                                                 quality: torrent.quality,
                                                 seeds: torrent.seeds,
