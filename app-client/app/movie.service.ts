@@ -22,12 +22,14 @@ export class MovieService {
             httpparams.set('page', params.page.toString());
         if (params.query_term)
             httpparams.set('query_term', params.query_term);
-        if (params.genres)
+        if (params.genres && params.genres != 'all')
             httpparams.set('genres', params.genres);
         if (params.years)
             httpparams.set('years', params.years);
         if (params.rating)
             httpparams.set('rating', params.rating);
+        if (params.order && params.order !== 'default')
+            httpparams.set('order', params.order);
 
         return this.authHttp.get(this.config.apiUrl + '/movies', { search: httpparams })
             .map(res => res.json() as Movie[])

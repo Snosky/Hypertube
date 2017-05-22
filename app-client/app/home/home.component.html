@@ -37,6 +37,17 @@
             <label>Rating range</label>
             <nouislider [connect]="true" [tooltips]="true" [min]="0" [max]="100" [step]="1" [(ngModel)]="ratingRangeFormat" (ngModelChange)="ratingRangeChange($event)"></nouislider>
         </div>
+        <select name="" id="" class="form-control" #orderBox (change)="filterOrder(orderBox.value)">
+            <option value="default">Default order</option>
+            <option value="year">Production year asc</option>
+            <option value="-year">Production year desc</option>
+            <option value="rating">Rating asc</option>
+            <option value="-rating">Rating desc</option>
+            <option value="title">Title asc</option>
+            <option value="-title">Title desc</option>
+            <option value="runtime">Runtime asc</option>
+            <option value="-runtime">Runtime desc</option>
+        </select>
     </div>
 
     <div class="col-sm-10" id="moviesContainer"

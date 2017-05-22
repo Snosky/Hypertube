@@ -24,7 +24,11 @@ module.exports.getAll = function(req, res){
         config['rating'] = { $gt: parseInt(rating[0]) / 10 - 0.1, $lt: parseInt(rating[1]) / 10 + 0.1 };
     }
 
-    Movie.find(config).skip(offset).limit(limit)
+    let sort = '';
+    if (params.order && params.order !== 'default')
+        sort = params.order;
+
+    Movie.find(config).skip(offset).limit(limit).sort(sort)
         .exec(function(err, movies){
             if (err)
                 return res.status(500).json(err);

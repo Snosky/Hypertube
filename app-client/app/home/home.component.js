@@ -38,6 +38,8 @@ var HomeComponent = (function () {
         this.genres = '';
         this.years = new Subject_1.Subject();
         this.rating = new Subject_1.Subject();
+        this.orderTerm = new Subject_1.Subject();
+        this.order = '';
         this.scrollCallback = this.getNextPage.bind(this);
     }
     HomeComponent.prototype.search = function (term) {
@@ -57,6 +59,10 @@ var HomeComponent = (function () {
         this.page = 1;
         this.rating.next(e);
     };
+    HomeComponent.prototype.filterOrder = function (term) {
+        this.page = 1;
+        this.orderTerm.next(term);
+    };
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.currentUser = this.authService.currentUser();
@@ -66,36 +72,41 @@ var HomeComponent = (function () {
             _this.yearsRange = range;
             _this.yearsRangeFormat = [range.min, range.max];
         });
-        var genreSource = this.genreTerm
-            .map(function (genres) {
-            _this.genres = genres;
-            return { query_term: _this.term, page: 1, genres: genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat };
-        });
         var pageSource = this.pageStream
             .map(function (pageNumber) {
             _this.page = pageNumber;
-            return { query_term: _this.term, page: pageNumber, genres: _this.genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat };
+            return { query_term: _this.term, page: pageNumber, genres: _this.genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat, order: _this.order };
+        });
+        var genreSource = this.genreTerm
+            .map(function (genres) {
+            _this.genres = genres;
+            return { query_term: _this.term, page: 1, genres: genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat, order: _this.order };
         });
         var yearsSource = this.years
             .map(function (range) {
             _this.yearsRangeFormat = range;
-            return { query_term: _this.term, page: _this.page, genres: _this.genres, years: range, rating: _this.ratingRangeFormat };
+            return { query_term: _this.term, page: 1, genres: _this.genres, years: range, rating: _this.ratingRangeFormat, order: _this.order };
         });
         var ratingSource = this.rating
             .map(function (range) {
             _this.ratingRangeFormat = range;
-            return { query_term: _this.term, page: _this.page, genres: _this.genres, years: _this.yearsRangeFormat, rating: range };
+            return { query_term: _this.term, page: 1, genres: _this.genres, years: _this.yearsRangeFormat, rating: range, order: _this.order };
+        });
+        var orderSource = this.orderTerm
+            .map(function (order) {
+            _this.order = order;
+            return { query_term: _this.term, page: 1, genres: _this.genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat, order: order };
         });
         var searchSource = this.searchTerms
             .debounceTime(300)
             .distinctUntilChanged()
             .map(function (term) {
             _this.term = term;
-            return { query_term: term, page: 1, genres: _this.genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat };
+            return { query_term: term, page: 1, genres: _this.genres, years: _this.yearsRangeFormat, rating: _this.ratingRangeFormat, order: _this.order };
         });
         var source = pageSource
-            .merge(searchSource, genreSource, yearsSource, ratingSource)
-            .startWith({ query_term: this.term, page: this.page, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat })
+            .merge(searchSource, genreSource, yearsSource, ratingSource, orderSource)
+            .startWith({ query_term: this.term, page: this.page, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat, order: this.order })
             .switchMap(function (params) {
             return _this.movieService.search(params);
         })
@@ -117,7 +128,7 @@ var HomeComponent = (function () {
     };
     HomeComponent.prototype.getNextPage = function () {
         this.pageStream.next(this.page + 1);
-        return this.movieService.search({ query_term: this.term, page: this.page + 1 });
+        return this.movieService.search({ query_term: this.term, page: this.page + 1, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat });
         // TODO : Change this to someting better
     };
     HomeComponent.prototype.onResize = function (e) {
