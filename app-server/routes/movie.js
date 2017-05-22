@@ -12,7 +12,7 @@ module.exports.getAll = function(req, res){
     if (params.query_term)
         config['title'] = new RegExp(params.query_term.trim(), 'i');
     // Better search http://stackoverflow.com/questions/28775051/best-way-to-perform-a-full-text-search-in-mongodb-and-mongoose
-    if (params.genres)
+    if (params.genres && params.genres !== 'all')
         config['genres'] = { $in: Array.isArray(params.genres) ? params.genres : [params.genres] };
 
     if (params.years) {
