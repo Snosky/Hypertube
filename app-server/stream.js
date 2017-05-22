@@ -8,11 +8,23 @@ let fs = require('fs');
 let http = require('http');
 let url = require('url');
 let path = require('path');
+let ffmpeg = require('fluent-ffmpeg');
+// let Transcoder = require('stream-transcoder');
+let pump = require('pump');
+
+let request = require('request');
+let Movie = require('../model/movie.js');
+
+const StreamArray = require('stream-json/utils/StreamArray');
+const {Writable} = require('stream');
+
 
 
 router.route('/search')
     .get(auth, (req, res) => {
-        engine = torrentStream('magnet:?xt=urn:btih:9c7d939a66fc73b6f41be72a4bc4a07469562eff&dn=The+Great+Wall+%282016%29+%5BYTS.AG%5D', {
+
+        // engine = torrentStream('magnet:?xt=urn:btih:9c7d939a66fc73b6f41be72a4bc4a07469562eff&dn=The+Great+Wall+%282016%29+%5BYTS.AG%5D', {
+        engine = torrentStream('magnet:?xt=urn:btih:A24AE30442C6C98C4F700F9574A2C83D444B88C0&dn=Logan.2017.1080p.KORSUB.HDRip.x264.AAC2.0-STUTTERSHIT&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2710%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce', {
             connections: 3000,     // Max amount of peers to be connected to.
             uploads: 10,          // Number of upload slots.
             tmp: '/tmp',          // Root folder for the files storage.
@@ -33,6 +45,7 @@ router.route('/search')
 
 
         let videoFile = "";
+        let video_ext = "";
         engine.on('ready', function() {
 
             engine.files.forEach(function(file) {
@@ -44,13 +57,15 @@ router.route('/search')
                 // console.log('filename:', file);
                 if (ext === '.mp4' || ext === '.mkv' || ext === '.avi') {
                     videoFile = file;
+                    video_ext = ext;
+                    return;
                 }
+
             });
             console.log("videofile : ", videoFile);
 
             let test = 0;
             let videoLength = videoFile.length;
-            console.log("headers : ", req.headers);
             if (req.headers.range)
             {
                 let range = req.headers.range;
@@ -63,16 +78,49 @@ router.route('/search')
                 let chunksize = (end - start) + 1;
                 let mimetype = path.extname(videoFile.name);
 
-                // TO DO : conversion en mp4 if (mimetype != mp4)
+                console.log("EXT : ", video_ext);
+                if (video_ext === '.mp4' || video_ext === '.webm')
+                {
+                    let content_type = "";
+                    if (video_ext === '.mp4')
+                        content_type = "video/mp4";
+                    else if (video_ext === '.webm')
+                        content_type = "video/webm";
 
-                res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + videoLength, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' })
-                stream = videoFile.createReadStream({start : start, end : end});
-                stream.pipe(res);
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + videoLength, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': content_type });
+                    stream = videoFile.createReadStream({start : start, end : end});
+
+                    pump(stream, res);
+                }
+                else
+                {
+                    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + videoLength, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
+                    stream = videoFile.createReadStream({start : start, end : end});
+
+                    ffmpeg(stream).videoCodec('libvpx').audioCodec('libvorbis').format('mp4')
+                        .audioBitrate(128)
+                        .videoBitrate(1024)
+                        .outputOptions([
+                            '-threads 8',
+                            '-deadline realtime',
+                            '-error-resilient 1'
+                        ]);
+                    pump(stream, res);
+                }
             }
             else {
                 res.writeHead(200, { 'Content-Length': videoLength, 'Content-Type': 'video/mp4' });
                 stream = videoFile.createReadStream({test, videoLength});
-                stream.pipe(res);
+
+                // ffmpeg(stream).videoCodec('libvpx').audioCodec('libvorbis').format('mp4')
+                //     .audioBitrate(128)
+                //     .videoBitrate(1024)
+                //     .outputOptions([
+                //         '-threads 8',
+                //         '-deadline realtime',
+                //         '-error-resilient 1'
+                //     ]);
+                pump(stream, res);
             }
         });
 
@@ -82,31 +130,6 @@ router.route('/search')
         engine.on('idle', () => {
             console.log('download Complete for : ', videoFile.path);
         });
-
-
-        // var video_path = '/tmp/my-file/The\ Great\ Wall\ \(2016\)\ \[YTS.AG\]//The.Great.Wall.2016.720p.BluRay.x264-[YTS.AG].mp4';
-        // var stat = fs.statSync(video_path);
-        // var total = stat.size;
-        // if (req.headers['range']) {
-        //     var range = req.headers.range;
-        //     console.log("range : ", range)
-        //     var parts = range.replace(/bytes=/, "").split("-");
-        //     var partialstart = parts[0];
-        //     var partialend = parts[1];
-        //
-        //     var start = parseInt(partialstart, 10);
-        //     var end = partialend ? parseInt(partialend, 10) : total-1;
-        //     var chunksize = (end-start)+1;
-        //     console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
-        //
-        //     var file = fs.createReadStream(video_path, {start: start, end: end});
-        //     res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
-        //     file.pipe(res);
-        // } else {
-        //     console.log('ALL: ' + total);
-        //     res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
-        //     fs.createReadStream(video_path).pipe(res);
-        // }
 
 
 
