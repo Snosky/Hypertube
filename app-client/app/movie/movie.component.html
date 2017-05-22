@@ -7,20 +7,55 @@
             <div class="col-12 col-sm-9 movie-info-container">
                 <h1 class="display-3 ">{{movie.title}}</h1>
                 <div class="movie-info">
-                    {{movie.year}}
+                    <div class="info">
+                        {{info.Released}}
+                    </div>
                     <span class="bull-sep">&bull;</span>
-                    {{movie.runtime}} min
+                    <div class="info">
+                        {{info.Runtime}}
+                    </div>
                     <span class="bull-sep">&bull;</span>
-                    {{movie.genres.join(' / ')}}
+                    <div class="info">
+                        {{info.Genre}}
+                    </div>
                     <span class="bull-sep">&bull;</span>
-                    <a [href]="'http://www.imdb.com/title/' + movie.imdb_code">
-                        <img src="assets/img/imdb.png" alt="IMDB" class="imdb">
-                    </a>
+                    <div class="info">
+                        <a [href]="'http://www.imdb.com/title/' + movie.imdb_code">
+                            <img src="assets/img/imdb.png" alt="IMDB" class="imdb">
+                        </a>
+                    </div>
                     <span class="bull-sep">&bull;</span>
-                    {{movie.rating * 10}}%
+                    <div class="info">
+                        {{info.imdbRating * 10}}%
+                    </div>
+                    <span class="bull-sep" *ngIf="info.Rated">&bull;</span>
+                    <div class="info" *ngIf="info.Rated" >
+                        <div class="movie-mpa">
+                            {{info.Rated}}
+                        </div>
+                    </div>
                     <span class="bull-sep">&bull;</span>
-                    <div class="movie-mpa">
-                        {{movie.mpa_rating}}
+                    <div class="info">
+                        {{info.Country}}
+                    </div>
+                    <span class="bull-sep">&bull;</span>
+                    <div class="info">
+                        {{info.Language}}
+                    </div>
+                    <span class="bull-sep" *ngIf="info.Director !== 'N/A'">&bull;</span>
+                    <div class="info" *ngIf="info.Director !== 'N/A'">
+                        <span>Director</span> {{info.Director}}
+                    </div>
+                    <span class="bull-sep" *ngIf="info.Writer !== 'N/A'">&bull;</span>
+                    <div class="info" *ngIf="info.Writer !== 'N/A'">
+                        <span>Writer</span> {{info.Writer}}
+                    </div>
+                    <span class="bull-sep" *ngIf="info.Actors !== 'N/A'">&bull;</span>
+                    <div class="info" *ngIf="info.Actors !== 'N/A'">
+                        <span>Actors</span> {{info.Actors}}
+                    </div><span class="bull-sep" *ngIf="info.Production !== 'N/A'">&bull;</span>
+                    <div class="info" *ngIf="info.Production !== 'N/A'">
+                        <span>Production</span> {{info.Production}}
                     </div>
                 </div>
                 <div class="movie-desc">

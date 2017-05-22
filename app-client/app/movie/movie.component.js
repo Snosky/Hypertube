@@ -14,18 +14,25 @@ var router_1 = require("@angular/router");
 var platform_browser_1 = require("@angular/platform-browser");
 var movie_service_1 = require("../movie.service");
 var movie_torrent_service_1 = require("../movie-torrent.service");
+var omdb_service_1 = require("../omdb.service");
 var MovieComponent = (function () {
-    function MovieComponent(route, sanitizer, movieService, movieTorrentService) {
+    function MovieComponent(route, sanitizer, movieService, omdbService, movieTorrentService) {
         this.route = route;
         this.sanitizer = sanitizer;
         this.movieService = movieService;
+        this.omdbService = omdbService;
         this.movieTorrentService = movieTorrentService;
+        this.info = {};
     }
     MovieComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.slug = this.route.snapshot.params['slug'];
         this.movieService.getOne(this.slug)
-            .then(function (movie) { return _this.movie = movie; });
+            .then(function (movie) {
+            _this.movie = movie;
+            _this.omdbService.getMoreInfo(movie.imdb_code)
+                .then(function (info) { return _this.info = info; });
+        });
     };
     MovieComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
@@ -46,6 +53,7 @@ MovieComponent = __decorate([
     __metadata("design:paramtypes", [router_1.ActivatedRoute,
         platform_browser_1.DomSanitizer,
         movie_service_1.MovieService,
+        omdb_service_1.OmdbService,
         movie_torrent_service_1.MovieTorrentService])
 ], MovieComponent);
 exports.MovieComponent = MovieComponent;

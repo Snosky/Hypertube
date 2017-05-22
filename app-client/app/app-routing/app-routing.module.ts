@@ -7,6 +7,7 @@ import {MyProfileComponent} from "../my-profile/my-profile.component";
 import {MovieComponent} from "../movie/movie.component";
 import {ShowsComponent} from "../shows/shows.component";
 import {ShowComponent} from "../show/show.component";
+import {StreamComponent} from "../stream/stream.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -16,6 +17,7 @@ const routes: Routes = [
     { path: 'movie/:slug', component: MovieComponent, canActivate: [AuthGuard] },
     { path: 'shows', component: ShowsComponent, canActivate: [AuthGuard] },
     { path: 'show/:slug', component: ShowComponent, canActivate: [AuthGuard] },
+    { path: 'stream', component: StreamComponent },
     { path: '**', redirectTo: '' }
 ];
 

@@ -7,6 +7,8 @@
     .movie-info-container { padding-left: 30px; }
 
     .movie-info { padding: 15px; font-size: 14px; }
+.info { display: inline-block; }
+.info span { text-transform: uppercase; color: rgba(255, 255, 255, 0.7) }
         .imdb { max-width: 35px; }
         .movie-info .movie-mpa { display: inline-block; font-size: 12px; padding: 2px 4px 1px 4px; border: solid 1px #FFF; border-radius: 2px; vertical-align: middle; }
 

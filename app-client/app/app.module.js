@@ -35,6 +35,11 @@ var show_service_1 = require("./show.service");
 var default_image_directive_1 = require("./default-image.directive");
 var show_component_1 = require("./show/show.component");
 var omdb_service_1 = require("./omdb.service");
+var stream_component_1 = require("./stream/stream.component");
+var core_2 = require("videogular2/core");
+var controls_1 = require("videogular2/controls");
+var overlay_play_1 = require("videogular2/overlay-play");
+var buffering_1 = require("videogular2/buffering");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -57,7 +62,11 @@ AppModule = __decorate([
             forms_1.ReactiveFormsModule,
             app_routing_module_1.AppRoutingModule,
             ng_bootstrap_1.NgbModule.forRoot(),
-            ng2_nouislider_1.NouisliderModule
+            ng2_nouislider_1.NouisliderModule,
+            core_2.VgCoreModule,
+            controls_1.VgControlsModule,
+            overlay_play_1.VgOverlayPlayModule,
+            buffering_1.VgBufferingModule
         ],
         declarations: [
             app_component_1.AppComponent,
@@ -70,7 +79,8 @@ AppModule = __decorate([
             movie_component_1.MovieComponent,
             shows_component_1.ShowsComponent,
             default_image_directive_1.DefaultImageDirective,
-            show_component_1.ShowComponent
+            show_component_1.ShowComponent,
+            stream_component_1.StreamComponent
         ],
         providers: [
             app_config_1.AppConfig,

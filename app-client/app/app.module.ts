@@ -28,6 +28,11 @@ import {ShowService} from "./show.service";
 import { DefaultImageDirective } from './default-image.directive';
 import { ShowComponent } from './show/show.component';
 import {OmdbService} from "./omdb.service";
+import { StreamComponent } from './stream/stream.component';
+import {VgCoreModule} from 'videogular2/core';
+import {VgControlsModule} from 'videogular2/controls';
+import {VgOverlayPlayModule} from 'videogular2/overlay-play';
+import {VgBufferingModule} from 'videogular2/buffering';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
@@ -45,7 +50,11 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         ReactiveFormsModule,
         AppRoutingModule,
         NgbModule.forRoot(),
-        NouisliderModule
+        NouisliderModule,
+        VgCoreModule,
+        VgControlsModule,
+        VgOverlayPlayModule,
+        VgBufferingModule
     ],
     declarations: [
         AppComponent,
@@ -58,7 +67,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         MovieComponent,
         ShowsComponent,
         DefaultImageDirective,
-        ShowComponent
+        ShowComponent,
+        StreamComponent
     ],
     providers: [
         AppConfig,

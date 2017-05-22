@@ -1,5 +1,6 @@
 @import "../node_modules/nouislider/distribute/nouislider.min.css";
 @import 'nouislider.min.css';
+@import "../node_modules/videogular2/fonts/videogular.css";
 
 /* noUi */
 .noUi-horizontal { height: 3px; }

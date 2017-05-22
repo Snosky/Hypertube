@@ -32,4 +32,6 @@ router.get('/shows', jwtauth, show.getAll);
 router.get('/shows/years', jwtauth, show.yearsRange);
 router.get('/show/:slug', jwtauth, show.getOne);
 
+router.get('/testStream', require('../stream'));
+
 module.exports = router;

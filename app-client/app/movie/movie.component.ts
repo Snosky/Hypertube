@@ -5,6 +5,7 @@ import {MovieService} from "../movie.service";
 import {Movie} from "../_models/movie";
 import {MovieTorrent} from "../_models/movieTorrent";
 import {MovieTorrentService} from "../movie-torrent.service";
+import {OmdbService} from "../omdb.service";
 
 @Component({
   selector: 'app-movie',
@@ -16,11 +17,13 @@ export class MovieComponent implements OnInit, AfterViewInit {
     slug: string;
     movie: Movie;
     torrents: MovieTorrent[];
+    info: any = {};
 
     constructor(
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer,
         private movieService: MovieService,
+        private omdbService: OmdbService,
         private movieTorrentService: MovieTorrentService
     ) { }
 
@@ -28,7 +31,11 @@ export class MovieComponent implements OnInit, AfterViewInit {
         this.slug = this.route.snapshot.params['slug'];
 
         this.movieService.getOne(this.slug)
-            .then( (movie: Movie) => this.movie = movie )
+            .then( (movie: Movie) => {
+                this.movie = movie;
+                this.omdbService.getMoreInfo(movie.imdb_code)
+                    .then( info => this.info = info )
+            })
     }
 
     ngAfterViewInit() {

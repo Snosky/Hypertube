@@ -28,6 +28,7 @@
         'angular2-jwt': 'npm:angular2-jwt/angular2-jwt.js',
         'nouislider': 'npm:nouislider/distribute/nouislider.js',
         'ng2-nouislider': 'npm:ng2-nouislider/src/nouislider.js',
+        'videogular2': 'npm:videogular2',
       // other libraries
       'rxjs':                      'npm:rxjs',
     },
@@ -44,6 +45,9 @@
         rxjs: {
             defaultExtension: 'js'
         },
+        videogular2: {
+            defaultExtension: 'js'
+        }
         //'nouislider': { main: 'distribute/nouislider.js', defaultExtension: 'js' },
         //'ng2-nouislider': { main: 'src/nouislider.js', defaultExtension: 'js' },
     }
