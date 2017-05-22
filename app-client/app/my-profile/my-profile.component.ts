@@ -17,6 +17,9 @@ export class MyProfileComponent implements OnInit {
     registerModel: any = {};
     loading = false;
 
+    imageValid = false;
+    image: any = null;
+
     constructor(
         private authService: AuthService,
         private fb: FormBuilder,
@@ -59,6 +62,7 @@ export class MyProfileComponent implements OnInit {
         'firstname': '',
         'lastname': '',
         'password': '',
+        'pic': ''
     };
 
     registerValidationMessages = {
@@ -80,8 +84,34 @@ export class MyProfileComponent implements OnInit {
         'password': {
             'minlength': 'Password must be at least 6 characters long.',
             'pattern': 'Password must contains at least 1 number and 1 uppercase'
+        },
+        'pic': {
+            'required': 'Please select an avatar.',
+            'type': 'File type not allowed. Only png and jpeg are allowed.',
+            'size': 'File is too big. 5Mo max.'
         }
     };
+
+    picChangeEvent(fileInput: any){
+        this.registerFormErrors.pic = '';
+        if (fileInput.target.files[0] === undefined) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.required;
+        }
+        else if (['image/jpeg', 'image/jpg', 'image/png'].indexOf(fileInput.target.files[0].type) === -1) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.type;
+        }
+        else if (fileInput.target.files[0].size > 5242880) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.size;
+        }
+        else {
+            this.image = fileInput.target.files[0];
+            this.imageValid = true;
+        }
+        //this.registerFormValid = this.registerForm.valid && this.imageValid;
+    }
 
     registerOnValueChange(data?: any) {
         if (!this.registerForm) { return; }
@@ -103,18 +133,24 @@ export class MyProfileComponent implements OnInit {
 
     ngOnInit() {
         this.currentUser = this.authService.currentUser();
-        this.registerModel.username = this.currentUser.username;
-        this.registerModel.email = this.currentUser.email;
-        this.registerModel.lastname = this.currentUser.lastname;
-        this.registerModel.firstname = this.currentUser.firstname;
-        this.buildForm();
+        this.userService.me()
+            .then((user: User) => {
+                this.registerModel.username = user.username;
+                this.registerModel.email = user.email;
+                this.registerModel.lastname = user.lastname;
+                this.registerModel.firstname = user.firstname;
+                this.buildForm();
+            });
     }
 
     formSubmit() {
         this.registerModel = this.registerForm.value;
+        if (this.imageValid)
+            this.registerModel.pic = this.image;
         this.loading = true;
         this.userService.update(this.registerModel)
             .then(data => {
+                this.authService.saveToken(data.token);
                 this.loading = false;
                 this.flash.success('Your profile have been successfully update.');
                 this.registerForm.get('password').reset();

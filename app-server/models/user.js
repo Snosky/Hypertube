@@ -49,10 +49,10 @@ userSchema.methods.generateJwt = function() {
 
     return jwt.sign({
         _id: this._id,
-        email: this.email,
+        //email: this.email,
         username: this.username,
-        lastname: this.lastname,
-        firstname: this.firstname,
+        //lastname: this.lastname,
+        //firstname: this.firstname,
         pic: this.pic,
         exp: parseInt(expiry.getTime() / 1000)
     }, config.TOKEN_SECRET);

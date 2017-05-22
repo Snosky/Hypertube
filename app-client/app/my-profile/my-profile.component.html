@@ -1,11 +1,19 @@
-<form novalidate [formGroup]="registerForm" (ngSubmit)="formSubmit()">
+<form novalidate [formGroup]="registerForm" (ngSubmit)="formSubmit()" *ngIf="this.registerModel.username">
 
     <div class="form-group row">
         <div class="col-sm-2 col-form-label text-right">
-            <img src="https://s3-us-west-1.amazonaws.com/powr/defaults/image-slider1.jpg" alt="Avatar" class="img-fluid img-thumbnail">
+            <img src="{{currentUser.pic.indexOf('http') !== -1 ? currentUser.pic : 'http://localhost:3000/userpics/' + currentUser.pic}}" alt="avatar" class="img-fluid img-thumbnail">
         </div>
         <div class="col-sm-10 d-flex align-items-center">
-                <input type="file" (change)="profilePicChange($event)">
+            <div class="form-group"
+                 [class.has-danger]="registerFormErrors.pic"
+            >
+                <label for="pic">Avatar</label>
+                <input type="file" name="pic" id="pic" (change)="picChangeEvent($event)">
+                <div class="form-control-label" *ngIf="registerFormErrors.pic">
+                    {{ registerFormErrors.pic }}
+                </div>
+            </div>
         </div>
     </div>
 
@@ -105,7 +113,7 @@
     <div class="form-group row">
         <div class="offset-sm-2 col-sm-10">
             <button [disabled]="!registerForm.valid" class=" btn btn-block">
-                <span *ngIf="!loading">Register</span>
+                <span *ngIf="!loading">Update</span>
                 <span *ngIf="loading">Loading...</span>
             </button>
         </div>

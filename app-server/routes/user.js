@@ -127,33 +127,54 @@ module.exports.update = function(req, res) {
 
     req.getValidationResult().then(function(result) {
         if (!result.isEmpty()) {
+            if (req.file)
+                fs.unlink(req.file.path, function(err) {
+                    if (err) console.error('FS', err);
+                });
             return res.status(400).json({errors: result.useFirstErrorOnly().mapped()});
         }
 
         User.findById(req.payload._id, function(err, user){
-            if (err)
+            if (err) {
+                if (req.file)
+                    fs.unlink(req.file.path, function (err) {
+                        if (err) console.error('FS', err);
+                    });
                 return res.status(500).json(err);
+            }
 
             user.username = req.body.username;
             user.email = req.body.email;
             user.firstname = req.body.firstname;
             user.lastname = req.body.lastname;
+            if (req.file && req.file.filename)
+                user.pic = req.file.filename;
 
             if (req.body.password) {
                 user.password = req.body.password;
                 user.hashPassword()
                     .then(() => {
                         user.save(function(err){
-                            if (err)
+                            if (err) {
+                                if (req.file)
+                                    fs.unlink(req.file.path, function (err) {
+                                        if (err) console.error('FS', err);
+                                    });
                                 return res.status(500).json(err);
+                            }
                             let token = user.generateJwt();
                             return res.status(200).json({ token: token });
                         })
                     });
             } else {
                 user.save(function(err){
-                    if (err)
+                    if (err) {
+                        if (req.file)
+                            fs.unlink(req.file.path, function (err) {
+                                if (err) console.error('FS', err);
+                            });
                         return res.status(500).json(err);
+                    }
                     let token = user.generateJwt();
                     return res.status(200).json({ token: token });
                 })
@@ -162,3 +183,15 @@ module.exports.update = function(req, res) {
     });
 };
 
+
+module.exports.me = function(req, res) {
+    if (!req.payload._id)
+        return res.status(401).json({ "message" : "UnauthorizedError: private profile" });
+
+    User.findOne({ _id: req.payload._id}, function(err, user){
+        if (err)
+            return res.status(500).json(err);
+        delete user.password;
+        return res.status(200).json(user);
+    })
+};

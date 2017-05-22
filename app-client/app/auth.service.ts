@@ -23,6 +23,7 @@ export class AuthService {
     }
 
     currentUser(): User {
+        //return this.logout();
         const token = this.getToken();
         let payload;
         payload = token.split('.')[1];
@@ -54,7 +55,6 @@ export class AuthService {
             formData.append('pic', user.pic, user.pic.name);
 
             xhr.onreadystatechange = function () {
-                console.log(xhr);
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
                         resolve(JSON.parse(xhr.response));

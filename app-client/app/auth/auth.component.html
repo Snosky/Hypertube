@@ -49,10 +49,11 @@
             <ngb-tab title="SIGN UP">
                 <ng-template ngbTabContent>
                     <div class="col-xs-12">
-                        {{registerFormValid}}
                         <h2>Register</h2>
                         <form [formGroup]="registerForm" (ngSubmit)="submitRegister()">
-                            <div class="form-group">
+                            <div class="form-group"
+                                 [class.has-danger]="registerFormErrors.pic"
+                            >
                                 <label for="pic">Avatar</label>
                                 <input type="file" name="pic" id="pic" (change)="picChangeEvent($event)">
                                 <div class="form-control-label" *ngIf="registerFormErrors.pic">

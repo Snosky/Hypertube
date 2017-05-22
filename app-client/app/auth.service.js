@@ -27,6 +27,7 @@ var AuthService = (function () {
         return localStorage.getItem('meanToken');
     };
     AuthService.prototype.currentUser = function () {
+        //return this.logout();
         var token = this.getToken();
         var payload;
         payload = token.split('.')[1];
@@ -56,7 +57,6 @@ var AuthService = (function () {
             formData.append('firstname', user.firstname);
             formData.append('pic', user.pic, user.pic.name);
             xhr.onreadystatechange = function () {
-                console.log(xhr);
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
                         resolve(JSON.parse(xhr.response));

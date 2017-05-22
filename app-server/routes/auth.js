@@ -18,7 +18,7 @@ module.exports.facebook = function(req, res) {
             return res.status(500).json({ errors: { message: token.error.message }});
 
         // Get user profile information
-        const fields = ['id', 'email', 'name','picture.type(large)'];
+        const fields = ['id', 'email', 'name','picture.type(large)', 'last_name', 'first_name'];
         const graphApiUrl = 'https://graph.facebook.com/v2.9/me?fields=' + fields.join(',');
         request.get({url: graphApiUrl, qs: token, json: true}, function(err, response, profile){
             if (response.statusCode !== 200)
@@ -45,12 +45,13 @@ module.exports.facebook = function(req, res) {
                     })
                 }
                 else {
-                    console.log(profile);
                     let user = new User();
                     user.facebookId = profile.id;
                     user.username = profile.name;
                     user.email = profile.email;
                     user.pic = profile.picture.data.url;
+                    user.lastname = profile.last_name;
+                    user.firstname = profile.first_name;
                     user.save(function(err){
                         if (err)
                             return res.status(500).json(err);
@@ -107,6 +108,8 @@ module.exports.fortytwo = function(req, res) {
                     user.username = profile.login;
                     user.email = profile.email;
                     user.pic = profile.image_url;
+                    user.lastname = profile.last_name;
+                    user.firstname = profile.first_name;
                     user.save(function(err){
                         if (err)
                             return res.status(500).json(err);

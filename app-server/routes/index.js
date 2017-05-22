@@ -19,7 +19,8 @@ router.post('/register', user.picValidation, user.register);
 router.post('/auth', user.auth);
 router.post('/auth/facebook', auth.facebook);
 router.post('/auth/42', auth.fortytwo);
-router.post('/user/update', jwtauth, user.update);
+router.post('/user/update', [jwtauth, user.picValidation], user.update);
+router.get('/user/me', jwtauth, user.me);
 
 // Movies
 router.get('/movies', movie.getAll);

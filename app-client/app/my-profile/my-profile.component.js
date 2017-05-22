@@ -22,12 +22,15 @@ var MyProfileComponent = (function () {
         this.flash = flash;
         this.registerModel = {};
         this.loading = false;
+        this.imageValid = false;
+        this.image = null;
         this.registerFormErrors = {
             'username': '',
             'email': '',
             'firstname': '',
             'lastname': '',
             'password': '',
+            'pic': ''
         };
         this.registerValidationMessages = {
             'username': {
@@ -48,6 +51,11 @@ var MyProfileComponent = (function () {
             'password': {
                 'minlength': 'Password must be at least 6 characters long.',
                 'pattern': 'Password must contains at least 1 number and 1 uppercase'
+            },
+            'pic': {
+                'required': 'Please select an avatar.',
+                'type': 'File type not allowed. Only png and jpeg are allowed.',
+                'size': 'File is too big. 5Mo max.'
             }
         };
     }
@@ -79,6 +87,26 @@ var MyProfileComponent = (function () {
             .subscribe(function (data) { return _this.registerOnValueChange(data); });
         this.registerOnValueChange();
     };
+    MyProfileComponent.prototype.picChangeEvent = function (fileInput) {
+        this.registerFormErrors.pic = '';
+        if (fileInput.target.files[0] === undefined) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.required;
+        }
+        else if (['image/jpeg', 'image/jpg', 'image/png'].indexOf(fileInput.target.files[0].type) === -1) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.type;
+        }
+        else if (fileInput.target.files[0].size > 5242880) {
+            this.imageValid = false;
+            this.registerFormErrors.pic = this.registerValidationMessages.pic.size;
+        }
+        else {
+            this.image = fileInput.target.files[0];
+            this.imageValid = true;
+        }
+        //this.registerFormValid = this.registerForm.valid && this.imageValid;
+    };
     MyProfileComponent.prototype.registerOnValueChange = function (data) {
         if (!this.registerForm) {
             return;
@@ -98,19 +126,26 @@ var MyProfileComponent = (function () {
         }
     };
     MyProfileComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.currentUser = this.authService.currentUser();
-        this.registerModel.username = this.currentUser.username;
-        this.registerModel.email = this.currentUser.email;
-        this.registerModel.lastname = this.currentUser.lastname;
-        this.registerModel.firstname = this.currentUser.firstname;
-        this.buildForm();
+        this.userService.me()
+            .then(function (user) {
+            _this.registerModel.username = user.username;
+            _this.registerModel.email = user.email;
+            _this.registerModel.lastname = user.lastname;
+            _this.registerModel.firstname = user.firstname;
+            _this.buildForm();
+        });
     };
     MyProfileComponent.prototype.formSubmit = function () {
         var _this = this;
         this.registerModel = this.registerForm.value;
+        if (this.imageValid)
+            this.registerModel.pic = this.image;
         this.loading = true;
         this.userService.update(this.registerModel)
             .then(function (data) {
+            _this.authService.saveToken(data.token);
             _this.loading = false;
             _this.flash.success('Your profile have been successfully update.');
             _this.registerForm.get('password').reset();

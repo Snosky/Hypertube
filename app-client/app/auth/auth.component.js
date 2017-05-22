@@ -128,7 +128,6 @@ var AuthComponent = (function () {
             this.registerFormErrors.pic = this.registerValidationMessages.pic.size;
         }
         else {
-            console.log(fileInput.target.files[0]);
             this.image = fileInput.target.files[0];
             this.imageValid = true;
         }
