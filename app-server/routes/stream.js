@@ -48,7 +48,7 @@ module.exports.streamFile = function(req, res) {
     engine = torrentStream(torrentUrl, {
         connections: 3000,
         uploads: 10,
-        tmp: '/tmp',
+        tmp: filepath,
         path: filepath,
         verify: true,
         dht: true,
@@ -72,10 +72,18 @@ module.exports.streamFile = function(req, res) {
         videoLength = videoFile.length;
         if (req.headers.range) {
             range = req.headers.range;
+            let seen = Math.round(videoLength * 0.85);
 
             positions = range.replace(/bytes=/, '').split('-');
             start = parseInt(positions[0], 10);
             end = positions[1] ? parseInt(positions[1], 10) : videoLength - 1;
+
+            let vu = (end - start) * 0.3;
+            if (start >= seen || end - vu >= seen)
+            {
+                console.log("ce film a ete vu");
+            }
+
             chunksize = end - start + 1;
             mimetype = path.extname(videoFile.name);
 
@@ -109,6 +117,8 @@ module.exports.streamFile = function(req, res) {
 
     engine.on('download', function() {
         console.log('Downloading...');
+
+        console.log(Math.round((engine.swarm.downloaded / videoLength.length) * 100)+"% downloaded for : ", videoFile.path);
         //Something to do while downlaoding
         // Maybe socket.emit to room watching this movie
     });

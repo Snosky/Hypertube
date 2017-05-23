@@ -48,6 +48,11 @@ var ShowService = (function () {
             .toPromise()
             .then(function (range) { return range.json(); });
     };
+    ShowService.prototype.getEpisodes = function (slug) {
+        return this.authHttp.get(this.config.apiUrl + '/show/' + slug + '/episodes')
+            .toPromise()
+            .then(function (res) { return res.json(); });
+    };
     return ShowService;
 }());
 ShowService = __decorate([

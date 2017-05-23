@@ -73,3 +73,7 @@ gen
 !/app-server/public/userpics/.gitkeep
 /app-server/videos/*
 !/app-server/videos/.gitkeep
+/app-server/shows.json
+/app-server/models/data/
+/tslint.json
+!/tslint.json
