@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import {VgAPI} from 'videogular2/core';
 
 @Component({
     selector: 'app-stream',
@@ -6,10 +7,19 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./stream.component.css'],
     inputs: ['source']
 })
-export class StreamComponent implements OnInit {
+export class StreamComponent{
+    private api: any;
 
     constructor() { }
 
-    ngOnInit() {
+
+    onPlayerReady(api: VgAPI){
+        this.api = api;
+
+        this.api.getDefaultMedia().progress.subscribe(
+            (progress: any) => {
+                console.log(progress);
+            }
+        )
     }
 }
