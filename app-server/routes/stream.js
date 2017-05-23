@@ -22,6 +22,7 @@ module.exports.movieStream = function(req, res, next){
             if (!torrent) return res.status(401).json('Torrent not valid');
 
             req.torrent = torrent;
+            req.torrentType = 'movie';
             return next();
         }
     );

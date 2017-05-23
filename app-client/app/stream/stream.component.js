@@ -13,12 +13,6 @@ var core_1 = require("@angular/core");
 var StreamComponent = (function () {
     function StreamComponent() {
     }
-    StreamComponent.prototype.onPlayerReady = function (api) {
-        this.api = api;
-        this.api.getDefaultMedia().progress.subscribe(function (progress) {
-            console.log(progress);
-        });
-    };
     return StreamComponent;
 }());
 StreamComponent = __decorate([
