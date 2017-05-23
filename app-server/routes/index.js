@@ -13,6 +13,7 @@ const auth = require('./auth');
 const movie = require('./movie');
 const show = require('./show');
 const stream = require('./stream');
+const comment = require('./comment');
 
 // User
 router.post('/register', user.picValidation, user.register);
@@ -29,10 +30,16 @@ router.get('/movie/watch/:torrentid', stream.movieStream, stream.streamFile);
 router.get('/movie/:slug', jwtauth, movie.getOne);
 router.get('/movie/:slug/torrents', jwtauth, movie.getTorrents);
 
+
 // Shows
 router.get('/shows', jwtauth, show.getAll);
 router.get('/shows/years', jwtauth, show.yearsRange);
 router.get('/show/:slug', jwtauth, show.getOne);
 router.get('/show/:slug/episodes', jwtauth, show.getEpisodes);
+
+// Comments
+router.post('/comment/add', jwtauth, comment.addComment);
+router.get('/comment/getComment', comment.getComment);
+
 
 module.exports = router;
