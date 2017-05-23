@@ -18,6 +18,8 @@ var ShowComponent = (function () {
         this.route = route;
         this.showService = showService;
         this.omdbService = omdbService;
+        this.episodes = [];
+        this.season = -1;
     }
     ShowComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -27,6 +29,13 @@ var ShowComponent = (function () {
             _this.show = show;
             _this.omdbService.getMoreInfo(_this.show.imdb_code)
                 .then(function (info) { return _this.info = info; });
+        });
+    };
+    ShowComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.showService.getEpisodes(this.slug)
+            .then(function (episodes) {
+            _this.episodes = episodes;
         });
     };
     return ShowComponent;

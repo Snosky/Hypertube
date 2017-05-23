@@ -49,6 +49,7 @@ var ShowService = (function () {
             .then(function (range) { return range.json(); });
     };
     ShowService.prototype.getEpisodes = function (slug) {
+        console.log(this.config.apiUrl + '/show/' + slug + '/episodes');
         return this.authHttp.get(this.config.apiUrl + '/show/' + slug + '/episodes')
             .toPromise()
             .then(function (res) { return res.json(); });

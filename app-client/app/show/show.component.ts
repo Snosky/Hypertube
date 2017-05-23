@@ -16,6 +16,8 @@ export class ShowComponent implements OnInit, AfterViewInit {
     info: any;
     episodes: Episode[] = [];
 
+    season = -1;
+
     constructor(
         private route: ActivatedRoute,
         private showService: ShowService,

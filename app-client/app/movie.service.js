@@ -48,6 +48,10 @@ var MovieService = (function () {
             .toPromise()
             .then(function (range) { return range.json(); });
     };
+    MovieService.prototype.setView = function (slug) {
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + slug + '/view')
+            .toPromise();
+    };
     return MovieService;
 }());
 MovieService = __decorate([

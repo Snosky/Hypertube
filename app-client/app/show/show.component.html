@@ -69,7 +69,11 @@
 
                 <div class="episodes-list" *ngIf="episodes">
                     <ul class="list-group">
-                        <li class="list-group-item" *ngFor="let episode of episodes">{{episode.title}}</li>
+                        <li class="list-group-item" *ngFor="let episode of episodes">
+                            <span>SEASON</span>{{episode.season}} <span>EPISODE</span>{{episode.episode}}
+                            {{episode.title}}
+                            <span>{{episode.first_aired}}</span>
+                        </li>
                     </ul>
                 </div>
 
