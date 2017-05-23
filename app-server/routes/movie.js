@@ -2,8 +2,12 @@ const Movie = require('../models/movie');
 const MovieTorrent = require('../models/movieTorrent');
 const url = require('url');
 const MovieSeen = require('../models/movieSeen');
+const Promise = require('bluebird');
 
 module.exports.getAll = function(req, res){
+    if (!req.payload._id)
+        return res.status(401).json();
+
     params = url.parse(req.url, true).query;
 
     let limit = parseInt(params.limit) || 20;
@@ -36,7 +40,17 @@ module.exports.getAll = function(req, res){
             if (err)
                 return res.status(500).json(err);
 
-            return res.status(200).json(movies);
+            Promise.each(movies, function(movie){
+                return new Promise(function(resolve, reject){
+                    MovieSeen.findOne({ id_movie: movie._id, user_id: req.payload._id }, function(err, seen){
+                        if (err || !seen) movie.seen = false;
+                        movie.seen = true;
+                        resolve();
+                    });
+                });
+            }).then(function(){
+                return res.status(200).json(movies);
+            });
         });
 };
 

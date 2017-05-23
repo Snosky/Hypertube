@@ -18,7 +18,8 @@ const movieSchema = mongoose.Schema({
     background_image_original: { type: String },
     small_cover_image: { type: String },
     medium_cover_image: { type: String },
-    large_cover_image: { type: String }
+    large_cover_image: { type: String },
+    seen: { type: Boolean, default: false }
 });
 
 
