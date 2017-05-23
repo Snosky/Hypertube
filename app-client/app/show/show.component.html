@@ -67,6 +67,12 @@
                     {{show.description_full}}
                 </div>
 
+                <div class="episodes-list" *ngIf="episodes">
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let episode of episodes">{{episode.title}}</li>
+                    </ul>
+                </div>
+
                 <div class="movie-watch" *ngIf="torrents">
                     <div ngbRadioGroup>
                         <label class="btn btn-quality" *ngFor="let torrent of torrents" placement="top" ngbTooltip="{{torrent.size}}">

@@ -53,17 +53,10 @@ export class MovieComponent implements OnInit, AfterViewInit {
     }
 
     launchStream() {
-        this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
-        /*this.authHttp.get(')
-            .subscribe(
-                result => {
-                    console.log(result)
-                },
-                error => {
-                    console.log(error);
-                }
-            )*/
-
+        this.movieService.setView(this.slug)
+            .then(() => {
+                this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
+            })
     }
 
 }

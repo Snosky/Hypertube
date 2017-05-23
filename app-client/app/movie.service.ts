@@ -47,4 +47,9 @@ export class MovieService {
             .then(range => range.json());
     }
 
+    setView(slug: string): Promise<any> {
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + slug + '/view')
+            .toPromise()
+    }
+
 }

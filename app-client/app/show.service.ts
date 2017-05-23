@@ -51,6 +51,7 @@ export class ShowService {
     }
 
     getEpisodes(slug: string): Promise<Episode[]> {
+        console.log(this.config.apiUrl + '/show/' + slug + '/episodes');
         return this.authHttp.get(this.config.apiUrl + '/show/' + slug + '/episodes')
             .toPromise()
             .then(res => res.json() as Episode[])

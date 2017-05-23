@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {VgAPI} from 'videogular2/core';
 
 @Component({
     selector: 'app-stream',

@@ -33,6 +33,6 @@ router.get('/movie/:slug/torrents', jwtauth, movie.getTorrents);
 router.get('/shows', jwtauth, show.getAll);
 router.get('/shows/years', jwtauth, show.yearsRange);
 router.get('/show/:slug', jwtauth, show.getOne);
-router.get('/show/:slug/episodes', show.getEpisodes);
+router.get('/show/:slug/episodes', jwtauth, show.getEpisodes);
 
 module.exports = router;
