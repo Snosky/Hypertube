@@ -57,8 +57,8 @@ export class ShowService {
             .then(res => res.json() as Episode[])
     }
 
-    updateViewTime(movie_id) {
-        return this.authHttp.get(this.config.apiUrl + '/show/seen');
+    updateViewTime(show_id: string) {
+        return this.authHttp.get(this.config.apiUrl + '/show/'+ show_id +'/seen');
     }
 
 }

@@ -51,9 +51,10 @@ export class MovieService {
             .toPromise()
     }
 
-    updateViewTime(movie_id: string, currentTime: number, percent: number) {
-        console.log(`Movie: ${movie_id} | Current: ${currentTime} | Percent: ${percent}%`);
-        return this.authHttp.get(this.config.apiUrl + '/movie/' + movie_id + '/seen');
+    updateViewTime(movie_id: string) {
+        console.log(`Movie: ${movie_id}`);
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + movie_id + '/seen')
+            .toPromise();
     }
 
 }

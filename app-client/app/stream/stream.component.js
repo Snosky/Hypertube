@@ -28,9 +28,9 @@ var StreamComponent = (function () {
                 _this.viewSend = true;
                 console.log('Movie view');
                 if (_this.type === 'movie')
-                    _this.movieService.updateViewTime(_this.id, progress.srcElement.currentTime, percent);
+                    _this.movieService.updateViewTime(_this.id).then(function () { console.log('Movie set to view'); }).catch(function (error) { return console.warn(error); });
                 else if (_this.type === 'show')
-                    _this.showService.updateViewTime(_this.id, progress.srcElement.currentTime, percent);
+                    _this.showService.updateViewTime(_this.id);
             }
         });
     };

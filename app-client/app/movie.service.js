@@ -51,9 +51,10 @@ var MovieService = (function () {
         return this.authHttp.get(this.config.apiUrl + '/movie/' + slug + '/view')
             .toPromise();
     };
-    MovieService.prototype.updateViewTime = function (movie_id, currentTime, percent) {
-        console.log("Movie: " + movie_id + " | Current: " + currentTime + " | Percent: " + percent + "%");
-        return this.authHttp.get(this.config.apiUrl + '/movie/' + movie_id + '/seen');
+    MovieService.prototype.updateViewTime = function (movie_id) {
+        console.log("Movie: " + movie_id);
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + movie_id + '/seen')
+            .toPromise();
     };
     return MovieService;
 }());

@@ -37,9 +37,9 @@ export class StreamComponent {
                     this.viewSend = true;
                     console.log('Movie view');
                     if (this.type === 'movie')
-                        this.movieService.updateViewTime(this.id, progress.srcElement.currentTime, percent);
+                        this.movieService.updateViewTime(this.id).then(() => { console.log('Movie set to view') }).catch((error) => console.warn(error));
                     else if (this.type === 'show')
-                        this.showService.updateViewTime(this.id, progress.srcElement.currentTime, percent);
+                        this.showService.updateViewTime(this.id);
                 }
             }
         );
