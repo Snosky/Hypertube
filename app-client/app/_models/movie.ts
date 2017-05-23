@@ -17,4 +17,5 @@ export class Movie {
     small_cover_image: string;
     medium_cover_image: string;
     large_cover_image: string;
+    seen: boolean;
 }

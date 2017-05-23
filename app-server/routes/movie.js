@@ -43,8 +43,7 @@ module.exports.getAll = function(req, res){
             Promise.each(movies, function(movie){
                 return new Promise(function(resolve, reject){
                     MovieSeen.findOne({ id_movie: movie._id, user_id: req.payload._id }, function(err, seen){
-                        if (err || !seen) movie.seen = false;
-                        movie.seen = true;
+                        movie.seen = !(err || !seen);
                         resolve();
                     });
                 });
