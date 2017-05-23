@@ -7,6 +7,8 @@ const ffmpeg = require('fluent-ffmpeg');
 const pump = require('pump');
 const request = require('request');
 const MovieTorrent = require('../models/movieTorrent');
+const OS = require('opensubtitles-api');
+const OpenSubtitles = new OS('UserAgent');
 
 module.exports.movieStream = function(req, res, next){
     if (!req.params.torrentid)
@@ -129,4 +131,16 @@ module.exports.streamFile = function(req, res) {
         // File finish download
     })
 
+};
+
+
+module.exports.subtitles = function (req, res) {
+
+    OpenSubtitles.search({
+        sublanguageid: lang,
+        filesize: torrent.size,
+        extensions: ['srt', 'vtt'],
+        limit: 'best',
+        query: torrent.title + " " + torrent.info.year
+    })
 };
