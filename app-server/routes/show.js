@@ -1,4 +1,7 @@
 const Show = require('../models/show');
+const Episode = require('../models/episode');
+const EpisodeTorrent = require('../models/episodeTorrent');
+const Promise = require('bluebird')
 const url = require('url');
 
 module.exports.getAll = function(req, res){
@@ -61,3 +64,32 @@ module.exports.yearsRange = function(req, res){
         });
     })
 };
+
+module.exports.getEpisodes = function(req, res){
+    let slug = req.params.slug;
+
+    Show.findOne({ slug: slug }, function(err, show){
+        if (err) return res.status(500).json(err);
+
+        if (!show) return res.status(401).json('Show not found');
+
+        Episode.find({ show_id: show._id })
+            .sort({season: 1, episode: 1})
+            .exec(function(err, episodes){
+            if (err) return res.status(500).json(err);
+
+            Promise.each(episodes, function(episode, index){
+                return new Promise(function(resolve, reject){
+                    EpisodeTorrent.find({ episode_id: episode._id }, function(err, torrents){
+                        episode.torrents = torrents;
+                        resolve();
+                    });
+                })
+            })
+                .then(function(){
+                    return res.status(200).json(episodes)
+                });
+
+        })
+    })
+}

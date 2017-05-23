@@ -8,7 +8,8 @@ const episodeSchema = Schema({
     description_full: { type: String },
     season: { type: Number },
     episode: { type: Number },
-    first_aired: { type: Number }
+    first_aired: { type: Number },
+    torrents: { type: Array, default: []}
 });
 
 module.exports = mongoose.model('Episode', episodeSchema);

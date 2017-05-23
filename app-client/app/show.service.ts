@@ -4,6 +4,7 @@ import {URLSearchParams} from "@angular/http";
 import {AuthHttp} from "angular2-jwt";
 import {Observable} from "rxjs/Observable";
 import {Show} from "./_models/show";
+import {Episode} from "./_models/episode";
 
 import 'rxjs/add/operator/toPromise';
 
@@ -47,6 +48,12 @@ export class ShowService {
         return this.authHttp.get(this.config.apiUrl + '/shows/years')
             .toPromise()
             .then(range => range.json());
+    }
+
+    getEpisodes(slug: string): Promise<Episode[]> {
+        return this.authHttp.get(this.config.apiUrl + '/show/' + slug + '/episodes')
+            .toPromise()
+            .then(res => res.json() as Episode[])
     }
 
 }
