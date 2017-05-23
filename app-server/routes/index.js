@@ -35,7 +35,7 @@ router.get('/movie/:id_movie/seen', jwtauth, movie.seen);
 // Shows
 router.get('/shows/years', jwtauth, show.yearsRange);
 router.get('/shows', jwtauth, show.getAll);
-router.get('/movie/watch/:torrentid', stream.showStream, stream.streamFile);
+router.get('/show/watch/:torrentid', stream.showStream, stream.streamFile);
 router.get('/show/:slug', jwtauth, show.getOne);
 router.get('/show/:slug/episodes', jwtauth, show.getEpisodes);
 router.get('/show/:id_episode/seen', jwtauth, show.seen);
