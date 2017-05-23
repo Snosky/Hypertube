@@ -18,9 +18,8 @@ const EpisodeTorrent = require('./models/episodeTorrent');
 
 const saveShow = function(show) {
     return new Promise(function(resolve, reject){
-        if (show.num_seasons === 0 || show.episodes === [] || show.year === null)
+        if (!show.imdb_id || show.num_seasons === 0 || show.episodes === [] || show.year === null)
             return resolve();
-
         Show.findOneAndUpdate(
             { imdb_code: show.imdb_id },
             { $set: {
@@ -42,11 +41,90 @@ const saveShow = function(show) {
             }},
             { upsert: true, new: true },
             function (err, result) {
-                if (err)
-                    return reject(err);
-                return resolve();
+                if (err) {
+                    return reject(show.imdb_id, error);
+                }
+
+                // Save show episodes
+                saveEpisodes(result._id, show.episodes)
+                    .then(function(){
+                        return resolve(show.imdb_id);
+                    })
+                    .catch(function(error){
+                        return reject(show.imdb_id, error);
+                    });
             });
     });
+};
+
+const saveEpisodes = function(show_id, episodes) {
+    return Promise.each(episodes, function(episode){
+        return new Promise(function(resolve, reject){
+            ShowEpisode.findOneAndUpdate(
+                { tvdb_id: episode.tvdb_id },
+                { $set: {
+                    tvdb_id: episode.tvdb_id,
+                    show_id: show_id,
+                    title: episode.title,
+                    description_full: episode.overview,
+                    season: episode.season,
+                    episode: episode.episode,
+                    first_aired: episode.first_aired,
+                }},
+                { upsert: true, new: true },
+                function (err, result){
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    // Save torrent
+                    saveTorrents(result._id, episode.torrents)
+                        .then(function(){
+                            return resolve();
+                        })
+                        .catch(function(error){
+                            return reject(error);
+                        })
+                }
+            )
+        });
+    })
+};
+
+const saveTorrents = function(episode_id, torrents){
+    const qualities = ['480p', '720p', '1080p'];
+
+    let hash,
+        torrent;
+    return Promise.each(qualities, function(quality){
+        const regex = /magnet:\?xt=urn:btih:([A-Za-z0-9]*)/g;
+        return new Promise(function(resolve, reject){
+            torrent = torrents[quality];
+            if (torrent === undefined) {
+                return resolve();
+            } else {
+                hash = regex.exec(torrent.url);
+                EpisodeTorrent.findOneAndUpdate(
+                    { hash: hash[1] },
+                    { $set: {
+                        episode_id: episode_id,
+                        url: torrent.url,
+                        hash: hash[1],
+                        quality: quality,
+                        seeds: torrent.seeds,
+                        peers: torrent.peers
+                    }},
+                    { upsert: true, new: true },
+                    function (err, result){
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve();
+                    }
+                )
+            }
+        });
+    })
 };
 
 request('https://tv-v2.api-fetch.website/exports/show', function(error, response, body) {
@@ -62,7 +140,14 @@ request('https://tv-v2.api-fetch.website/exports/show', function(error, response
 
         rl.on('line', function(line){
             line = JSON.parse(line);
-            saveShow(line);
+            saveShow(line)
+                .then(function(title){
+                    if (title)
+                        console.log('Show updated', title);
+                })
+                .catch(function(imdb, error){
+                    console.error('Error ' + imdb, error);
+                });
         });
 
         rl.on('close', function(){

@@ -7,9 +7,7 @@ const episodeTorrentSchema = Schema({
     hash: { type: String },
     quality: { type: String },
     seeds: { type: Number },
-    peers: { type: Number },
-    size: { type: String },
-    size_bytes: { type: Number }
+    peers: { type: Number }
 });
 
 module.exports = mongoose.model('EpisodeTorrent', episodeTorrentSchema);
