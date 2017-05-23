@@ -37,11 +37,13 @@ var ShowComponent = (function () {
         this.showService.getEpisodes(this.slug)
             .then(function (episodes) {
             _this.episodes = episodes;
-            console.log(_this.episodes);
         });
     };
     ShowComponent.prototype.launchStream = function () {
         this.stream = 'http://localhost:3000/show/watch/' + this.torrent._id;
+    };
+    ShowComponent.prototype.back = function () {
+        this.stream = null;
     };
     return ShowComponent;
 }());

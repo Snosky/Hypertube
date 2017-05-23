@@ -42,11 +42,14 @@ export class ShowComponent implements OnInit, AfterViewInit {
         this.showService.getEpisodes(this.slug)
             .then( (episodes: Episode[]) => {
                 this.episodes = episodes;
-                console.log(this.episodes);
             })
     }
 
     launchStream() {
         this.stream = 'http://localhost:3000/show/watch/' + this.torrent._id;
+    }
+
+    back() {
+        this.stream = null;
     }
 }

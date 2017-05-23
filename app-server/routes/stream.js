@@ -57,6 +57,9 @@ module.exports.streamFile = function(req, res) {
     const filename = req.torrent._id,
         torrentUrl = req.torrent.url;
 
+    /*if (req.torrent.seeds === 0)
+        return res.status(401).json('No seeds');*/
+
     let filepath = __dirname + '/../videos/' + filename,
         videoFile,
         videoExt,
@@ -69,6 +72,8 @@ module.exports.streamFile = function(req, res) {
         chunksize,
         mimetype,
         contentType;
+
+    console.log(torrentUrl);
 
     engine = torrentStream(torrentUrl, {
         connections: 3000,
@@ -85,6 +90,12 @@ module.exports.streamFile = function(req, res) {
     });
 
     engine.on('ready', function(){
+        if (engine.files.length === 0) {
+            console.log("No peers");
+            return res.status(401).json("No peers");
+        }
+
+
         engine.files.forEach(function(file){
             let ext = path.extname(file.name);
             if (['.mp4', '.mkv', '.avi'].indexOf(ext) !== -1) { // If one of this ext
