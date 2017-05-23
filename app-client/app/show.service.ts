@@ -17,7 +17,7 @@ export class ShowService {
 
     search(params: any): Observable<Show[]> {
         let httpparams = new URLSearchParams();
-        httpparams.set('limit', '24');
+        httpparams.set('limit', '36');
         if (params.page)
             httpparams.set('page', params.page.toString());
         if (params.query_term)
