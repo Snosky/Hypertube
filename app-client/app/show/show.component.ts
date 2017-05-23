@@ -49,7 +49,7 @@ export class ShowComponent implements OnInit, AfterViewInit {
         this.stream = 'http://localhost:3000/show/watch/' + this.torrent._id;
     }
 
-    back() {
+    closeVideo() {
         this.stream = null;
     }
 }

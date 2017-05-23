@@ -42,7 +42,7 @@ var ShowComponent = (function () {
     ShowComponent.prototype.launchStream = function () {
         this.stream = 'http://localhost:3000/show/watch/' + this.torrent._id;
     };
-    ShowComponent.prototype.back = function () {
+    ShowComponent.prototype.closeVideo = function () {
         this.stream = null;
     };
     return ShowComponent;

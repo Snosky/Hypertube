@@ -1,5 +1,5 @@
 <script src="movie.component.ts"></script>
-<div *ngIf="movie" class="row h-100 movie-container" [style.background-image]="'url(' + movie.background_image + ')'">
+<div *ngIf="movie && !stream" class="row h-100 movie-container" [style.background-image]="'url(' + movie.background_image + ')'">
     <div class="col-12">
         <div class="row bg">
             <div class="col-12 col-sm-3 movie-image-container">
@@ -76,6 +76,7 @@
     </div>
 </div>
 
-<div *ngIf="stream">
+<div class="video" *ngIf="stream">
+    <button (click)="closeVideo()">Back to show</button>
     <app-stream [source]="stream" type="movie" [id]="movie._id"></app-stream>
 </div>
