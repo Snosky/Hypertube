@@ -102,8 +102,6 @@ module.exports.fortytwo = function(req, res) {
                 }
                 else {
                     let user = new User();
-                    console.log(profile);
-
                     user.fortytwoId = body.access_token;
                     user.username = profile.login;
                     user.email = profile.email;

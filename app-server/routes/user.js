@@ -191,7 +191,7 @@ module.exports.me = function(req, res) {
     User.findOne({ _id: req.payload._id}, function(err, user){
         if (err)
             return res.status(500).json(err);
-        delete user.password;
+        user.password = '';
         return res.status(200).json(user);
     })
 };
