@@ -127,11 +127,19 @@ module.exports.streamFile = function(req, res) {
 
             stream = videoFile.createReadStream({start: start, end: end});
 
+            stream.on('error', function(err){
+                console.log(err);
+            });
+
             if (['.webm', '.mp4'].indexOf(videoExt) === -1) { // If not one of this ext
-                ffmpeg(stream).videoCodec('libvpx').audioCode('libvorbis').format('mp4')
-                    .audioBitrate(128)
-                    .videoBitrate(1024)
-                    .outputOptions(['-threads 8', '-deadline realtime', '-error-resilient 1']);
+                try {
+                    ffmpeg(stream).videoCodec('libvpx').audioCode('libvorbis').format('mp4')
+                        .audioBitrate(128)
+                        .videoBitrate(1024)
+                        .outputOptions(['-threads 8', '-deadline realtime', '-error-resilient 1']);
+                } catch (err) {
+                    console.error(err);
+                }
             }
 
             pump(stream, res);
