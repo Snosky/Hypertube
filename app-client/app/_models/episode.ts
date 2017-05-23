@@ -6,5 +6,6 @@ export class Episode {
     description_full: string;
     title: string;
     first_aired: string;
-    torrent: Array<any>;
+    torrents: Array<any>;
+    seen: boolean;
 }

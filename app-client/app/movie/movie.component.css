@@ -17,8 +17,8 @@
     .bull-sep { display: inline-block; padding: 0 10px; }
 
     .movie-watch { margin-top: 25px; }
-    .movie-watch button.watch { vertical-align: top; }
-    .btn-quality { background: #333; }
+    .movie-watch button.watch { vertical-align: top; cursor: pointer; }
+    .btn-quality { background: #333; cursor: pointer; }
     .btn-quality.active { background: #FFF; color: #333; }
 
 @media screen and (max-width: 576px) {

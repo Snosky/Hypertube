@@ -19,6 +19,7 @@ var ShowComponent = (function () {
         this.showService = showService;
         this.omdbService = omdbService;
         this.episodes = [];
+        this.torrent = {};
         this.season = -1;
     }
     ShowComponent.prototype.ngOnInit = function () {
@@ -36,7 +37,11 @@ var ShowComponent = (function () {
         this.showService.getEpisodes(this.slug)
             .then(function (episodes) {
             _this.episodes = episodes;
+            console.log(_this.episodes);
         });
+    };
+    ShowComponent.prototype.launchStream = function () {
+        this.stream = 'http://localhost:3000/show/watch/' + this.torrent._id;
     };
     return ShowComponent;
 }());

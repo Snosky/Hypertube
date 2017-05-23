@@ -68,24 +68,30 @@
                 </div>
 
                 <div class="episodes-list" *ngIf="episodes">
+                    <h3>Episodes :</h3>
                     <ul class="list-group">
                         <li class="list-group-item" *ngFor="let episode of episodes">
-                            <span>SEASON</span>{{episode.season}} <span>EPISODE</span>{{episode.episode}}
+                            <span class="episode">
+                                <span>S</span>{{episode.season < 10 ? '0' + episode.season : episode.season}}<span>E</span>{{episode.episode < 10 ? '0' + episode.episode : episode.episode}}
+                            </span>
                             {{episode.title}}
-                            <span>{{episode.first_aired}}</span>
+                            {{episode.seen}}
+                            <span class="torrents movie-watch" *ngIf="episode.torrents.length">
+                                <div ngbRadioGroup [(ngModel)]="torrent">
+                                    <label class="btn btn-quality" *ngFor="let torrent of episode.torrents" placement="top" ngbTooltip="{{torrent.size}}">
+                                        <input type="radio" name="torrent" [value]="torrent"> {{torrent.quality}}
+                                    </label>
+                                </div>
+                                <button class="btn watch" (click)="launchStream()" [disabled]="torrent.episode_id !== episode._id">Watch !</button>
+                            </span>
                         </li>
                     </ul>
-                </div>
-
-                <div class="movie-watch" *ngIf="torrents">
-                    <div ngbRadioGroup>
-                        <label class="btn btn-quality" *ngFor="let torrent of torrents" placement="top" ngbTooltip="{{torrent.size}}">
-                            <input type="radio" [value]="torrent._id"> {{torrent.quality}}
-                        </label>
-                    </div>
-                    <button class="btn watch">Watch !</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div>
+    <app-stream [source]="stream" type="show" [id]="torrent.episode_id"></app-stream>
 </div>
