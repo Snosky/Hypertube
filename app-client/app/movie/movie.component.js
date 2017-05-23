@@ -15,13 +15,15 @@ var platform_browser_1 = require("@angular/platform-browser");
 var movie_service_1 = require("../movie.service");
 var movie_torrent_service_1 = require("../movie-torrent.service");
 var omdb_service_1 = require("../omdb.service");
+var angular2_jwt_1 = require("angular2-jwt");
 var MovieComponent = (function () {
-    function MovieComponent(route, sanitizer, movieService, omdbService, movieTorrentService) {
+    function MovieComponent(route, sanitizer, movieService, omdbService, movieTorrentService, authHttp) {
         this.route = route;
         this.sanitizer = sanitizer;
         this.movieService = movieService;
         this.omdbService = omdbService;
         this.movieTorrentService = movieTorrentService;
+        this.authHttp = authHttp;
         this.info = {};
     }
     MovieComponent.prototype.ngOnInit = function () {
@@ -42,6 +44,18 @@ var MovieComponent = (function () {
     MovieComponent.prototype.youtubeTrailer = function () {
         return this.sanitizer.bypassSecurityTrustResourceUrl('//www.youtube.com/embed/' + this.movie.yt_trailer_code + '?rel=0');
     };
+    MovieComponent.prototype.launchStream = function () {
+        this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
+        /*this.authHttp.get(')
+            .subscribe(
+                result => {
+                    console.log(result)
+                },
+                error => {
+                    console.log(error);
+                }
+            )*/
+    };
     return MovieComponent;
 }());
 MovieComponent = __decorate([
@@ -54,7 +68,8 @@ MovieComponent = __decorate([
         platform_browser_1.DomSanitizer,
         movie_service_1.MovieService,
         omdb_service_1.OmdbService,
-        movie_torrent_service_1.MovieTorrentService])
+        movie_torrent_service_1.MovieTorrentService,
+        angular2_jwt_1.AuthHttp])
 ], MovieComponent);
 exports.MovieComponent = MovieComponent;
 //# sourceMappingURL=movie.component.js.map

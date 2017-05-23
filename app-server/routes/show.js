@@ -29,8 +29,6 @@ module.exports.getAll = function(req, res){
     if (params.order && params.order !== 'default')
         sort = params.order;
 
-    console.log(config);
-
     Show.find(config).skip(offset).limit(limit).sort(sort)
         .exec(function(err, movies){
             if (err)
@@ -58,8 +56,6 @@ module.exports.yearsRange = function(req, res){
         Show.findOne().where('year').ne(null).sort({year: 1}).exec(function(err, min){
             if (err)
                 return res.status(500).json(err);
-
-            console.log(min.year, max.year);
 
             return res.status(200).json({max: max.year, min: min.year});
         });

@@ -6,6 +6,8 @@ import {Movie} from "../_models/movie";
 import {MovieTorrent} from "../_models/movieTorrent";
 import {MovieTorrentService} from "../movie-torrent.service";
 import {OmdbService} from "../omdb.service";
+import {AuthHttp} from "angular2-jwt";
+import {URLSearchParams} from "@angular/http";
 
 @Component({
   selector: 'app-movie',
@@ -18,13 +20,16 @@ export class MovieComponent implements OnInit, AfterViewInit {
     movie: Movie;
     torrents: MovieTorrent[];
     info: any = {};
+    torrent: string;
+    stream: string;
 
     constructor(
         private route: ActivatedRoute,
         private sanitizer: DomSanitizer,
         private movieService: MovieService,
         private omdbService: OmdbService,
-        private movieTorrentService: MovieTorrentService
+        private movieTorrentService: MovieTorrentService,
+        private authHttp: AuthHttp
     ) { }
 
     ngOnInit() {
@@ -45,6 +50,20 @@ export class MovieComponent implements OnInit, AfterViewInit {
 
     youtubeTrailer() {
         return this.sanitizer.bypassSecurityTrustResourceUrl('//www.youtube.com/embed/' + this.movie.yt_trailer_code +'?rel=0');
+    }
+
+    launchStream() {
+        this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
+        /*this.authHttp.get(')
+            .subscribe(
+                result => {
+                    console.log(result)
+                },
+                error => {
+                    console.log(error);
+                }
+            )*/
+
     }
 
 }

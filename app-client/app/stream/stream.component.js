@@ -21,7 +21,8 @@ StreamComponent = __decorate([
     core_1.Component({
         selector: 'app-stream',
         templateUrl: './stream.component.html',
-        styleUrls: ['./stream.component.css']
+        styleUrls: ['./stream.component.css'],
+        inputs: ['source']
     }),
     __metadata("design:paramtypes", [])
 ], StreamComponent);

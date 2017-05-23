@@ -12,6 +12,7 @@ const user = require('./user');
 const auth = require('./auth');
 const movie = require('./movie');
 const show = require('./show');
+const stream = require('./stream');
 
 // User
 router.post('/register', user.picValidation, user.register);
@@ -24,6 +25,7 @@ router.get('/user/me', jwtauth, user.me);
 // Movies
 router.get('/movies/years', jwtauth, movie.yearsRange);
 router.get('/movies', jwtauth, movie.getAll);
+router.get('/movie/watch/:torrentid', stream.movieStream, stream.streamFile);
 router.get('/movie/:slug', jwtauth, movie.getOne);
 router.get('/movie/:slug/torrents', jwtauth, movie.getTorrents);
 
@@ -31,7 +33,5 @@ router.get('/movie/:slug/torrents', jwtauth, movie.getTorrents);
 router.get('/shows', jwtauth, show.getAll);
 router.get('/shows/years', jwtauth, show.yearsRange);
 router.get('/show/:slug', jwtauth, show.getOne);
-
-router.get('/testStream', require('../stream'));
 
 module.exports = router;

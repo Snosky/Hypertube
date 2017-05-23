@@ -9,7 +9,8 @@ const movieTorrent = Schema({
     seeds: { type: Number },
     peers: { type: Number },
     size: { type: String },
-    size_bytes: { type: Number }
+    size_bytes: { type: Number },
+    lastView: { type: Date }
 });
 
 module.exports = mongoose.model('MovieTorrent', movieTorrent);

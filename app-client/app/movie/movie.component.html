@@ -63,14 +63,18 @@
                 </div>
 
                 <div class="movie-watch" *ngIf="torrents">
-                    <div ngbRadioGroup>
+                    <div ngbRadioGroup [(ngModel)]="torrent">
                         <label class="btn btn-quality" *ngFor="let torrent of torrents" placement="top" ngbTooltip="{{torrent.size}}">
-                            <input type="radio" [value]="torrent._id"> {{torrent.quality}}
+                            <input type="radio" name="torrent" [value]="torrent._id"> {{torrent.quality}}
                         </label>
                     </div>
-                    <button class="btn watch">Watch !</button>
+                    <button class="btn watch" (click)="launchStream()" [disabled]="!torrent">Watch !</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div *ngIf="stream">
+    <app-stream [source]="stream"></app-stream>
 </div>

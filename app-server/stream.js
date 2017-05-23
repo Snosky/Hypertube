@@ -13,10 +13,10 @@ module.exports =function(req, res) {
     engine = torrentStream('magnet:?xt=urn:btih:A24AE30442C6C98C4F700F9574A2C83D444B88C0&dn=Logan.2017.1080p.KORSUB.HDRip.x264.AAC2.0-STUTTERSHIT&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2710%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce', {
         connections: 3000,     // Max amount of peers to be connected to.
         uploads: 10,          // Number of upload slots.
-        tmp: '/tmp',          // Root folder for the files storage.
+        tmp: '/videos',          // Root folder for the files storage.
                               // Defaults to '/tmp' or temp folder specific to your OS.
                               // Each torrent will be placed into a separate folder under /tmp/torrent-stream/{infoHash}
-        path: '/tmp/my-file', // Where to save the files. Overrides `tmp`.
+        path: '/videos/my-file', // Where to save the files. Overrides `tmp`.
         verify: true,         // Verify previously stored data before starting
                               // Defaults to true
         dht: true,            // Whether or not to use DHT to initialize the swarm.

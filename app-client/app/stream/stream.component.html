@@ -26,7 +26,7 @@
     </vg-controls>
 
     <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin>
-        <source src="http://localhost:3000/testStream">
+        <source [src]="source">
 
         <track kind="subtitles" label="English" src="http://static.videogular.com/assets/subs/pale-blue-dot.vtt" srclang="en" default>
         <track kind="subtitles" label="Español" src="http://static.videogular.com/assets/subs/pale-blue-dot-es.vtt" srclang="es">
