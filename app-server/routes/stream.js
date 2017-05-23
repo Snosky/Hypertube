@@ -118,7 +118,7 @@ module.exports.streamFile = function(req, res) {
     engine.on('download', function() {
         console.log('Downloading...');
 
-        console.log(Math.round((engine.swarm.downloaded / videoLength.length) * 100)+"% downloaded for : ", videoFile.path);
+        console.log(Math.round((engine.swarm.downloaded / videoFile.length) * 100)+"% downloaded for : ", videoFile.path);
         //Something to do while downlaoding
         // Maybe socket.emit to room watching this movie
     });
