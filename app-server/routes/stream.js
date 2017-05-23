@@ -9,6 +9,7 @@ const request = require('request');
 const MovieTorrent = require('../models/movieTorrent');
 const OS = require('opensubtitles-api');
 const OpenSubtitles = new OS('UserAgent');
+const EpisodeTorrent = require('../models/episodeTorrent');
 
 module.exports.movieStream = function(req, res, next){
     if (!req.params.torrentid)
@@ -25,6 +26,27 @@ module.exports.movieStream = function(req, res, next){
 
             req.torrent = torrent;
             req.torrentType = 'movie';
+            return next();
+        }
+    );
+
+};
+
+module.exports.showStream = function(req, res, next){
+    if (!req.params.torrentid)
+        return res.status(401).json('No torrent magnet found');
+
+    EpisodeTorrent.findOneAndUpdate(
+        { _id: req.params.torrentid },
+        { $set: { lastView: Date.now() } },
+        { upsert: false, new: true },
+        function(err, torrent){
+            if (err) return res.status(500).json('Server error');
+
+            if (!torrent) return res.status(401).json('Torrent not valid');
+
+            req.torrent = torrent;
+            req.torrentType = 'show';
             return next();
         }
     );
@@ -81,12 +103,6 @@ module.exports.streamFile = function(req, res) {
             start = parseInt(positions[0], 10);
             end = positions[1] ? parseInt(positions[1], 10) : videoLength - 1;
 
-            let vu = (end - start) * 0.3;
-            if (start >= seen || end - vu >= seen)
-            {
-                console.log("ce film a ete vu");
-            }
-
             chunksize = end - start + 1;
             mimetype = path.extname(videoFile.name);
 
@@ -119,8 +135,6 @@ module.exports.streamFile = function(req, res) {
     });
 
     engine.on('download', function() {
-        console.log('Downloading...');
-
         console.log(Math.round((engine.swarm.downloaded / videoFile.length) * 100)+"% downloaded for : ", videoFile.path);
         //Something to do while downlaoding
         // Maybe socket.emit to room watching this movie

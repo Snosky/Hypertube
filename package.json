@@ -45,6 +45,7 @@
     "ng2-imageupload": "^1.4.2",
     "ng2-nouislider": "^1.6.1",
     "nouislider": "^9.2.0",
+    "opensubtitles-api": "^4.0.0-rc2",
     "passport-facebook": "^2.1.1",
     "passport-local": "^1.0.0",
     "pump": "^1.0.2",
