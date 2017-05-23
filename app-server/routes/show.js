@@ -1,6 +1,7 @@
 const Show = require('../models/show');
 const Episode = require('../models/episode');
 const EpisodeTorrent = require('../models/episodeTorrent');
+const EpisodeSeen = require('../models/episodeSeen');
 const Promise = require('bluebird')
 const url = require('url');
 
@@ -80,10 +81,17 @@ module.exports.getEpisodes = function(req, res){
 
             Promise.each(episodes, function(episode, index){
                 return new Promise(function(resolve, reject){
-                    EpisodeTorrent.find({ episode_id: episode._id }, function(err, torrents){
-                        episode.torrents = torrents;
-                        resolve();
+
+                    EpisodeSeen.findOne({ id_episode: episode._id, user_id: req.payload._id }, function(err, seen){
+                        episode.seen = !(err || !seen);
+
+                        EpisodeTorrent.find({ episode_id: episode._id }, function(err, torrents){
+                            episode.torrents = torrents;
+                            resolve();
+                        });
+
                     });
+
                 })
             })
                 .then(function(){
@@ -92,4 +100,20 @@ module.exports.getEpisodes = function(req, res){
 
         })
     })
-}
+};
+
+module.exports.seen = function (req, res) {
+    EpisodeSeen.findOneAndUpdate(
+        {id_episode: req.params.id_episode, user_id: req.payload._id},
+        { $set: {
+            id_episode: req.params.id_episode,
+            user_id: req.payload._id
+        }},
+        {upsert: true},
+        function(err){
+            if (err)
+                res.status(500).json(err);
+            res.status(200).json();
+        }
+    )
+};

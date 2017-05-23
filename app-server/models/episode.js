@@ -9,7 +9,8 @@ const episodeSchema = Schema({
     season: { type: Number },
     episode: { type: Number },
     first_aired: { type: Number },
-    torrents: { type: Array, default: []}
+    torrents: { type: Array, default: []},
+    seen: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('Episode', episodeSchema);
