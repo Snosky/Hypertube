@@ -8,18 +8,7 @@ import {VgAPI} from 'videogular2/core';
     inputs: ['source']
 })
 export class StreamComponent{
-    private api: any;
+    constructor() {
 
-    constructor() { }
-
-
-    onPlayerReady(api: VgAPI){
-        this.api = api;
-
-        this.api.getDefaultMedia().progress.subscribe(
-            (progress: any) => {
-                console.log(progress);
-            }
-        )
     }
 }
