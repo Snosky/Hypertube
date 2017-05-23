@@ -1,13 +1,47 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {VgAPI} from 'videogular2/core';
+import {MovieService} from "../movie.service";
+import {ShowService} from "../show.service";
+import {Subject} from "rxjs";
 
 @Component({
     selector: 'app-stream',
     templateUrl: './stream.component.html',
     styleUrls: ['./stream.component.css'],
-    inputs: ['source']
+    inputs: ['source', 'type', 'id']
 })
-export class StreamComponent{
-    constructor() {
+export class StreamComponent {
+    preload:string = 'auto';
+    api: VgAPI;
+    viewSend = false;
 
+    @Input()
+    type: string;
+
+    @Input()
+    id: string;
+
+    constructor(
+        private movieService: MovieService,
+        private showService: ShowService
+    ) { }
+
+    onPlayerReady(api:VgAPI) {
+        this.api = api;
+
+        this.api.getDefaultMedia().subscriptions.progress.subscribe(
+            (progress) => {
+                let percent = (progress.srcElement.currentTime / progress.srcElement.duration) * 100;
+
+                if (!isNaN(percent) && percent >= 85 && this.viewSend === false){
+                    this.viewSend = true;
+                    console.log('Movie view');
+                    if (this.type === 'movie')
+                        this.movieService.updateViewTime(this.id, progress.srcElement.currentTime, percent);
+                    else if (this.type === 'show')
+                        this.showService.updateViewTime(this.id, progress.srcElement.currentTime, percent);
+                }
+            }
+        );
     }
 }

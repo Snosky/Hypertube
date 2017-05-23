@@ -45,11 +45,11 @@ var MovieComponent = (function () {
         return this.sanitizer.bypassSecurityTrustResourceUrl('//www.youtube.com/embed/' + this.movie.yt_trailer_code + '?rel=0');
     };
     MovieComponent.prototype.launchStream = function () {
-        var _this = this;
-        this.movieService.setView(this.slug)
-            .then(function () {
-            _this.stream = 'http://localhost:3000/movie/watch/' + _this.torrent;
-        });
+        /*this.movieService.setView(this.slug)
+            .then(() => {
+
+            })*/
+        this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
     };
     return MovieComponent;
 }());

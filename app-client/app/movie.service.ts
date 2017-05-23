@@ -11,7 +11,6 @@ import {AuthHttp} from "angular2-jwt";
 export class MovieService {
     constructor(
       private config: AppConfig,
-      private http: Http,
       private authHttp: AuthHttp
     ) { }
 
@@ -50,6 +49,11 @@ export class MovieService {
     setView(slug: string): Promise<any> {
         return this.authHttp.get(this.config.apiUrl + '/movie/' + slug + '/view')
             .toPromise()
+    }
+
+    updateViewTime(movie_id: string, currentTime: number, percent: number) {
+        console.log(`Movie: ${movie_id} | Current: ${currentTime} | Percent: ${percent}%`);
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + movie_id + '/seen');
     }
 
 }

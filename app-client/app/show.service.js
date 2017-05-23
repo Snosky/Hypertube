@@ -54,6 +54,9 @@ var ShowService = (function () {
             .toPromise()
             .then(function (res) { return res.json(); });
     };
+    ShowService.prototype.updateViewTime = function (movie_id) {
+        return this.authHttp.get(this.config.apiUrl + '/show/seen');
+    };
     return ShowService;
 }());
 ShowService = __decorate([

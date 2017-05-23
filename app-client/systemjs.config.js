@@ -43,6 +43,7 @@
             }
         },
         rxjs: {
+            main: 'bundles/Rx.js',
             defaultExtension: 'js'
         },
         videogular2: {

@@ -15,9 +15,8 @@ var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
 var angular2_jwt_1 = require("angular2-jwt");
 var MovieService = (function () {
-    function MovieService(config, http, authHttp) {
+    function MovieService(config, authHttp) {
         this.config = config;
-        this.http = http;
         this.authHttp = authHttp;
     }
     MovieService.prototype.search = function (params) {
@@ -52,12 +51,15 @@ var MovieService = (function () {
         return this.authHttp.get(this.config.apiUrl + '/movie/' + slug + '/view')
             .toPromise();
     };
+    MovieService.prototype.updateViewTime = function (movie_id, currentTime, percent) {
+        console.log("Movie: " + movie_id + " | Current: " + currentTime + " | Percent: " + percent + "%");
+        return this.authHttp.get(this.config.apiUrl + '/movie/' + movie_id + '/seen');
+    };
     return MovieService;
 }());
 MovieService = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [app_config_1.AppConfig,
-        http_1.Http,
         angular2_jwt_1.AuthHttp])
 ], MovieService);
 exports.MovieService = MovieService;
