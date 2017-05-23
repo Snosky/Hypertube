@@ -1,6 +1,7 @@
 const Movie = require('../models/movie');
 const MovieTorrent = require('../models/movieTorrent');
 const url = require('url');
+const MovieSeen = require('../models/movieSeen');
 
 module.exports.getAll = function(req, res){
     params = url.parse(req.url, true).query;
@@ -81,4 +82,20 @@ module.exports.yearsRange = function(req, res){
             return res.status(200).json({max: max.year, min: min.year});
         });
     })
+};
+
+module.exports.seen = function (req, res) {
+    MovieSeen.findOneAndUpdate(
+        {id_movie: req.params.id_movie, user_id: req.payload._id},
+        { $set: {
+            id_movie: req.params.id_movie,
+            user_id: req.payload._id
+        }},
+        {upsert: true},
+        function(err){
+            if (err)
+                res.status(500).json(err);
+            res.status(200).json();
+        }
+    )
 };

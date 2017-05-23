@@ -29,6 +29,7 @@ router.get('/movies', jwtauth, movie.getAll);
 router.get('/movie/watch/:torrentid', stream.movieStream, stream.streamFile);
 router.get('/movie/:slug', jwtauth, movie.getOne);
 router.get('/movie/:slug/torrents', jwtauth, movie.getTorrents);
+router.get('/movie/:id_movie/seen', jwtauth, movie.seen);
 
 
 // Shows
@@ -39,7 +40,7 @@ router.get('/show/:slug/episodes', jwtauth, show.getEpisodes);
 
 // Comments
 router.post('/comment/add', jwtauth, comment.addComment);
-router.get('/comment/getComment', comment.getComment);
+router.get('/comment/getComment', jwtauth, comment.getComment);
 
 
 module.exports = router;
