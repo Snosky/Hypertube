@@ -43,7 +43,7 @@ router.get('/show/:id_episode/seen', jwtauth, show.seen);
 
 // Comments
 router.post('/comment/add', jwtauth, comment.addComment);
-router.get('/comment/getComment', jwtauth, comment.getComment);
+router.get('/comment/get/:imdb_code', jwtauth, comment.getComment);
 
 
 module.exports = router;
