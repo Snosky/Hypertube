@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const fs = require('fs');
+let nodemailer = require('nodemailer');
 
 /**
  * Registration route
@@ -42,8 +43,7 @@ module.exports.register = function(req, res) {
                         return res.status(400).json(err);
                     }
 
-                    const token = user.generateJwt();
-                    res.status(200).json({ token: token });
+                    res.status(200).json({ message : "Success"  });
                 });
             })
             .catch(function(err) {
@@ -219,5 +219,36 @@ module.exports.updateLang = function (req, res) {
 };
 
 module.exports.forgotPassword = function (req, res) {
+    if (!req.body.resetPwd)
+        return res.status(400).json("error");
+
+    let user_name = req.body.user_name;
+
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'matcha.4242@gmail.com',
+            pass: 'matcha42'
+        }
+    });
+
+    let link = "http://localhost:3000/new_password?token="+token+"&user_name="+user_name;
+
+    let mailOptions = {
+        from: 'Matcha', // sender address
+        to: email, // list of receivers
+        subject: 'Matcha - Reset Password', // Subject line
+        text: 'Hello ' +user_name+ ',\n\n\n' +
+        'to reset your password, please click the link below or copy/paste to your browser :\n\n' +link
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
+    });
+
 
 };
