@@ -1,0 +1,5 @@
+.btn-42 {  background: #00babc; border: none; cursor: pointer; }
+    .btn-42 > img { max-height: 20px; }
+
+.btn-facebook {  background: #4267b2; border: none; cursor: pointer;}
+    .btn-facebook > img { max-height: 20px; }

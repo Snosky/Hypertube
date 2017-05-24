@@ -25,3 +25,5 @@
     .movie-image { position: relative; }
     .movie-info-container { padding-left: 15px; }
 }
+
+.btn-back { margin: 10px 0; }

@@ -4,57 +4,65 @@
         <div class="form-group">
             <input type="text" placeholder="Search a show" class="form-control" #searchBox (keyup)="search(searchBox.value)">
         </div>
-        <select  class="form-control" #genreBox (change)="filterGenre($event)" multiple>
-            <option value="all">All Genre</option>
-            <option value="action">Action</option>
-            <option value="adventure">Adventure</option>
-            <option value="animation">Animation</option>
-            <option value="comedy">Comedy</option>
-            <option value="crime">Crime</option>
-            <option value="disaster">Disaster</option>
-            <option value="documentary">Documentary</option>
-            <option value="drama">Drama</option>
-            <option value="eastern">Eastern</option>
-            <option value="family">Family</option>
-            <option value="fan-film">Fan-film</option>
-            <option value="fantasy">Fantasy</option>
-            <option value="film-noir">Film-Noir</option>
-            <option value="history">History</option>
-            <option value="horror">Horror</option>
-            <option value="indie">Indie</option>
-            <option value="music">Music</option>
-            <option value="mystery">Mystery</option>
-            <option value="road">Road</option>
-            <option value="romance">Romance</option>
-            <option value="science-fiction">Sci-Fi</option>
-            <option value="short">Short</option>
-            <option value="sports">Sport</option>
-            <option value="sporting-event">Sporting event</option>
-            <option value="suspense">Suspense</option>
-            <option value="thriller">Thriller</option>
-            <option value="tv-movie">TV movie</option>
-            <option value="war">War</option>
-            <option value="western">Western</option>
-        </select>
-        <div class="form-control"  *ngIf="yearsRange">
-            <label>Years range</label>
-            <nouislider [connect]="true" [tooltips]="true" [min]="yearsRange.min" [max]="yearsRange.max" [step]="1" [(ngModel)]="yearsRangeFormat" (ngModelChange)="yearsRangeChange($event)" class="test"></nouislider>
+        <div class="form-group">
+            <select  class="form-control" #genreBox (change)="filterGenre($event)" multiple>
+                <option value="all">All Genre</option>
+                <option value="action">Action</option>
+                <option value="adventure">Adventure</option>
+                <option value="animation">Animation</option>
+                <option value="comedy">Comedy</option>
+                <option value="crime">Crime</option>
+                <option value="disaster">Disaster</option>
+                <option value="documentary">Documentary</option>
+                <option value="drama">Drama</option>
+                <option value="eastern">Eastern</option>
+                <option value="family">Family</option>
+                <option value="fan-film">Fan-film</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="film-noir">Film-Noir</option>
+                <option value="history">History</option>
+                <option value="horror">Horror</option>
+                <option value="indie">Indie</option>
+                <option value="music">Music</option>
+                <option value="mystery">Mystery</option>
+                <option value="road">Road</option>
+                <option value="romance">Romance</option>
+                <option value="science-fiction">Sci-Fi</option>
+                <option value="short">Short</option>
+                <option value="sports">Sport</option>
+                <option value="sporting-event">Sporting event</option>
+                <option value="suspense">Suspense</option>
+                <option value="thriller">Thriller</option>
+                <option value="tv-movie">TV movie</option>
+                <option value="war">War</option>
+                <option value="western">Western</option>
+            </select>
         </div>
-        <div class="form-control">
-            <label>Rating range</label>
-            <nouislider [connect]="true" [tooltips]="true" [min]="0" [max]="100" [step]="1" [(ngModel)]="ratingRangeFormat" (ngModelChange)="ratingRangeChange($event)"></nouislider>
+        <div class="form-group">
+            <div class="form-control"  *ngIf="yearsRange">
+                <label>Years range</label>
+                <nouislider [connect]="true" [tooltips]="true" [min]="yearsRange.min" [max]="yearsRange.max" [step]="1" [(ngModel)]="yearsRangeFormat" (ngModelChange)="yearsRangeChange($event)" class="test"></nouislider>
+            </div>
         </div>
-        <select name="" id="" class="form-control" #orderBox (change)="filterOrder(orderBox.value)">
-            <option value="default">Default order</option>
-            <option value="year">Production year asc</option>
-            <option value="-year">Production year desc</option>
-            <option value="rating">Rating asc</option>
-            <option value="-rating">Rating desc</option>
-            <option value="title">Title asc</option>
-            <option value="-title">Title desc</option>
-            <option value="runtime">Runtime asc</option>
-            <option value="-runtime">Runtime desc</option>
-        </select>
+        <div class="form-group">
+            <div class="form-control">
+                <label>Rating range</label>
+                <nouislider [connect]="true" [tooltips]="true" [min]="0" [max]="100" [step]="1" [(ngModel)]="ratingRangeFormat" (ngModelChange)="ratingRangeChange($event)"></nouislider>
+            </div>
+        </div>
+        <div class="form-group">
+            <select name="" id="" class="form-control" #orderBox (change)="filterOrder(orderBox.value)">
+                <option value="default">Default order</option>
+                <option value="year">Production year asc</option>
+                <option value="-year">Production year desc</option>
+                <option value="rating">Rating asc</option>
+                <option value="-rating">Rating desc</option>
+                <option value="title">Title asc</option>
+                <option value="-title">Title desc</option>
+                <option value="runtime">Runtime asc</option>
+                <option value="-runtime">Runtime desc</option>
+            </select>
+        </div>
     </div>
 
     <div class="col-sm-10" id="moviesContainer"
@@ -68,7 +76,7 @@
         <div class="row">
             <div class="col-xs-2 col-sm-4 col-md-3 col-lg-2 movie"
                  *ngFor="let show of shows">
-                <a [routerLink]="['/show', show.slug]">
+                <a href="#" [routerLink]="['/show', show.slug]">
                     <img [src]="show.cover_image" [default]="'assets/img/poster.png'" class="img-fluid" [alt]="show.title">
                     <div class="movie-info">
                         {{show.title}}

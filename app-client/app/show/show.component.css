@@ -31,3 +31,5 @@
 
 .episodes-list { margin-top: 20px; }
     .episodes-list ul li.list-group-item { background: transparent }
+
+.btn-back { margin: 10px 0; }
