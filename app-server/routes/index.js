@@ -22,7 +22,8 @@ router.post('/auth/facebook', auth.facebook);
 router.post('/auth/42', auth.fortytwo);
 router.post('/user/update', [jwtauth, user.picValidation], user.update);
 router.get('/user/me', jwtauth, user.me);
-router.get('/user/:uid', user.uid);/*tests*/
+router.get('/user/:uid', jwtauth, user.uid);
+router.get('/user/lang/:lang', jwtauth, user.updateLang);
 
 // Movies
 router.get('/movies/years', jwtauth, movie.yearsRange);
