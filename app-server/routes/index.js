@@ -24,6 +24,7 @@ router.post('/user/update', [jwtauth, user.picValidation], user.update);
 router.get('/user/me', jwtauth, user.me);
 router.get('/user/profile/:uid', jwtauth, user.uid);
 router.get('/user/lang/:lang', jwtauth, user.updateLang);
+router.post('/user/forgotPassword', user.forgotPassword);
 
 // Movies
 router.get('/movies/years', jwtauth, movie.yearsRange);

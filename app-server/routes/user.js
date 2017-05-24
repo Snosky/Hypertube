@@ -258,3 +258,7 @@ module.exports.forgotPassword = function (req, res) {
             return;
     });
 };
+
+module.exports.verifyToken = function (req, res) {
+    
+}
