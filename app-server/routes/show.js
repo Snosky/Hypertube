@@ -57,9 +57,13 @@ module.exports.yearsRange = function(req, res){
         if (err)
             return res.status(500).json(err);
 
+        if (!max) return res.status(401).json('no movies');
+
         Show.findOne().where('year').ne(null).sort({year: 1}).exec(function(err, min){
             if (err)
                 return res.status(500).json(err);
+
+            if (!min) return res.status(401).json('no movies');
 
             return res.status(200).json({max: max.year, min: min.year});
         });
