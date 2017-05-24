@@ -16,10 +16,12 @@ var movie_component_1 = require("../movie/movie.component");
 var shows_component_1 = require("../shows/shows.component");
 var show_component_1 = require("../show/show.component");
 var stream_component_1 = require("../stream/stream.component");
+var profile_component_1 = require("../profile/profile.component");
 var routes = [
     { path: '', component: home_component_1.HomeComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'auth', component: auth_component_1.AuthComponent },
     { path: 'auth/:provider', component: auth_component_1.AuthComponent },
+    { path: 'profile/:id', component: profile_component_1.ProfileComponent },
     { path: 'profile', component: my_profile_component_1.MyProfileComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'movie/:slug', component: movie_component_1.MovieComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'shows', component: shows_component_1.ShowsComponent, canActivate: [auth_guard_1.AuthGuard] },

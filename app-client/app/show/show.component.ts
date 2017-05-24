@@ -4,6 +4,7 @@ import {ActivatedRoute} from "@angular/router";
 import {ShowService} from "../show.service";
 import {OmdbService} from "../omdb.service";
 import {Episode} from "../_models/episode";
+import {FlashService} from "../flash.service";
 
 @Component({
   selector: 'app-show',
@@ -23,7 +24,8 @@ export class ShowComponent implements OnInit, AfterViewInit {
     constructor(
         private route: ActivatedRoute,
         private showService: ShowService,
-        private omdbService: OmdbService
+        private omdbService: OmdbService,
+        private flash: FlashService
     ) { }
 
     ngOnInit() {
@@ -39,10 +41,15 @@ export class ShowComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.showService.getEpisodes(this.slug)
+        /*this.showService.getEpisodes(this.slug)
             .then( (episodes: Episode[]) => {
                 this.episodes = episodes;
-            })
+            })*/
+        this.showService.getEpisodesObs(this.slug)
+            .subscribe(
+                episodes => this.episodes = episodes,
+                error => this.flash.error(err)
+            )
     }
 
     launchStream() {

@@ -63,14 +63,27 @@
                     {{movie.description_full}}
                 </div>
 
-                <div class="movie-watch" *ngIf="torrents">
-                    <div ngbRadioGroup [(ngModel)]="torrent">
-                        <label class="btn btn-quality" *ngFor="let torrent of torrents" placement="top" ngbTooltip="{{torrent.size}}">
-                            <input type="radio" name="torrent" [value]="torrent._id"> {{torrent.quality}}
-                        </label>
-                    </div>
-                    <button class="btn watch" (click)="launchStream()" [disabled]="!torrent">Watch !</button>
-                </div>
+                <ngb-tabset>
+                    <ngb-tab title="Torrents">
+                        <ng-template ngbTabContent>
+                            <div class="movie-watch" *ngIf="torrents">
+                                <div ngbRadioGroup [(ngModel)]="torrent">
+                                    <label class="btn btn-quality" *ngFor="let torrent of torrents" placement="top" ngbTooltip="{{torrent.size}}">
+                                        <input type="radio" name="torrent" [value]="torrent._id"> {{torrent.quality}}
+                                    </label>
+                                </div>
+                                <button class="btn watch" (click)="launchStream()" [disabled]="!torrent">Watch !</button>
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+                    <ngb-tab title="Comment">
+                        <ng-template ngbTabContent>
+                            <app-comment [imdb]="movie.imdb_code"></app-comment>
+                        </ng-template>
+                    </ngb-tab>
+                </ngb-tabset>
+
+
             </div>
         </div>
     </div>

@@ -13,11 +13,13 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var show_service_1 = require("../show.service");
 var omdb_service_1 = require("../omdb.service");
+var flash_service_1 = require("../flash.service");
 var ShowComponent = (function () {
-    function ShowComponent(route, showService, omdbService) {
+    function ShowComponent(route, showService, omdbService, flash) {
         this.route = route;
         this.showService = showService;
         this.omdbService = omdbService;
+        this.flash = flash;
         this.episodes = [];
         this.torrent = {};
         this.season = -1;
@@ -34,10 +36,12 @@ var ShowComponent = (function () {
     };
     ShowComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
-        this.showService.getEpisodes(this.slug)
-            .then(function (episodes) {
-            _this.episodes = episodes;
-        });
+        /*this.showService.getEpisodes(this.slug)
+            .then( (episodes: Episode[]) => {
+                this.episodes = episodes;
+            })*/
+        this.showService.getEpisodesObs(this.slug)
+            .subscribe(function (episodes) { return _this.episodes = episodes; }, function (error) { return _this.flash.error(err); });
     };
     ShowComponent.prototype.launchStream = function () {
         this.stream = 'http://localhost:3000/show/watch/' + this.torrent._id;
@@ -55,7 +59,8 @@ ShowComponent = __decorate([
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute,
         show_service_1.ShowService,
-        omdb_service_1.OmdbService])
+        omdb_service_1.OmdbService,
+        flash_service_1.FlashService])
 ], ShowComponent);
 exports.ShowComponent = ShowComponent;
 //# sourceMappingURL=show.component.js.map

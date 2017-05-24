@@ -33,6 +33,9 @@ import {VgCoreModule} from 'videogular2/core';
 import {VgControlsModule} from 'videogular2/controls';
 import {VgOverlayPlayModule} from 'videogular2/overlay-play';
 import {VgBufferingModule} from 'videogular2/buffering';
+import {CommentComponent} from "./comment/comment.component";
+import {CommentService} from "./comment.service";
+import {ProfileComponent} from "./profile/profile.component";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
@@ -68,7 +71,9 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         ShowsComponent,
         DefaultImageDirective,
         ShowComponent,
-        StreamComponent
+        StreamComponent,
+        CommentComponent,
+        ProfileComponent
     ],
     providers: [
         AppConfig,
@@ -85,7 +90,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         MovieService,
         MovieTorrentService,
         ShowService,
-        OmdbService
+        OmdbService,
+        CommentService
     ],
     bootstrap:    [ AppComponent]
 })

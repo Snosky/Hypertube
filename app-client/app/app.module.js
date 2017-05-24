@@ -40,6 +40,9 @@ var core_2 = require("videogular2/core");
 var controls_1 = require("videogular2/controls");
 var overlay_play_1 = require("videogular2/overlay-play");
 var buffering_1 = require("videogular2/buffering");
+var comment_component_1 = require("./comment/comment.component");
+var comment_service_1 = require("./comment.service");
+var profile_component_1 = require("./profile/profile.component");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -80,7 +83,9 @@ AppModule = __decorate([
             shows_component_1.ShowsComponent,
             default_image_directive_1.DefaultImageDirective,
             show_component_1.ShowComponent,
-            stream_component_1.StreamComponent
+            stream_component_1.StreamComponent,
+            comment_component_1.CommentComponent,
+            profile_component_1.ProfileComponent
         ],
         providers: [
             app_config_1.AppConfig,
@@ -97,7 +102,8 @@ AppModule = __decorate([
             movie_service_1.MovieService,
             movie_torrent_service_1.MovieTorrentService,
             show_service_1.ShowService,
-            omdb_service_1.OmdbService
+            omdb_service_1.OmdbService,
+            comment_service_1.CommentService
         ],
         bootstrap: [app_component_1.AppComponent]
     })

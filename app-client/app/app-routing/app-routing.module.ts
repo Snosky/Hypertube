@@ -8,11 +8,13 @@ import {MovieComponent} from "../movie/movie.component";
 import {ShowsComponent} from "../shows/shows.component";
 import {ShowComponent} from "../show/show.component";
 import {StreamComponent} from "../stream/stream.component";
+import {ProfileComponent} from "../profile/profile.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'auth', component: AuthComponent },
     { path: 'auth/:provider', component: AuthComponent },
+    { path: 'profile/:id', component: ProfileComponent },
     { path: 'profile', component: MyProfileComponent, canActivate: [AuthGuard] },
     { path: 'movie/:slug', component: MovieComponent, canActivate: [AuthGuard] },
     { path: 'shows', component: ShowsComponent, canActivate: [AuthGuard] },

@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import {AppConfig} from "./app.config";
-import {URLSearchParams} from "@angular/http";
+import {URLSearchParams, Response} from "@angular/http";
 import {AuthHttp} from "angular2-jwt";
-import {Observable} from "rxjs/Observable";
 import {Show} from "./_models/show";
 import {Episode} from "./_models/episode";
 
 import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/throw'
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ShowService {
@@ -51,14 +54,33 @@ export class ShowService {
     }
 
     getEpisodes(slug: string): Promise<Episode[]> {
-        console.log(this.config.apiUrl + '/show/' + slug + '/episodes');
         return this.authHttp.get(this.config.apiUrl + '/show/' + slug + '/episodes')
             .toPromise()
             .then(res => res.json() as Episode[])
     }
 
+    getEpisodesObs(slug: string): Observable<Episode[]> {
+        return this.authHttp.get(this.config.apiUrl + '/show/' + slug + '/episodes')
+            .map((res: Response) => res.json())
+            .catch(this.handleError);
+    }
+
     updateViewTime(show_id: string) {
         return this.authHttp.get(this.config.apiUrl + '/show/'+ show_id +'/seen');
+    }
+
+    private handleError (error: Response | any) {
+        // In a real world app, you might use a remote logging infrastructure
+        let errMsg: string;
+        if (error instanceof Response) {
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+        } else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error(errMsg);
+        return Observable.throw(errMsg);
     }
 
 }

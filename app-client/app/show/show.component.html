@@ -67,26 +67,37 @@
                     {{show.description_full}}
                 </div>
 
-                <div class="episodes-list" *ngIf="episodes">
-                    <h3>Episodes :</h3>
-                    <ul class="list-group">
-                        <li class="list-group-item" *ngFor="let episode of episodes">
-                            <span class="episode">
-                                <span>S</span>{{episode.season < 10 ? '0' + episode.season : episode.season}}<span>E</span>{{episode.episode < 10 ? '0' + episode.episode : episode.episode}}
-                            </span>
-                            {{episode.title}}
-                            {{episode.seen}}
-                            <span class="torrents movie-watch" *ngIf="episode.torrents.length">
-                                <div ngbRadioGroup [(ngModel)]="torrent">
-                                    <label class="btn btn-quality" *ngFor="let torrent of episode.torrents" placement="top" ngbTooltip="{{torrent.size}}">
-                                        <input type="radio" name="torrent" [value]="torrent" [disabled]="torrent.peers === 0"> {{torrent.quality}} ({{torrent.seeds}}, {{torrent.peers}})
-                                    </label>
-                                </div>
-                                <button class="btn watch" (click)="launchStream()" [disabled]="torrent.episode_id !== episode._id">Watch !</button>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
+                <ngb-tabset>
+                    <ngb-tab title="Torrents">
+                        <ng-template ngbTabContent>
+                            <!-- Episode List -->
+                            <div class="episodes-list" *ngIf="episodes">
+                                <h3>Episodes :</h3>
+                                <ul class="list-group">
+                                    <li class="list-group-item" *ngFor="let episode of episodes" [class.list-group-item-success]="episode.seen">
+                                        <span class="episode">
+                                            <span>S</span>{{episode.season < 10 ? '0' + episode.season : episode.season}}<span>E</span>{{episode.episode < 10 ? '0' + episode.episode : episode.episode}}
+                                        </span>
+                                        {{episode.title}}
+                                        <span class="torrents movie-watch" *ngIf="episode.torrents.length">
+                                            <div ngbRadioGroup [(ngModel)]="torrent">
+                                                <label class="btn btn-quality" *ngFor="let torrent of episode.torrents" placement="top" ngbTooltip="{{torrent.size}}">
+                                                    <input type="radio" name="torrent" [value]="torrent" [disabled]="torrent.peers === 0"> {{torrent.quality}} ({{torrent.seeds}}, {{torrent.peers}})
+                                                </label>
+                                            </div>
+                                            <button class="btn watch" (click)="launchStream()" [disabled]="torrent.episode_id !== episode._id">Watch !</button>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+                    <ngb-tab title="Comment">
+                        <ng-template ngbTabContent>
+                            <app-comment [imdb]="show.imdb_code"></app-comment>
+                        </ng-template>
+                    </ngb-tab>
+                </ngb-tabset>
             </div>
         </div>
     </div>

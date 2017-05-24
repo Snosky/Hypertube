@@ -15,6 +15,10 @@ var http_1 = require("@angular/http");
 var angular2_jwt_1 = require("angular2-jwt");
 require("rxjs/add/operator/toPromise");
 var auth_service_1 = require("./auth.service");
+var Observable_1 = require("rxjs/Observable");
+require("rxjs/add/observable/throw");
+require("rxjs/add/operator/catch");
+require("rxjs/add/operator/map");
 var UserService = (function () {
     function UserService(config, authHttp, authService) {
         this.config = config;
@@ -59,6 +63,11 @@ var UserService = (function () {
         })
             .catch(this.handleError);
     };
+    UserService.prototype.profile = function (user_id) {
+        return this.authHttp.get(this.config.apiUrl + '/user/profile/' + user_id)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleErrorObs);
+    };
     UserService.prototype.handleError = function (error) {
         var err;
         if (error instanceof http_1.Response) {
@@ -70,6 +79,20 @@ var UserService = (function () {
             //err = error.message ? error.message : error.toString();
         }
         return Promise.reject(err);
+    };
+    UserService.prototype.handleErrorObs = function (error) {
+        // In a real world app, you might use a remote logging infrastructure
+        var errMsg;
+        if (error instanceof http_1.Response) {
+            var body = error.json() || '';
+            var err = body.error || JSON.stringify(body);
+            errMsg = error.status + " - " + (error.statusText || '') + " " + err;
+        }
+        else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error(errMsg);
+        return Observable_1.Observable.throw(errMsg);
     };
     return UserService;
 }());

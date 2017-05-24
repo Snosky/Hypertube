@@ -14,6 +14,10 @@ var app_config_1 = require("./app.config");
 var http_1 = require("@angular/http");
 var angular2_jwt_1 = require("angular2-jwt");
 require("rxjs/add/operator/toPromise");
+var Observable_1 = require("rxjs/Observable");
+require("rxjs/add/observable/throw");
+require("rxjs/add/operator/catch");
+require("rxjs/add/operator/map");
 var ShowService = (function () {
     function ShowService(config, authHttp) {
         this.config = config;
@@ -49,13 +53,31 @@ var ShowService = (function () {
             .then(function (range) { return range.json(); });
     };
     ShowService.prototype.getEpisodes = function (slug) {
-        console.log(this.config.apiUrl + '/show/' + slug + '/episodes');
         return this.authHttp.get(this.config.apiUrl + '/show/' + slug + '/episodes')
             .toPromise()
             .then(function (res) { return res.json(); });
     };
+    ShowService.prototype.getEpisodesObs = function (slug) {
+        return this.authHttp.get(this.config.apiUrl + '/show/' + slug + '/episodes')
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
     ShowService.prototype.updateViewTime = function (show_id) {
         return this.authHttp.get(this.config.apiUrl + '/show/' + show_id + '/seen');
+    };
+    ShowService.prototype.handleError = function (error) {
+        // In a real world app, you might use a remote logging infrastructure
+        var errMsg;
+        if (error instanceof http_1.Response) {
+            var body = error.json() || '';
+            var err = body.error || JSON.stringify(body);
+            errMsg = error.status + " - " + (error.statusText || '') + " " + err;
+        }
+        else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error(errMsg);
+        return Observable_1.Observable.throw(errMsg);
     };
     return ShowService;
 }());

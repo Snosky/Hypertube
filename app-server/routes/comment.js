@@ -28,6 +28,7 @@ module.exports.addComment = function (req, res) {
 module.exports.getComment = function(req, res){
     Comment.find({imdb_code : req.params.imdb_code})
         .populate('user_id', {username: 1, _id: 1, pic: 1})
+        .sort({created_at: -1})
         .exec(function (err, comment) {
         if(err)
             return res.status(500).json(err);
