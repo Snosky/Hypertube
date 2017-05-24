@@ -15,13 +15,16 @@ var http_1 = require("@angular/http");
 var app_config_1 = require("./app.config");
 var angular2_jwt_1 = require("angular2-jwt");
 require("rxjs/add/operator/toPromise");
+var rxjs_1 = require("rxjs");
 var AuthService = (function () {
     function AuthService(config, http) {
         this.config = config;
         this.http = http;
+        this.refresh = new rxjs_1.Subject();
     }
     AuthService.prototype.saveToken = function (token) {
         localStorage.setItem('meanToken', token);
+        this.refresh.next('update');
     };
     AuthService.prototype.getToken = function () {
         return localStorage.getItem('meanToken');

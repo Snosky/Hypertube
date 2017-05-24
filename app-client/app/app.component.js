@@ -23,8 +23,10 @@ var AppComponent = (function () {
         this.flash = flash;
         this.route = '';
         router.events.subscribe(function (val) {
-            if (authService.isLoggedIn())
+            if (authService.isLoggedIn()) {
                 _this.currentUser = _this.authService.currentUser();
+                _this._refresh = _this.authService.refresh.subscribe(function (refresh) { return _this.currentUser = _this.authService.currentUser(); });
+            }
             else
                 _this.currentUser = null;
         });
@@ -38,6 +40,11 @@ var AppComponent = (function () {
             return false;
         this.userService.updateLang(lang)
             .subscribe(function (result) { return _this.currentUser.lang = lang; }, function (error) { return _this.flash.error(error); });
+    };
+    AppComponent.prototype.ngOnDestroy = function () {
+        if (this.currentUser) {
+            this._refresh._unsubscribe();
+        }
     };
     return AppComponent;
 }());

@@ -5,9 +5,12 @@ import {AppConfig} from "./app.config";
 import {tokenNotExpired} from "angular2-jwt";
 
 import 'rxjs/add/operator/toPromise';
+import {Subject} from "rxjs";
 
 @Injectable()
 export class AuthService {
+
+    refresh = new Subject<string>();
 
     constructor(
         private config: AppConfig,
@@ -16,6 +19,7 @@ export class AuthService {
 
     saveToken(token: string) {
         localStorage.setItem('meanToken', token);
+        this.refresh.next('update');
     }
 
     getToken() {

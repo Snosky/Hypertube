@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {User} from "./_models/user";
 import {AuthService} from "./auth.service";
 import {Router} from "@angular/router";
@@ -10,9 +10,11 @@ import {FlashService} from "./flash.service";
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
     currentUser: User;
     route: any = '';
+
+    private _refresh: any;
 
     constructor(
         private authService: AuthService,
@@ -21,8 +23,10 @@ export class AppComponent implements OnInit {
         private flash: FlashService
     ) {
         router.events.subscribe((val) => {
-            if (authService.isLoggedIn())
+            if (authService.isLoggedIn()) {
                 this.currentUser = this.authService.currentUser();
+                this._refresh = this.authService.refresh.subscribe(refresh => this.currentUser = this.authService.currentUser())
+            }
             else
                 this.currentUser = null;
         })
@@ -42,6 +46,12 @@ export class AppComponent implements OnInit {
                 error => this.flash.error(error)
             );
 
+    }
+
+    ngOnDestroy() {
+        if (this.currentUser) {
+            this._refresh._unsubscribe();
+        }
     }
 
 }
