@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const fs = require('fs');
 let nodemailer = require('nodemailer');
+let sha256 = require("crypto-js/sha256");
 
 /**
  * Registration route
@@ -219,36 +220,41 @@ module.exports.updateLang = function (req, res) {
 };
 
 module.exports.forgotPassword = function (req, res) {
-    if (!req.body.resetPwd)
+    if (!req.body.email)
         return res.status(400).json("error");
 
-    let user_name = req.body.user_name;
+    User.findOne({email : req.body.email}, function (err, result) {
+        if (err)
+            return;
+        if (result)
+        {
+            let token = sha256(req.body.email + Date.now()).toString();
 
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'matcha.4242@gmail.com',
+                    pass: 'matcha42'
+                }
+            });
 
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'matcha.4242@gmail.com',
-            pass: 'matcha42'
+            let link = "http://localhost:3000/new_password?token="+token;
+
+            let mailOptions = {
+                from: 'Hypertube', // sender address
+                to: email, // list of receivers
+                subject: 'Hypertube - Reset Password', // Subject line
+                text: 'To reset your password, please click the link below or copy/paste to your browser :\n\n' +link
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return console.log(error);
+                }
+                console.log('Message %s sent: %s', info.messageId, info.response);
+            });
         }
+        else
+            return;
     });
-
-    let link = "http://localhost:3000/new_password?token="+token+"&user_name="+user_name;
-
-    let mailOptions = {
-        from: 'Matcha', // sender address
-        to: email, // list of receivers
-        subject: 'Matcha - Reset Password', // Subject line
-        text: 'Hello ' +user_name+ ',\n\n\n' +
-        'to reset your password, please click the link below or copy/paste to your browser :\n\n' +link
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-        console.log('Message %s sent: %s', info.messageId, info.response);
-    });
-
-
 };
