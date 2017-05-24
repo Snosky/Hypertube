@@ -210,10 +210,14 @@ module.exports.updateLang = function (req, res) {
   if (['fre', 'eng'].indexOf(req.params.lang) === -1)
       return res.status(401).json({"message": "lang not allowed"});
 
-  User.findOneAndUpdate({_id: req.payload._id}, { $set: { lang : req.params.lang}}, function (err, user) {
+  User.findOneAndUpdate({_id: req.payload._id}, { $set: { lang : req.params.lang}}, {new: true}, function (err, user) {
       if (err)
           return res.status(500).json(err);
       let token = { token: user.generateJwt() };
       return res.status(200).json(token);
   })
+};
+
+module.exports.forgotPassword = function (req, res) {
+
 };
