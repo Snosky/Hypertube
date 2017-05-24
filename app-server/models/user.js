@@ -13,7 +13,8 @@ const userSchema = mongoose.Schema({
     lastname: { type: String },
     pic: { type: String },
     facebookId: { type: String, },
-    fortytwoId: { type: String, }
+    fortytwoId: { type: String, },
+    lang: { type: String, enum: ['fra', 'eng'], default: 'eng' }
 });
 
 /**

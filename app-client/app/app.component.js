@@ -12,11 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var auth_service_1 = require("./auth.service");
 var router_1 = require("@angular/router");
+var user_service_1 = require("./user.service");
+var flash_service_1 = require("./flash.service");
 var AppComponent = (function () {
-    function AppComponent(authService, router) {
+    function AppComponent(authService, userService, router, flash) {
         var _this = this;
         this.authService = authService;
+        this.userService = userService;
         this.router = router;
+        this.flash = flash;
         this.route = '';
         router.events.subscribe(function (val) {
             if (authService.isLoggedIn())
@@ -28,6 +32,13 @@ var AppComponent = (function () {
     }
     AppComponent.prototype.ngOnInit = function () {
     };
+    AppComponent.prototype.updateLang = function (lang) {
+        var _this = this;
+        if (['fre', 'eng'].indexOf(lang) === -1)
+            return false;
+        this.userService.updateLang(lang)
+            .subscribe(function (result) { return _this.currentUser.lang = lang; }, function (error) { return _this.flash.error(error); });
+    };
     return AppComponent;
 }());
 AppComponent = __decorate([
@@ -37,7 +48,9 @@ AppComponent = __decorate([
         styleUrls: ['./app.component.css']
     }),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
-        router_1.Router])
+        user_service_1.UserService,
+        router_1.Router,
+        flash_service_1.FlashService])
 ], AppComponent);
 exports.AppComponent = AppComponent;
 //# sourceMappingURL=app.component.js.map

@@ -7,4 +7,5 @@ export class User {
     lastname: string;
     firstname: string;
     pic: any;
+    lang: string;
 }

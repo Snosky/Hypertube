@@ -71,7 +71,8 @@
                     <ngb-tab title="Torrents">
                         <ng-template ngbTabContent>
                             <!-- Episode List -->
-                            <div class="episodes-list" *ngIf="episodes">
+                            <h4 *ngIf="!episodes.length">Fetching episodes, please wait...</h4>
+                            <div class="episodes-list" *ngIf="episodes.length">
                                 <h3>Episodes :</h3>
                                 <ul class="list-group">
                                     <li class="list-group-item" *ngFor="let episode of episodes" [class.list-group-item-success]="episode.seen">

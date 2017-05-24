@@ -67,6 +67,12 @@ export class UserService {
             .catch(this.handleErrorObs);
     }
 
+    updateLang(lang: string): Observable<any> {
+        return this.authHttp.get(this.config.apiUrl + '/user/lang/' + lang)
+            .map(res => res.json())
+            .catch(this.handleErrorObs);
+    }
+
     private handleError(error: Response | any) {
         let err;
         if (error instanceof Response) {

@@ -68,6 +68,11 @@ var UserService = (function () {
             .map(function (res) { return res.json(); })
             .catch(this.handleErrorObs);
     };
+    UserService.prototype.updateLang = function (lang) {
+        return this.authHttp.get(this.config.apiUrl + '/user/lang/' + lang)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleErrorObs);
+    };
     UserService.prototype.handleError = function (error) {
         var err;
         if (error instanceof http_1.Response) {
