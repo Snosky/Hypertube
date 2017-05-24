@@ -39,7 +39,10 @@ var AppComponent = (function () {
         if (['fre', 'eng'].indexOf(lang) === -1)
             return false;
         this.userService.updateLang(lang)
-            .subscribe(function (result) { return _this.currentUser.lang = lang; }, function (error) { return _this.flash.error(error); });
+            .subscribe(function (result) {
+            _this.currentUser.lang = lang;
+            _this.authService.saveToken(result.token);
+        }, function (error) { return _this.flash.error(error); });
     };
     AppComponent.prototype.ngOnDestroy = function () {
         if (this.currentUser) {
