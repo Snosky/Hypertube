@@ -30,6 +30,7 @@ router.get('/movie/watch/:torrentid', stream.movieStream, stream.streamFile);
 router.get('/movie/:slug', jwtauth, movie.getOne);
 router.get('/movie/:slug/torrents', jwtauth, movie.getTorrents);
 router.get('/movie/:id_movie/seen', jwtauth, movie.seen);
+router.post('/movie/subtitles', stream.subtitles);
 
 
 // Shows

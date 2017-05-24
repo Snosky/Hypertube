@@ -8,7 +8,11 @@ const pump = require('pump');
 const request = require('request');
 const MovieTorrent = require('../models/movieTorrent');
 const OS = require('opensubtitles-api');
-const OpenSubtitles = new OS('UserAgent');
+const OpenSubtitles = new OS({
+    useragent:'UserAgent',
+    username: 'sqku',
+    password: 'hypertube123',
+});
 const EpisodeTorrent = require('../models/episodeTorrent');
 
 module.exports.movieStream = function(req, res, next){
@@ -170,10 +174,26 @@ module.exports.streamFile = function(req, res) {
 module.exports.subtitles = function (req, res) {
 
     OpenSubtitles.search({
-        sublanguageid: lang,
-        filesize: torrent.size,
-        extensions: ['srt', 'vtt'],
-        limit: 'best',
-        query: torrent.title + " " + torrent.info.year
-    })
+        // hash: req.body.hash,
+        imdbid: req.body.imdb_code,
+        sublanguageid: 'fre',
+        gzip: true
+    }).then(subtitles => {
+        if (subtitles.fr) {
+            console.log('Subtitle found:', subtitles);
+            require('request')({
+                url: subtitles.fr.url,
+                encoding: null
+            }, (error, response, data) => {
+                if (error) throw error;
+                require('zlib').unzip(data, (error, buffer) => {
+                    if (error) throw error;
+                    const subtitle_content = buffer.toString(subtitles.fr.encoding);
+                    console.log('Subtitle content:', subtitle_content);
+                });
+            });
+        } else {
+            throw 'no subtitle found';
+        }
+    }).catch(console.error);
 };
