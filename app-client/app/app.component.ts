@@ -44,7 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
             .subscribe(
                 result => {
                     this.currentUser.lang = lang;
-                    console.log(result);
+                    this.authService.saveToken(result.token)
                 },
                 error => this.flash.error(error)
             );
