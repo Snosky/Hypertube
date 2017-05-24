@@ -13,14 +13,21 @@ var core_1 = require("@angular/core");
 var movie_service_1 = require("../movie.service");
 var show_service_1 = require("../show.service");
 var flash_service_1 = require("../flash.service");
+var subtitles_service_1 = require("../subtitles.service");
 var StreamComponent = (function () {
-    function StreamComponent(movieService, showService, flash) {
+    function StreamComponent(movieService, showService, subtitlesService, flash) {
         this.movieService = movieService;
         this.showService = showService;
+        this.subtitlesService = subtitlesService;
         this.flash = flash;
         this.preload = 'auto';
         this.viewSend = false;
     }
+    StreamComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.subtitlesService.getSubtitles(this.id)
+            .subscribe(function (subtitles) { return _this.subtitles = subtitles; }, function (error) { return _this.flash.error(error); });
+    };
     StreamComponent.prototype.onPlayerReady = function (api) {
         var _this = this;
         this.api = api;
@@ -55,6 +62,7 @@ StreamComponent = __decorate([
     }),
     __metadata("design:paramtypes", [movie_service_1.MovieService,
         show_service_1.ShowService,
+        subtitles_service_1.SubtitlesService,
         flash_service_1.FlashService])
 ], StreamComponent);
 exports.StreamComponent = StreamComponent;

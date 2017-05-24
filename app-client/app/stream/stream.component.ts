@@ -1,9 +1,10 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {VgAPI} from 'videogular2/core';
 import {MovieService} from "../movie.service";
 import {ShowService} from "../show.service";
 import {Subject} from "rxjs";
 import {FlashService} from "../flash.service";
+import {SubtitlesService} from "../subtitles.service";
 
 @Component({
     selector: 'app-stream',
@@ -11,10 +12,11 @@ import {FlashService} from "../flash.service";
     styleUrls: ['./stream.component.css'],
     inputs: ['source', 'type', 'id']
 })
-export class StreamComponent {
+export class StreamComponent implements OnInit {
     preload:string = 'auto';
     api: VgAPI;
     viewSend = false;
+    subtitles:any;
 
     @Input()
     type: string;
@@ -25,8 +27,17 @@ export class StreamComponent {
     constructor(
         private movieService: MovieService,
         private showService: ShowService,
+        private subtitlesService: SubtitlesService,
         private flash: FlashService
     ) { }
+
+    ngOnInit() {
+        this.subtitlesService.getSubtitles(this.id)
+            .subscribe(
+                subtitles => this.subtitles = subtitles,
+                error => this.flash.error(error)
+            )
+    }
 
     onPlayerReady(api:VgAPI) {
         this.api = api;

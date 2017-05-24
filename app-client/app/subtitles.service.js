@@ -11,15 +11,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var app_config_1 = require("./app.config");
+var angular2_jwt_1 = require("angular2-jwt");
+var Observable_1 = require("rxjs/Observable");
+require("rxjs/add/observable/throw");
+require("rxjs/add/operator/catch");
+require("rxjs/add/operator/map");
+var http_1 = require("@angular/http");
 var SubtitlesService = (function () {
-    function SubtitlesService(config) {
+    function SubtitlesService(config, authHttp) {
         this.config = config;
+        this.authHttp = authHttp;
     }
+    SubtitlesService.prototype.getSubtitles = function (torrent_id) {
+        return this.authHttp.get(this.config.apiUrl + '/movie/subtitles/' + torrent_id)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleError);
+    };
+    SubtitlesService.prototype.handleError = function (error) {
+        // In a real world app, you might use a remote logging infrastructure
+        var errMsg;
+        if (error instanceof http_1.Response) {
+            var body = error.json() || '';
+            var err = body.error || JSON.stringify(body);
+            errMsg = error.status + " - " + (error.statusText || '') + " " + err;
+        }
+        else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error(errMsg);
+        return Observable_1.Observable.throw(errMsg);
+    };
     return SubtitlesService;
 }());
 SubtitlesService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [app_config_1.AppConfig])
+    __metadata("design:paramtypes", [app_config_1.AppConfig,
+        angular2_jwt_1.AuthHttp])
 ], SubtitlesService);
 exports.SubtitlesService = SubtitlesService;
 //# sourceMappingURL=subtitles.service.js.map

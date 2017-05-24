@@ -1,7 +1,6 @@
 let CronJob = require('cron').CronJob;
-let EpisodeTorrent = require('/app-server/models/episodeTorrent');
-let epi
-let MovieTorrent = require('/app-server/models/movieTorrent');
+let EpisodeTorrent = require('../models/episodeTorrent');
+let MovieTorrent = require('../models/movieTorrent');
 let fse = require('fs-extra');
 let config = require('../config/config');
 
