@@ -1,2 +1,7 @@
-<a (click)="facebookLogin()" id="facebookLink" class="btn btn-block">FACEBOOK</a>
-<a (click)="login42()" id="42Link" class="btn btn-block">42</a>
+<div *ngIf="!loading">
+    <a (click)="facebookLogin()" id="facebookLink" class="btn btn-block">FACEBOOK</a>
+    <a (click)="login42()" id="42Link" class="btn btn-block">42</a>
+</div>
+<div *ngIf="loading">
+    Loading please wait...
+</div>
