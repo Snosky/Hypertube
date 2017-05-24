@@ -42,7 +42,7 @@ export class ShowComponent implements OnInit, AfterViewInit {
         this.showService.getEpisodesObs(this.slug)
             .subscribe(
                 episodes => this.episodes = episodes,
-                error => this.flash.error(err)
+                error => this.flash.error(error)
             )
     }
 

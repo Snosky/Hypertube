@@ -37,7 +37,7 @@ var ShowComponent = (function () {
     ShowComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
         this.showService.getEpisodesObs(this.slug)
-            .subscribe(function (episodes) { return _this.episodes = episodes; }, function (error) { return _this.flash.error(err); });
+            .subscribe(function (episodes) { return _this.episodes = episodes; }, function (error) { return _this.flash.error(error); });
     };
     ShowComponent.prototype.launchStream = function () {
         this.openVideo = true;
