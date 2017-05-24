@@ -25,8 +25,9 @@
     </vg-controls>
 
     <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin [src]="source">
-        <track kind="subtitles" label="English" src="http://static.videogular.com/assets/subs/pale-blue-dot.vtt" srclang="en" default>
-        <track kind="subtitles" label="Español" src="http://static.videogular.com/assets/subs/pale-blue-dot-es.vtt" srclang="es">
+
+        <track *ngIf="subtitles && subtitles.eng" kind="subtitles" label="English" [src]="subtitles.eng" srclang="en" [default]="currentUser.lang === 'eng'">
+        <track *ngIf="subtitles && subtitles.fre" kind="subtitles" label="Français" [src]="subtitles.fre" srclang="fr" [default]="currentUser.lang === 'fre'">
     </video>
 </vg-player>
 

@@ -22,6 +22,7 @@ export class MovieComponent implements OnInit, AfterViewInit {
     info: any = {};
     torrent: string;
     stream: string;
+    openVideo = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -52,11 +53,13 @@ export class MovieComponent implements OnInit, AfterViewInit {
     }
 
     launchStream() {
-        this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
+        this.openVideo = true;
+        //this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
     }
 
     closeVideo() {
-        this.stream = null;
+        this.openVideo = false;
+        //this.stream = null;
     }
 
 }

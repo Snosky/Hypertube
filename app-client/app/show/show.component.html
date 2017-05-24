@@ -1,4 +1,4 @@
-<div *ngIf="show && !stream" class="row h-100 movie-container" [style.background-image]="'url(' + show.background_image + ')'">
+<div *ngIf="show && !openVideo" class="row h-100 movie-container" [style.background-image]="'url(' + show.background_image + ')'">
     <div class="col-12">
         <div class="row bg">
             <div class="col-12 col-sm-3 movie-image-container">
@@ -104,7 +104,7 @@
     </div>
 </div>
 
-<div class="video" *ngIf="stream">
+<div class="video" *ngIf="openVideo">
     <button (click)="closeVideo()">Back to show</button>
-    <app-stream [source]="stream" type="show" [id]="torrent.episode_id"></app-stream>
+    <app-stream [torrentid]="torrent._id" type="show" [id]="torrent.episode_id"></app-stream>
 </div>

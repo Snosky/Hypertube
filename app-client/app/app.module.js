@@ -43,6 +43,7 @@ var buffering_1 = require("videogular2/buffering");
 var comment_component_1 = require("./comment/comment.component");
 var comment_service_1 = require("./comment.service");
 var profile_component_1 = require("./profile/profile.component");
+var subtitles_service_1 = require("./subtitles.service");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -103,7 +104,8 @@ AppModule = __decorate([
             movie_torrent_service_1.MovieTorrentService,
             show_service_1.ShowService,
             omdb_service_1.OmdbService,
-            comment_service_1.CommentService
+            comment_service_1.CommentService,
+            subtitles_service_1.SubtitlesService
         ],
         bootstrap: [app_component_1.AppComponent]
     })

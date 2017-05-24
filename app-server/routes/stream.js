@@ -10,19 +10,16 @@ const pump = require('pump');
 const request = require('request');
 const MovieTorrent = require('../models/movieTorrent');
 const Movie = require('../models/movie');
+const EpisodeTorrent = require('../models/episodeTorrent');
+const Episode = require('../models/episode');
+const Show = require('../models/show');
 const OS = require('opensubtitles-api');
 const OpenSubtitles = new OS('OSTestUserAgentTemp');
 const config = require('../config/config');
-// const OpenSubtitles = new OS({
-//     useragent:'OSTestUserAgentTemp',
-//     username: 'sqku',
-//     password: 'hypertube123'
-// });
-const EpisodeTorrent = require('../models/episodeTorrent');
 
 module.exports.movieStream = function(req, res, next){
     if (!req.params.torrentid)
-        return res.status(401).json('No torrent magnet found');
+        return res.status(400).json('No torrent magnet found');
 
     MovieTorrent.findOneAndUpdate(
         { _id: req.params.torrentid },
@@ -31,7 +28,7 @@ module.exports.movieStream = function(req, res, next){
         function(err, torrent){
             if (err) return res.status(500).json('Server error');
 
-            if (!torrent) return res.status(401).json('Torrent not valid');
+            if (!torrent) return res.status(400).json('Torrent not valid');
 
             req.torrent = torrent;
             req.torrentType = 'movie';
@@ -43,7 +40,7 @@ module.exports.movieStream = function(req, res, next){
 
 module.exports.showStream = function(req, res, next){
     if (!req.params.torrentid)
-        return res.status(401).json('No torrent magnet found');
+        return res.status(400).json('No torrent magnet found');
 
     EpisodeTorrent.findOneAndUpdate(
         { _id: req.params.torrentid },
@@ -52,7 +49,7 @@ module.exports.showStream = function(req, res, next){
         function(err, torrent){
             if (err) return res.status(500).json('Server error');
 
-            if (!torrent) return res.status(401).json('Torrent not valid');
+            if (!torrent) return res.status(400).json('Torrent not valid');
 
             req.torrent = torrent;
             req.torrentType = 'show';
@@ -101,7 +98,7 @@ module.exports.streamFile = function(req, res) {
     engine.on('ready', function(){
         if (engine.files.length === 0) {
             console.log("No peers");
-            return res.status(401).json("No peers");
+            return res.status(400).json("No peers");
         }
 
 
@@ -178,14 +175,44 @@ module.exports.streamFile = function(req, res) {
 module.exports.movieSubtitles = function(req, res, next) {
     let torrent_id = req.params.torrent_id;
 
-    MovieTorrent.findOne({_id: torrent_id}, function(err, torrent){
+    MovieTorrent.findOne({_id: torrent_id})
+        .populate('id_movie', {imdb_code: 1})
+        .exec(function(err, torrent){
         if (err) return res.status(500).json(err);
 
-        if (!torrent) return res.status(401).json('no movie');
+        console.log(torrent_id);
 
-        req.torrent = torrent;
+        if (!torrent) return res.status(400).json('no torrent');
+
+        req.torrent = {
+            torrent_id: torrent._id,
+            imdb_code: torrent.id_movie.imdb_code
+        };
+        console.log(req.torrent);
         next();
     })
+};
+
+module.exports.showSubtitles = function(req, res, next) {
+    let torrent_id = req.params.torrent_id;
+
+    EpisodeTorrent.findOne({_id: torrent_id})
+        .populate({
+            path: 'episode_id',
+            select: '_id show_id',
+            populate: { path: 'show_id', select: 'imdb_code' }
+        })
+        .exec(function(err, torrent){
+            if (err) return res.status(500).json(err);
+
+            if (!torrent) return res.status(400).json('no torrent');
+
+            req.torrent = {
+                torrent_id: torrent._id,
+                imdb_code: torrent.episode_id.show_id.imdb_code
+            };
+            next();
+        });
 };
 
 module.exports.subtitles = function(req, res) {
@@ -193,52 +220,42 @@ module.exports.subtitles = function(req, res) {
 
     if (!torrent) return res.status(500).json({'message': 'torrent error'});
 
-    Movie.findOne({ _id: torrent.id_movie }, function(err, movie){
+    let subpath = config.FOLDER_SAVE + torrent.torrent_id + '/subtitles';
+    let subtitlesUrl = {};
+    fse.pathExists(subpath, function(err, exist){
         if (err) return res.status(500).json(err);
 
-        if (!movie) return res.status(401).json("no movie");
+        if (exist) {
+            subtitlesUrl.fre = '/subtitles/' + torrent.torrent_id + '/fre.vtt';
+            subtitlesUrl.eng = '/subtitles/' + torrent.torrent_id + '/eng.vtt';
+            return res.status(200).json(subtitlesUrl);
+        }
+        OpenSubtitles.search({imdbid: torrent.imdb_code, sublanguageid: 'fre, eng'})
+            .then(function(subtitles){
+                if (!subtitles['fr'] && !subtitles['en'])
+                    return res.status(400).json({'message': 'No subtitles available.'});
 
-        let subpath = config.FOLDER_SAVE + torrent._id + '/subtitles';
-        let subtitlesUrl = {};
-        fse.pathExists(subpath, function(err, exist){
-            if (err) return res.status(500).json(err);
+                fse.mkdirs(subpath, function(err){
+                    if (err) return res.status(500).json(err);
 
-            if (exist) {
-                subtitlesUrl.fre = '/subtitles/' + torrent._id + '/fre.vtt';
-                subtitlesUrl.eng = '/subtitles/' + torrent._id + '/eng.vtt';
-                return res.status(200).json(subtitlesUrl);
-            }
-            console.log(movie);
-            OpenSubtitles.search({imdbid: movie.imdb_code, sublanguageid: 'fre, eng'})
-                .then(function(subtitles){
+                    if (subtitles['fr']) {
+                        request(subtitles['fr'].url).pipe(srt2vtt())
+                            .pipe(fs.createWriteStream(subpath + '/fre.vtt'));
+                        subtitlesUrl.fre = '/subtitles/' + torrent.torrent_id + '/fre.vtt';
+                    }
 
-                    console.log(subtitles);
-
-                    if (!subtitles['fr'] && !subtitles['en'])
-                        return res.status(401).json({'message': 'No subtitles available.'});
-
-                    fse.mkdirs(subpath, function(err){
-                        if (err) return res.status(500).json(err);
-
-                        if (subtitles['fr']) {
-                            request(subtitles['fr'].url).pipe(srt2vtt())
-                                .pipe(fs.createWriteStream(subpath + '/fre.vtt'));
-                            subtitlesUrl.fre = '/subtitles/' + torrent._id + '/fre.vtt';
-                        }
-
-                        if (subtitles['en']) {
-                            request(subtitles['en'].url).pipe(srt2vtt())
-                                .pipe(fs.createWriteStream(subpath + '/eng.vtt'));
-                            subtitlesUrl.eng = '/subtitles/' + torrent._id + '/eng.vtt';
-                        }
-                        return res.status(200).json(subtitlesUrl);
-                    });
-                })
-                .catch(function(err){
-                    return res.status(500).json(err);
-                })
+                    if (subtitles['en']) {
+                        request(subtitles['en'].url).pipe(srt2vtt())
+                            .pipe(fs.createWriteStream(subpath + '/eng.vtt'));
+                        subtitlesUrl.eng = '/subtitles/' + torrent.torrent_id + '/eng.vtt';
+                    }
+                    return res.status(200).json(subtitlesUrl);
+                });
+            })
+            .catch(function(err){
+                return res.status(500).json(err);
+            })
         });
-    });
 };
 /*
 module.exports.subtitles = function (req, res) {

@@ -36,6 +36,7 @@ import {VgBufferingModule} from 'videogular2/buffering';
 import {CommentComponent} from "./comment/comment.component";
 import {CommentService} from "./comment.service";
 import {ProfileComponent} from "./profile/profile.component";
+import {SubtitlesService} from "./subtitles.service";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
@@ -91,7 +92,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         MovieTorrentService,
         ShowService,
         OmdbService,
-        CommentService
+        CommentService,
+        SubtitlesService
     ],
     bootstrap:    [ AppComponent]
 })

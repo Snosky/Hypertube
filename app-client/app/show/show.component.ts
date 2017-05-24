@@ -17,9 +17,7 @@ export class ShowComponent implements OnInit, AfterViewInit {
     info: any;
     episodes: Episode[] = [];
     torrent: any = {};
-    stream: string;
-
-    season = -1;
+    openVideo = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -49,10 +47,10 @@ export class ShowComponent implements OnInit, AfterViewInit {
     }
 
     launchStream() {
-        this.stream = 'http://localhost:3000/show/watch/' + this.torrent._id;
+        this.openVideo = true;
     }
 
     closeVideo() {
-        this.stream = null;
+        this.openVideo = false;
     }
 }

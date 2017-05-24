@@ -14,8 +14,10 @@ var movie_service_1 = require("../movie.service");
 var show_service_1 = require("../show.service");
 var flash_service_1 = require("../flash.service");
 var subtitles_service_1 = require("../subtitles.service");
+var auth_service_1 = require("../auth.service");
 var StreamComponent = (function () {
-    function StreamComponent(movieService, showService, subtitlesService, flash) {
+    function StreamComponent(authService, movieService, showService, subtitlesService, flash) {
+        this.authService = authService;
         this.movieService = movieService;
         this.showService = showService;
         this.subtitlesService = subtitlesService;
@@ -25,7 +27,9 @@ var StreamComponent = (function () {
     }
     StreamComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.subtitlesService.getSubtitles(this.id)
+        this.currentUser = this.authService.currentUser();
+        this.source = 'http://localhost:3000/' + this.type + '/watch/' + this.torrentid;
+        this.subtitlesService.getSubtitles(this.torrentid)
             .subscribe(function (subtitles) { return _this.subtitles = subtitles; }, function (error) { return _this.flash.error(error); });
     };
     StreamComponent.prototype.onPlayerReady = function (api) {
@@ -53,14 +57,19 @@ __decorate([
     core_1.Input(),
     __metadata("design:type", String)
 ], StreamComponent.prototype, "id", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", String)
+], StreamComponent.prototype, "torrentid", void 0);
 StreamComponent = __decorate([
     core_1.Component({
         selector: 'app-stream',
         templateUrl: './stream.component.html',
         styleUrls: ['./stream.component.css'],
-        inputs: ['source', 'type', 'id']
+        inputs: ['torrentid', 'type', 'id']
     }),
-    __metadata("design:paramtypes", [movie_service_1.MovieService,
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        movie_service_1.MovieService,
         show_service_1.ShowService,
         subtitles_service_1.SubtitlesService,
         flash_service_1.FlashService])

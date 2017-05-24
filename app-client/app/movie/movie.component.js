@@ -23,6 +23,7 @@ var MovieComponent = (function () {
         this.omdbService = omdbService;
         this.movieTorrentService = movieTorrentService;
         this.info = {};
+        this.openVideo = false;
     }
     MovieComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -43,10 +44,12 @@ var MovieComponent = (function () {
         return this.sanitizer.bypassSecurityTrustResourceUrl('//www.youtube.com/embed/' + this.movie.yt_trailer_code + '?rel=0');
     };
     MovieComponent.prototype.launchStream = function () {
-        this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
+        this.openVideo = true;
+        //this.stream = 'http://localhost:3000/movie/watch/' + this.torrent;
     };
     MovieComponent.prototype.closeVideo = function () {
-        this.stream = null;
+        this.openVideo = false;
+        //this.stream = null;
     };
     return MovieComponent;
 }());

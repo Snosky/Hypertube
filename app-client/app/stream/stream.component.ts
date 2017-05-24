@@ -5,18 +5,22 @@ import {ShowService} from "../show.service";
 import {Subject} from "rxjs";
 import {FlashService} from "../flash.service";
 import {SubtitlesService} from "../subtitles.service";
+import {AuthService} from "../auth.service";
+import {User} from "../_models/user";
 
 @Component({
     selector: 'app-stream',
     templateUrl: './stream.component.html',
     styleUrls: ['./stream.component.css'],
-    inputs: ['source', 'type', 'id']
+    inputs: ['torrentid', 'type', 'id']
 })
 export class StreamComponent implements OnInit {
+    currentUser: User;
     preload:string = 'auto';
     api: VgAPI;
     viewSend = false;
     subtitles:any;
+    source: string;
 
     @Input()
     type: string;
@@ -24,7 +28,11 @@ export class StreamComponent implements OnInit {
     @Input()
     id: string;
 
+    @Input()
+    torrentid: string;
+
     constructor(
+        private authService: AuthService,
         private movieService: MovieService,
         private showService: ShowService,
         private subtitlesService: SubtitlesService,
@@ -32,7 +40,11 @@ export class StreamComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.subtitlesService.getSubtitles(this.id)
+        this.currentUser = this.authService.currentUser();
+
+        this.source = 'http://localhost:3000/' + this.type + '/watch/' + this.torrentid;
+
+        this.subtitlesService.getSubtitles(this.torrentid)
             .subscribe(
                 subtitles => this.subtitles = subtitles,
                 error => this.flash.error(error)

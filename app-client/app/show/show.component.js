@@ -22,7 +22,7 @@ var ShowComponent = (function () {
         this.flash = flash;
         this.episodes = [];
         this.torrent = {};
-        this.season = -1;
+        this.openVideo = false;
     }
     ShowComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -40,10 +40,10 @@ var ShowComponent = (function () {
             .subscribe(function (episodes) { return _this.episodes = episodes; }, function (error) { return _this.flash.error(err); });
     };
     ShowComponent.prototype.launchStream = function () {
-        this.stream = 'http://localhost:3000/show/watch/' + this.torrent._id;
+        this.openVideo = true;
     };
     ShowComponent.prototype.closeVideo = function () {
-        this.stream = null;
+        this.openVideo = false;
     };
     return ShowComponent;
 }());
