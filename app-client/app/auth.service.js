@@ -42,7 +42,6 @@ var AuthService = (function () {
         user.lastname = payload.lastname;
         user.firstname = payload.firstname;
         user.lang = payload.lang;
-        console.log(payload);
         user.pic = payload.pic;
         return user;
     };

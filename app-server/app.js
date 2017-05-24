@@ -4,14 +4,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const Promise = require('bluebird');
-const logger = require('morgan');
 
 const app = express();
 
 const config = require('./config/config');
 
 app.use(cors());
-//app.use(logger('dev'));
 
 app.use(express.static(__dirname + '/public'));
 

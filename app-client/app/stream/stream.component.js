@@ -12,10 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var movie_service_1 = require("../movie.service");
 var show_service_1 = require("../show.service");
+var flash_service_1 = require("../flash.service");
 var StreamComponent = (function () {
-    function StreamComponent(movieService, showService) {
+    function StreamComponent(movieService, showService, flash) {
         this.movieService = movieService;
         this.showService = showService;
+        this.flash = flash;
         this.preload = 'auto';
         this.viewSend = false;
     }
@@ -52,7 +54,8 @@ StreamComponent = __decorate([
         inputs: ['source', 'type', 'id']
     }),
     __metadata("design:paramtypes", [movie_service_1.MovieService,
-        show_service_1.ShowService])
+        show_service_1.ShowService,
+        flash_service_1.FlashService])
 ], StreamComponent);
 exports.StreamComponent = StreamComponent;
 //# sourceMappingURL=stream.component.js.map

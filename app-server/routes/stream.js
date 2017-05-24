@@ -136,7 +136,7 @@ module.exports.streamFile = function(req, res) {
             stream = videoFile.createReadStream({start: start, end: end});
 
             stream.on('error', function(err){
-                console.log(err);
+                return res.status(500).json(err);
             });
 
             if (['.webm', '.mp4'].indexOf(videoExt) === -1) { // If not one of this ext
@@ -146,7 +146,7 @@ module.exports.streamFile = function(req, res) {
                         .videoBitrate(1024)
                         .outputOptions(['-threads 8', '-deadline realtime', '-error-resilient 1']);
                 } catch (err) {
-                    console.error(err);
+                    return res.status(500).json(err);
                 }
             }
 

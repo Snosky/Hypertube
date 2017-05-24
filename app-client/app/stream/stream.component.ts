@@ -3,6 +3,7 @@ import {VgAPI} from 'videogular2/core';
 import {MovieService} from "../movie.service";
 import {ShowService} from "../show.service";
 import {Subject} from "rxjs";
+import {FlashService} from "../flash.service";
 
 @Component({
     selector: 'app-stream',
@@ -23,7 +24,8 @@ export class StreamComponent {
 
     constructor(
         private movieService: MovieService,
-        private showService: ShowService
+        private showService: ShowService,
+        private flash: FlashService
     ) { }
 
     onPlayerReady(api:VgAPI) {
