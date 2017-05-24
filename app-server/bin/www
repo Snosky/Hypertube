@@ -1,6 +1,6 @@
 const http = require('http');
 const app = require('../app');
-const cron = require('./cron.js');
+// const cron = require('./cron.js');
 
 app.set('port', process.env.PORT || 3000);
 const server = http.createServer(app);
@@ -8,7 +8,7 @@ const port = app.get('port');
 server.listen(port, () => {
 
 
-    cron();
+    // cron();
 
 
     console.log(`API running on localhost:${port}`);
