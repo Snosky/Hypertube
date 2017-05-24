@@ -52,7 +52,6 @@ export class MovieService {
     }
 
     updateViewTime(movie_id: string) {
-        console.log(`Movie: ${movie_id}`);
         return this.authHttp.get(this.config.apiUrl + '/movie/' + movie_id + '/seen')
             .toPromise();
     }

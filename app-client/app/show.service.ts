@@ -35,8 +35,6 @@ export class ShowService {
         if (params.order && params.order !== 'default')
             httpparams.set('order', params.order);
 
-        console.log(httpparams);
-
         return this.authHttp.get(this.config.apiUrl + '/shows', { search: httpparams })
             .map(res => res.json() as Show[])
     }
@@ -66,7 +64,8 @@ export class ShowService {
     }
 
     updateViewTime(show_id: string) {
-        return this.authHttp.get(this.config.apiUrl + '/show/'+ show_id +'/seen');
+        return this.authHttp.get(this.config.apiUrl + '/show/'+ show_id +'/seen')
+            .toPromise();
     }
 
     private handleError (error: Response | any) {
@@ -79,7 +78,6 @@ export class ShowService {
         } else {
             errMsg = error.message ? error.message : error.toString();
         }
-        console.error(errMsg);
         return Observable.throw(errMsg);
     }
 

@@ -1,4 +1,4 @@
-<vg-player (onPlayerReady)="onPlayerReady($event)">
+<vg-player *ngIf="loadPlayer" (onPlayerReady)="onPlayerReady($event)">
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>
 
@@ -25,14 +25,7 @@
     </vg-controls>
 
     <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin [src]="source">
-
-        <track *ngIf="subtitles && subtitles.eng" kind="subtitles" label="English" [src]="subtitles.eng" srclang="en" [default]="currentUser.lang === 'eng'">
-        <track *ngIf="subtitles && subtitles.fre" kind="subtitles" label="Français" [src]="subtitles.fre" srclang="fr" [default]="currentUser.lang === 'fre'">
+        <track *ngIf="subtitles && subtitles.eng" kind="subtitles" label="English" [src]="'http://localhost:3000' + subtitles.eng" srclang="en" [default]="currentUser.lang === 'eng'">
+        <track *ngIf="subtitles && subtitles.fre" kind="subtitles" label="Français" [src]="'http://localhost:3000' + subtitles.fre" srclang="fr" [default]="currentUser.lang === 'fre'">
     </video>
 </vg-player>
-
-
-<div *ngIf="subtitles">
-    {{subtitles.fre}}
-    {{subtitles.eng}}
-</div>

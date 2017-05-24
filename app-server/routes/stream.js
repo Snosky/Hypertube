@@ -79,8 +79,6 @@ module.exports.streamFile = function(req, res) {
         mimetype,
         contentType;
 
-    console.log(torrentUrl);
-
     engine = torrentStream(torrentUrl, {
         connections: 3000,
         uploads: 10,
@@ -226,8 +224,8 @@ module.exports.subtitles = function(req, res) {
         if (err) return res.status(500).json(err);
 
         if (exist) {
-            subtitlesUrl.fre = '/subtitles/' + torrent.torrent_id + '/fre.vtt';
-            subtitlesUrl.eng = '/subtitles/' + torrent.torrent_id + '/eng.vtt';
+            subtitlesUrl.fre = '/subtitle/' + torrent.torrent_id + '/fre.vtt';
+            subtitlesUrl.eng = '/subtitle/' + torrent.torrent_id + '/eng.vtt';
             return res.status(200).json(subtitlesUrl);
         }
         OpenSubtitles.search({imdbid: torrent.imdb_code, sublanguageid: 'fre, eng'})
@@ -241,13 +239,13 @@ module.exports.subtitles = function(req, res) {
                     if (subtitles['fr']) {
                         request(subtitles['fr'].url).pipe(srt2vtt())
                             .pipe(fs.createWriteStream(subpath + '/fre.vtt'));
-                        subtitlesUrl.fre = '/subtitles/' + torrent.torrent_id + '/fre.vtt';
+                        subtitlesUrl.fre = '/subtitle/' + torrent.torrent_id + '/fre.vtt';
                     }
 
                     if (subtitles['en']) {
                         request(subtitles['en'].url).pipe(srt2vtt())
                             .pipe(fs.createWriteStream(subpath + '/eng.vtt'));
-                        subtitlesUrl.eng = '/subtitles/' + torrent.torrent_id + '/eng.vtt';
+                        subtitlesUrl.eng = '/subtitle/' + torrent.torrent_id + '/eng.vtt';
                     }
                     return res.status(200).json(subtitlesUrl);
                 });
@@ -257,80 +255,8 @@ module.exports.subtitles = function(req, res) {
             })
         });
 };
-/*
-module.exports.subtitles = function (req, res) {
-    let torrent = req.torrent;
 
-    if (!torrent) return res.status(500).json('no torrent');
-
-    Movie.find({ _id: torrent.movie_id }, function(err, movie){
-        if(err)
-            return res.status(500).json("couldnt find movie");
-
-        if (!movie._id)
-            return res.status(401).json('movie not found');
-
-        fse.pathExists('/tmp/hypertube/' + torrent._id + '/subtitles/', function (err, exist) {
-            if (err)
-                return res.status(500).json("Server error");
-
-            let sub_tab = {};
-            if (exist === false)
-            {
-                OpenSubtitles.search({
-                    imdbid: movie.imdb_code,
-                    sublanguageid: 'fre, eng'
-                }).then(function (subtitles) {
-                    console.log(subtitles);
-
-                    if(subtitles['fr'])
-                    {
-                        let sub_path = '/tmp/hypertube/' + req.body.movie_id + '/subtitles/';
-
-                        fse.mkdirs(sub_path, function(err){
-                            if (err)
-                                return res.status(401).json("cant create directory for subtitles");
-                            else
-                            {
-                                request(subtitles['fr'].url)
-                                    .pipe(srt2vtt())
-                                    .pipe(fs.createWriteStream(sub_path + "/" + "fre" + ".vtt"));
-                                sub_tab.fre = '/subtitles/' + torrent._id + '/fre';
-                                console.log("fre subtitles downloaded")
-                            }
-                        })
-                    }
-                    if(subtitles['en'])
-                    {
-                        let sub_path = '/tmp/hypertube/' + torrent._id + '/subtitles/';
-
-                        fse.mkdirs(sub_path, function(err){
-                            if (err)
-                                return res.status(401).json("cant create directory for subtitles");
-                            else
-                            {
-                                request(subtitles['en'].url)
-                                    .pipe(srt2vtt())
-                                    .pipe(fs.createWriteStream(sub_path + "/" + "eng" + ".vtt"));
-                                sub_tab.eng = '/subtitles/' + torrent._id + '/eng';
-                                console.log("eng subtitles downloaded")
-                            }
-                        })
-                    }
-                }).catch(function(err){
-                    return res.status(400).json(err);
-                });
-                return res.status(200).json(sub_tab);
-            }
-            else
-            {
-                sub_tab = {
-                    fre: '/subtitles/' + torrent._id + '/fre',
-                    eng: '/subtitles/' + torrent._id + '/eng'
-                };
-                return res.status(200).json(sub_tab);
-            }
-        });
-    });
+module.exports.getSubtitleFile = function(req, res) {
+    console.log(config.FOLDER_SAVE + '/' + req.params.folder + '/subtitles/' + req.params.file);
+    res.sendFile(config.FOLDER_SAVE + '/' + req.params.folder + '/subtitles/' + req.params.file);
 };
-*/

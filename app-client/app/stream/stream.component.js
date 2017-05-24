@@ -23,14 +23,18 @@ var StreamComponent = (function () {
         this.subtitlesService = subtitlesService;
         this.flash = flash;
         this.preload = 'auto';
+        this.loadPlayer = false;
         this.viewSend = false;
     }
     StreamComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.currentUser = this.authService.currentUser();
         this.source = 'http://localhost:3000/' + this.type + '/watch/' + this.torrentid;
-        this.subtitlesService.getSubtitles(this.torrentid)
-            .subscribe(function (subtitles) { return _this.subtitles = subtitles; }, function (error) { return _this.flash.error(error); });
+        this.subtitlesService.getSubtitles(this.torrentid, this.type)
+            .subscribe(function (subtitles) {
+            _this.subtitles = subtitles;
+            _this.loadPlayer = true;
+        }, function (error) { return _this.flash.error(error); });
     };
     StreamComponent.prototype.onPlayerReady = function (api) {
         var _this = this;
@@ -43,7 +47,7 @@ var StreamComponent = (function () {
                 if (_this.type === 'movie')
                     _this.movieService.updateViewTime(_this.id).then(function () { console.log('Movie set to view'); }).catch(function (error) { return console.warn(error); });
                 else if (_this.type === 'show')
-                    _this.showService.updateViewTime(_this.id);
+                    _this.showService.updateViewTime(_this.id).then(function () { console.log('Movie set to view'); }).catch(function (error) { return console.warn(error); });
             }
         });
     };

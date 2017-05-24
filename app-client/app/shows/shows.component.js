@@ -72,7 +72,6 @@ var ShowsComponent = (function () {
         this.showService.yearsRange()
             .then(function (range) {
             _this.yearsRange = range;
-            console.log(range);
             _this.yearsRangeFormat = [range.min, range.max];
         });
         var pageSource = this.pageStream

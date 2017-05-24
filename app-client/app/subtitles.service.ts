@@ -16,8 +16,8 @@ export class SubtitlesService {
         private authHttp: AuthHttp
     ) {  }
 
-    getSubtitles(torrent_id: string) {
-        return this.authHttp.get(this.config.apiUrl + '/movie/subtitles/' + torrent_id)
+    getSubtitles(torrent_id: string, type: string) {
+        return this.authHttp.get(this.config.apiUrl + '/' + type + '/subtitles/' + torrent_id)
             .map(res => res.json())
             .catch(this.handleError)
     }

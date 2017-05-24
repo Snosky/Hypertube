@@ -90,6 +90,6 @@
 </div>
 
 <div class="video" *ngIf="openVideo">
-    <button (click)="closeVideo()">Back to show</button>
+    <button (click)="closeVideo()"class="btn btn-default">Back to movie</button>
     <app-stream [torrentid]="torrent" type="movie" [id]="movie._id"></app-stream>
 </div>

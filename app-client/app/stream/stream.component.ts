@@ -17,6 +17,7 @@ import {User} from "../_models/user";
 export class StreamComponent implements OnInit {
     currentUser: User;
     preload:string = 'auto';
+    loadPlayer = false;
     api: VgAPI;
     viewSend = false;
     subtitles:any;
@@ -41,12 +42,14 @@ export class StreamComponent implements OnInit {
 
     ngOnInit() {
         this.currentUser = this.authService.currentUser();
-
         this.source = 'http://localhost:3000/' + this.type + '/watch/' + this.torrentid;
 
-        this.subtitlesService.getSubtitles(this.torrentid)
+        this.subtitlesService.getSubtitles(this.torrentid, this.type)
             .subscribe(
-                subtitles => this.subtitles = subtitles,
+                subtitles => {
+                    this.subtitles = subtitles;
+                    this.loadPlayer = true;
+                },
                 error => this.flash.error(error)
             )
     }
@@ -64,7 +67,7 @@ export class StreamComponent implements OnInit {
                     if (this.type === 'movie')
                         this.movieService.updateViewTime(this.id).then(() => { console.log('Movie set to view') }).catch((error) => console.warn(error));
                     else if (this.type === 'show')
-                        this.showService.updateViewTime(this.id);
+                        this.showService.updateViewTime(this.id).then(() => { console.log('Movie set to view') }).catch((error) => console.warn(error));
                 }
             }
         );

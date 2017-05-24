@@ -52,7 +52,6 @@ var MovieService = (function () {
             .toPromise();
     };
     MovieService.prototype.updateViewTime = function (movie_id) {
-        console.log("Movie: " + movie_id);
         return this.authHttp.get(this.config.apiUrl + '/movie/' + movie_id + '/seen')
             .toPromise();
     };

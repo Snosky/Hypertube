@@ -89,7 +89,6 @@ export class ShowsComponent implements OnInit, AfterViewInit {
         this.showService.yearsRange()
             .then( range => {
                 this.yearsRange = range;
-                console.log(range);
                 this.yearsRangeFormat = [range.min, range.max]
             });
 

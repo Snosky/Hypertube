@@ -38,7 +38,6 @@ var ShowService = (function () {
             httpparams.set('rating', params.rating);
         if (params.order && params.order !== 'default')
             httpparams.set('order', params.order);
-        console.log(httpparams);
         return this.authHttp.get(this.config.apiUrl + '/shows', { search: httpparams })
             .map(function (res) { return res.json(); });
     };
@@ -63,7 +62,8 @@ var ShowService = (function () {
             .catch(this.handleError);
     };
     ShowService.prototype.updateViewTime = function (show_id) {
-        return this.authHttp.get(this.config.apiUrl + '/show/' + show_id + '/seen');
+        return this.authHttp.get(this.config.apiUrl + '/show/' + show_id + '/seen')
+            .toPromise();
     };
     ShowService.prototype.handleError = function (error) {
         // In a real world app, you might use a remote logging infrastructure
@@ -76,7 +76,6 @@ var ShowService = (function () {
         else {
             errMsg = error.message ? error.message : error.toString();
         }
-        console.error(errMsg);
         return Observable_1.Observable.throw(errMsg);
     };
     return ShowService;

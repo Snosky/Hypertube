@@ -44,6 +44,8 @@ router.get('/show/:slug', jwtauth, show.getOne);
 router.get('/show/:slug/episodes', jwtauth, show.getEpisodes);
 router.get('/show/:id_episode/seen', jwtauth, show.seen);
 
+router.get('/subtitle/:folder/:file', stream.getSubtitleFile);
+
 // Comments
 router.post('/comment/add', jwtauth, comment.addComment);
 router.get('/comment/get/:imdb_code', jwtauth, comment.getComment);

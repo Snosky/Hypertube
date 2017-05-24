@@ -22,8 +22,8 @@ var SubtitlesService = (function () {
         this.config = config;
         this.authHttp = authHttp;
     }
-    SubtitlesService.prototype.getSubtitles = function (torrent_id) {
-        return this.authHttp.get(this.config.apiUrl + '/movie/subtitles/' + torrent_id)
+    SubtitlesService.prototype.getSubtitles = function (torrent_id, type) {
+        return this.authHttp.get(this.config.apiUrl + '/' + type + '/subtitles/' + torrent_id)
             .map(function (res) { return res.json(); })
             .catch(this.handleError);
     };
