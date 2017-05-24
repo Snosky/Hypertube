@@ -41,10 +41,6 @@ export class ShowComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        /*this.showService.getEpisodes(this.slug)
-            .then( (episodes: Episode[]) => {
-                this.episodes = episodes;
-            })*/
         this.showService.getEpisodesObs(this.slug)
             .subscribe(
                 episodes => this.episodes = episodes,

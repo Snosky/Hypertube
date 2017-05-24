@@ -36,10 +36,6 @@ var ShowComponent = (function () {
     };
     ShowComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
-        /*this.showService.getEpisodes(this.slug)
-            .then( (episodes: Episode[]) => {
-                this.episodes = episodes;
-            })*/
         this.showService.getEpisodesObs(this.slug)
             .subscribe(function (episodes) { return _this.episodes = episodes; }, function (error) { return _this.flash.error(err); });
     };
