@@ -5,13 +5,13 @@ let fse = require('fs-extra');
 let config = require('../config/config');
 
 let job = new CronJob({
-    cronTime: '10 * * * * *',
+    cronTime: '00 00 6 * * *',
     onTick: function () {
 
     console.log("cron job start");
     let date = new Date();
-    // date.setMonth(date.getMonth() - 1);
-    date.setMonth(date.getMinutes() - 1);
+    date.setMonth(date.getMonth() - 1);
+    // date.setMonth(date.getMinutes() - 1);
     EpisodeTorrent.find({lastView : {$lt: date}}, function (err, result) {
         if (err)
             console.log("erreur cron");
@@ -39,6 +39,7 @@ let job = new CronJob({
         result.forEach(function (torrent) {
 
             fse.remove(config.FOLDER_SAVE + torrent._id, function (err) {
+
                 if (err)
                     console.log(err);
                 MovieTorrent.findOneAndUpdate({ _id: torrent._id}, {lastView: null}, function(err){
