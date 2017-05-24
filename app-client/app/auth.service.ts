@@ -34,6 +34,7 @@ export class AuthService {
         user.email = payload.email;
         user.lastname = payload.lastname;
         user.firstname = payload.firstname;
+        user.lang = payload.lang;
         user.pic = payload.pic;
         return user;
     }

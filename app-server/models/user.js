@@ -50,10 +50,8 @@ userSchema.methods.generateJwt = function() {
 
     return jwt.sign({
         _id: this._id,
-        //email: this.email,
         username: this.username,
-        //lastname: this.lastname,
-        //firstname: this.firstname,
+        lang: this.lang,
         pic: this.pic,
         exp: parseInt(expiry.getTime() / 1000)
     }, config.TOKEN_SECRET);
