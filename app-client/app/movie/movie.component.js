@@ -15,15 +15,13 @@ var platform_browser_1 = require("@angular/platform-browser");
 var movie_service_1 = require("../movie.service");
 var movie_torrent_service_1 = require("../movie-torrent.service");
 var omdb_service_1 = require("../omdb.service");
-var angular2_jwt_1 = require("angular2-jwt");
 var MovieComponent = (function () {
-    function MovieComponent(route, sanitizer, movieService, omdbService, movieTorrentService, authHttp) {
+    function MovieComponent(route, sanitizer, movieService, omdbService, movieTorrentService) {
         this.route = route;
         this.sanitizer = sanitizer;
         this.movieService = movieService;
         this.omdbService = omdbService;
         this.movieTorrentService = movieTorrentService;
-        this.authHttp = authHttp;
         this.info = {};
     }
     MovieComponent.prototype.ngOnInit = function () {
@@ -62,8 +60,7 @@ MovieComponent = __decorate([
         platform_browser_1.DomSanitizer,
         movie_service_1.MovieService,
         omdb_service_1.OmdbService,
-        movie_torrent_service_1.MovieTorrentService,
-        angular2_jwt_1.AuthHttp])
+        movie_torrent_service_1.MovieTorrentService])
 ], MovieComponent);
 exports.MovieComponent = MovieComponent;
 //# sourceMappingURL=movie.component.js.map

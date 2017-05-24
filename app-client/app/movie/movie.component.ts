@@ -28,8 +28,7 @@ export class MovieComponent implements OnInit, AfterViewInit {
         private sanitizer: DomSanitizer,
         private movieService: MovieService,
         private omdbService: OmdbService,
-        private movieTorrentService: MovieTorrentService,
-        private authHttp: AuthHttp
+        private movieTorrentService: MovieTorrentService
     ) { }
 
     ngOnInit() {

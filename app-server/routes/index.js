@@ -29,10 +29,10 @@ router.get('/user/lang/:lang', jwtauth, user.updateLang);
 router.get('/movies/years', jwtauth, movie.yearsRange);
 router.get('/movies', jwtauth, movie.getAll);
 router.get('/movie/watch/:torrentid', stream.movieStream, stream.streamFile);
+router.get('/movie/subtitles/:torrent_id', [stream.movieSubtitles], stream.subtitles);
 router.get('/movie/:slug', jwtauth, movie.getOne);
 router.get('/movie/:slug/torrents', jwtauth, movie.getTorrents);
 router.get('/movie/:id_movie/seen', jwtauth, movie.seen);
-router.post('/movie/subtitles', stream.subtitles);
 
 
 // Shows

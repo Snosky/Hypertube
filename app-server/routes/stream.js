@@ -3,7 +3,7 @@ const fs = require('fs');
 const fse = require('fs-extra');
 const http = require('http');
 const url = require('url');
-var srt2vtt = require('srt-to-vtt');
+const srt2vtt = require('srt-to-vtt');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const pump = require('pump');
@@ -12,6 +12,7 @@ const MovieTorrent = require('../models/movieTorrent');
 const Movie = require('../models/movie');
 const OS = require('opensubtitles-api');
 const OpenSubtitles = new OS('OSTestUserAgentTemp');
+const config = require('../config/config');
 // const OpenSubtitles = new OS({
 //     useragent:'OSTestUserAgentTemp',
 //     username: 'sqku',
@@ -68,7 +69,7 @@ module.exports.streamFile = function(req, res) {
     /*if (req.torrent.seeds === 0)
         return res.status(401).json('No seeds');*/
 
-    let filepath = '/tmp/hypertube/' + filename,
+    let filepath = config.FOLDER_SAVE + filename,
         videoFile,
         videoExt,
         test = 0,
@@ -177,16 +178,69 @@ module.exports.streamFile = function(req, res) {
 module.exports.movieSubtitles = function(req, res, next) {
     let torrent_id = req.params.torrent_id;
 
-    MovieTorrent.find({_id: torrent_id}, function(err, torrent){
+    MovieTorrent.findOne({_id: torrent_id}, function(err, torrent){
         if (err) return res.status(500).json(err);
 
-        if (!movie) return res.status(401).json('no movie');
+        if (!torrent) return res.status(401).json('no movie');
 
         req.torrent = torrent;
         next();
     })
 };
 
+module.exports.subtitles = function(req, res) {
+    let torrent = req.torrent;
+
+    if (!torrent) return res.status(500).json({'message': 'torrent error'});
+
+    Movie.findOne({ _id: torrent.id_movie }, function(err, movie){
+        if (err) return res.status(500).json(err);
+
+        if (!movie) return res.status(401).json("no movie");
+
+        let subpath = config.FOLDER_SAVE + torrent._id + '/subtitles';
+        let subtitlesUrl = {};
+        fse.pathExists(subpath, function(err, exist){
+            if (err) return res.status(500).json(err);
+
+            if (exist) {
+                subtitlesUrl.fre = '/subtitles/' + torrent._id + '/fre.vtt';
+                subtitlesUrl.eng = '/subtitles/' + torrent._id + '/eng.vtt';
+                return res.status(200).json(subtitlesUrl);
+            }
+            console.log(movie);
+            OpenSubtitles.search({imdbid: movie.imdb_code, sublanguageid: 'fre, eng'})
+                .then(function(subtitles){
+
+                    console.log(subtitles);
+
+                    if (!subtitles['fr'] && !subtitles['en'])
+                        return res.status(401).json({'message': 'No subtitles available.'});
+
+                    fse.mkdirs(subpath, function(err){
+                        if (err) return res.status(500).json(err);
+
+                        if (subtitles['fr']) {
+                            request(subtitles['fr'].url).pipe(srt2vtt())
+                                .pipe(fs.createWriteStream(subpath + '/fre.vtt'));
+                            subtitlesUrl.fre = '/subtitles/' + torrent._id + '/fre.vtt';
+                        }
+
+                        if (subtitles['en']) {
+                            request(subtitles['en'].url).pipe(srt2vtt())
+                                .pipe(fs.createWriteStream(subpath + '/eng.vtt'));
+                            subtitlesUrl.eng = '/subtitles/' + torrent._id + '/eng.vtt';
+                        }
+                        return res.status(200).json(subtitlesUrl);
+                    });
+                })
+                .catch(function(err){
+                    return res.status(500).json(err);
+                })
+        });
+    });
+};
+/*
 module.exports.subtitles = function (req, res) {
     let torrent = req.torrent;
 
@@ -262,3 +316,4 @@ module.exports.subtitles = function (req, res) {
         });
     });
 };
+*/

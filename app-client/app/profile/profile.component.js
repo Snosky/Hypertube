@@ -11,11 +11,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var user_service_1 = require("../user.service");
+var flash_service_1 = require("../flash.service");
+var router_1 = require("@angular/router");
 var ProfileComponent = (function () {
-    function ProfileComponent(userService) {
+    function ProfileComponent(route, userService, flash) {
+        this.route = route;
         this.userService = userService;
+        this.flash = flash;
     }
     ProfileComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.id = this.route.snapshot.params['id'];
+        this.userService.profile(this.id)
+            .subscribe(function (user) { return _this.user = user; }, function (error) { return _this.flash.error(error); });
     };
     return ProfileComponent;
 }());
@@ -25,7 +33,9 @@ ProfileComponent = __decorate([
         templateUrl: './profile.component.html',
         styleUrls: ['./profile.component.css']
     }),
-    __metadata("design:paramtypes", [user_service_1.UserService])
+    __metadata("design:paramtypes", [router_1.ActivatedRoute,
+        user_service_1.UserService,
+        flash_service_1.FlashService])
 ], ProfileComponent);
 exports.ProfileComponent = ProfileComponent;
 //# sourceMappingURL=profile.component.js.map
