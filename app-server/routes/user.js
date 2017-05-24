@@ -188,10 +188,19 @@ module.exports.me = function(req, res) {
     if (!req.payload._id)
         return res.status(401).json({ "message" : "UnauthorizedError: private profile" });
 
-    User.findOne({ _id: req.payload._id}, function(err, user){
+    User.findOne({ _id: req.payload._id},  {_id:1, username:1, email:1, firstname:1, lastname:1, pic:1, lang:1}, function(err, user){
         if (err)
             return res.status(500).json(err);
-        user.password = '';
+        return res.status(200).json(user);
+    })
+};
+
+module.exports.uid = function (req, res) {
+    if(!req.params.uid)
+        return res.status(401).json({"message" : "UnauthorizedError: private profile"});
+        User.findOne({ _id: req.params.uid}, {_id:1, username:1, email:1, firstname:1, lastname:1, pic:1, lang:1}, function(err, user){
+        if (err)
+            return res.status(500).json(err);
         return res.status(200).json(user);
     })
 };
