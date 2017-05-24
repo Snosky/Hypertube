@@ -213,6 +213,7 @@ module.exports.updateLang = function (req, res) {
   User.findOneAndUpdate({_id: req.payload._id}, { $set: { lang : req.params.lang}}, function (err, user) {
       if (err)
           return res.status(500).json(err);
-      return res.status(200).json(user);
+      let token = { token: user.generateJwt() };
+      return res.status(200).json(token);
   })
 };

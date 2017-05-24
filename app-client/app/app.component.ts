@@ -42,7 +42,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.userService.updateLang(lang)
             .subscribe(
-                result => this.currentUser.lang = lang,
+                result => {
+                    this.currentUser.lang = lang;
+                    console.log(result);
+                },
                 error => this.flash.error(error)
             );
 
