@@ -29,6 +29,10 @@ app.use(function(err, req, res, next) {
         return res.status(401).json({"message" : err.name + ": " + err.message});
 });
 
+app.use(function (req, res, next) {
+    return res.status(404).json({message: 'not found'})
+})
+
 app.get('/', function(req, res) { res.send('hello world') });
 
 module.exports = app;
