@@ -152,6 +152,8 @@ var MyProfileComponent = (function () {
             _this.registerForm.get('passwordConf').reset();
         })
             .catch(function (error) {
+            if (error.username && error.username.msg === 'Invalid username')
+                _this.registerFormErrors.username = 'Invalid username. Must be alphanumeric (no space allowed)';
             if (error.username && error.username.kind === 'unique')
                 _this.registerFormErrors.username = 'Username already used.';
             if (error.email && error.email.kind === 'unique')

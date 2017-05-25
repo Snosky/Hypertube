@@ -1,0 +1,9 @@
+vg-player > vg-scrub-bar:hover,
+vg-player > vg-scrub-bar:hover vg-scrub-bar-current-time,
+vg-player > vg-scrub-bar:hover vg-scrub-bar-buffering-time
+{ height: 20px; transition: height 0.5s; }
+
+vg-player > vg-scrub-bar, vg-scrub-bar-current-time, vg-scrub-bar-buffering-time { transition: height 0.5s; }
+
+vg-player > vg-scrub-bar { background: rgba(255, 255, 255, 0.5)}
+
