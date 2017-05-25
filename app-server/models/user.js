@@ -14,7 +14,8 @@ const userSchema = mongoose.Schema({
     pic: { type: String },
     facebookId: { type: String, },
     fortytwoId: { type: String, },
-    lang: { type: String, enum: ['fre', 'eng'], default: 'eng' }
+    lang: { type: String, enum: ['fre', 'eng'], default: 'eng' },
+    token: {type : String}
 });
 
 /**

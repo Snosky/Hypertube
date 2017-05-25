@@ -229,29 +229,33 @@ module.exports.forgotPassword = function (req, res) {
         if (result)
         {
             let token = sha256(req.body.email + Date.now()).toString();
+            result.token = token;
+            result.save(function (err) {
+                if(err)
+                    return res.status(500).json(err);
+                let transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'matcha.4242@gmail.com',
+                        pass: 'matcha42'
+                    }
+                });
 
-            let transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'matcha.4242@gmail.com',
-                    pass: 'matcha42'
-                }
-            });
+                let link = "http://localhost:3001/password/update/"+token;
 
-            let link = "http://localhost:3000/new_password?token="+token;
+                let mailOptions = {
+                    from: 'Hypertube', // sender address
+                    to: email, // list of receivers
+                    subject: 'Hypertube - Reset Password', // Subject line
+                    text: 'To reset your password, please click the link below or copy/paste to your browser :\n\n' +link
+                };
 
-            let mailOptions = {
-                from: 'Hypertube', // sender address
-                to: email, // list of receivers
-                subject: 'Hypertube - Reset Password', // Subject line
-                text: 'To reset your password, please click the link below or copy/paste to your browser :\n\n' +link
-            };
-
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    return console.log(error);
-                }
-                console.log('Message %s sent: %s', info.messageId, info.response);
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        return console.log(error);
+                    }
+                    console.log('Message %s sent: %s', info.messageId, info.response);
+                });
             });
         }
         else
@@ -260,5 +264,49 @@ module.exports.forgotPassword = function (req, res) {
 };
 
 module.exports.verifyToken = function (req, res) {
-    
-}
+    if (!req.params.token)
+        return res.status(400).json("page not found");
+    User.findOne({token: req.params.token}, function (err, result) {
+        if (err)
+            return res.status(500).json(err);
+        if(result)
+        {
+            return res.status(200).json({message : "token OK"})
+        }
+        else
+            return res.status(400).json({message : "token not valid"});
+    })
+};
+
+module.exports.updatePassword = function (req, res) {
+
+    req.checkBody('password', 'Invalid password').notEmpty().matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/);
+    req.checkBody('password', 'Password do not match').equals(req.body.passwordConf);
+    req.checkBody('token', "token not found");
+
+    req.getValidationResult().then(function(result) {
+        if (!result.isEmpty()) {
+            return res.status(400).json({ errors: result.useFirstErrorOnly().mapped() });
+        }
+        else
+        {
+            User.findOne({token: req.body.token}, function (err, user) {
+                if (err)
+                    return res.status(500).json(err);
+                if (!user)
+                    return res.status(400).json({message : "user not found"});
+                user.password = req.body.password;
+                user.hashPassword().then(function () {
+                    user.save(function(err) {
+                        if (err) {
+                            return res.status(400).json(err);
+                        }
+                        res.status(200).json({ message : "Password Updated"});
+                    });
+                }).catch(function (err) {
+                    return res.status(500).json(err);
+                })
+            })
+        }
+    });
+};
