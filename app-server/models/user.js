@@ -50,10 +50,10 @@ userSchema.methods.generateJwt = function() {
     expiry.setDate(expiry.getDate() + 7);
 
     return jwt.sign({
+        pic: this.pic,
         _id: this._id,
         username: this.username,
         lang: this.lang,
-        pic: this.pic,
         exp: parseInt(expiry.getTime() / 1000)
     }, config.TOKEN_SECRET);
 };
