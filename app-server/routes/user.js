@@ -247,7 +247,7 @@ module.exports.forgotPassword = function (req, res) {
 
             let mailOptions = {
                 from: 'Hypertube', // sender address
-                to: email, // list of receivers
+                to: req.body.email, // list of receivers
                 subject: 'Hypertube - Reset Password', // Subject line
                 text: 'To reset your password, please click the link below or copy/paste to your browser :\n\n' +link
             };

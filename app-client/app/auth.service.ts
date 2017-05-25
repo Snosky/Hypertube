@@ -31,6 +31,7 @@ export class AuthService {
         const token = this.getToken();
 
         if (!token) {
+            console.log('pas token');
             this.logout();
             return null;
         }
@@ -40,6 +41,7 @@ export class AuthService {
         try {
             payload = atob(payload);
         } catch (err){
+            console.log('Atob failed', err);
             this.logout();
             return null;
         }

@@ -33,6 +33,7 @@ var AuthService = (function () {
         //return this.logout();
         var token = this.getToken();
         if (!token) {
+            console.log('pas token');
             this.logout();
             return null;
         }
@@ -42,6 +43,7 @@ var AuthService = (function () {
             payload = atob(payload);
         }
         catch (err) {
+            console.log('Atob failed', err);
             this.logout();
             return null;
         }
