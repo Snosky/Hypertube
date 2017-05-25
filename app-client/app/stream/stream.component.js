@@ -40,6 +40,8 @@ var StreamComponent = (function () {
         var _this = this;
         this.api = api;
         this.api.getDefaultMedia().subscriptions.progress.subscribe(function (progress) {
+            if (!progress.srcElement)
+                return;
             var percent = (progress.srcElement.currentTime / progress.srcElement.duration) * 100;
             if (!isNaN(percent) && percent >= 85 && _this.viewSend === false) {
                 _this.viewSend = true;

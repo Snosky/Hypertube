@@ -59,6 +59,9 @@ export class StreamComponent implements OnInit {
 
         this.api.getDefaultMedia().subscriptions.progress.subscribe(
             (progress) => {
+                if (!progress.srcElement)
+                    return;
+
                 let percent = (progress.srcElement.currentTime / progress.srcElement.duration) * 100;
 
                 if (!isNaN(percent) && percent >= 85 && this.viewSend === false){
