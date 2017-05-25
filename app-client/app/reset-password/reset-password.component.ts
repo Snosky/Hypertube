@@ -105,7 +105,7 @@ export class ResetPasswordComponent implements OnInit{
 
     handleError(error: any){
         if (error.password) {
-            this.form.reset()
+            this.form.reset();
             this.formErrors.password = error.password.msg;
         }
     }
