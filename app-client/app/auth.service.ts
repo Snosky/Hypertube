@@ -62,7 +62,7 @@ export class AuthService {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        resolve(JSON.parse(xhr.response));
+                        resolve(xhr.response);
                     } else {
                         reject(xhr.response);
                     }
@@ -71,8 +71,8 @@ export class AuthService {
             xhr.open('POST', this.config.apiUrl + '/register', true);
             xhr.send(formData);
         })
-        .then((response: Response) => {
-            return response.json()
+        .then((response: string) => {
+            return JSON.parse(response);
         })
         .catch(this.handleError);
         /*return this.http.post(this.config.apiUrl + '/register', user)

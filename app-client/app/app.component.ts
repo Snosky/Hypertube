@@ -13,6 +13,7 @@ import {FlashService} from "./flash.service";
 export class AppComponent implements OnInit, OnDestroy {
     currentUser: User;
     route: any = '';
+    navbar = false;
 
     private _refresh: any;
 
@@ -40,6 +41,8 @@ export class AppComponent implements OnInit, OnDestroy {
         if (['fre', 'eng'].indexOf(lang) === -1)
             return false;
 
+        console.log(lang);
+
         this.userService.updateLang(lang)
             .subscribe(
                 result => {
@@ -48,13 +51,16 @@ export class AppComponent implements OnInit, OnDestroy {
                 },
                 error => this.flash.error(error)
             );
-
     }
 
     ngOnDestroy() {
         if (this.currentUser) {
             this._refresh._unsubscribe();
         }
+    }
+
+    toggleNavBar(){
+        this.navbar = !this.navbar;
     }
 
 }

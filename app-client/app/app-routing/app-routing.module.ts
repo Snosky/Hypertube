@@ -19,7 +19,6 @@ const routes: Routes = [
     { path: 'movie/:slug', component: MovieComponent, canActivate: [AuthGuard] },
     { path: 'shows', component: ShowsComponent, canActivate: [AuthGuard] },
     { path: 'show/:slug', component: ShowComponent, canActivate: [AuthGuard] },
-    { path: 'stream', component: StreamComponent },
     { path: '**', redirectTo: '' }
 ];
 
