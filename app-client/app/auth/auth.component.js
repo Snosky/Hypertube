@@ -185,12 +185,14 @@ var AuthComponent = (function () {
         console.log(this.registerModel);
         this.authService.register(this.registerModel)
             .then(function (data) {
-            _this.loading = false;
+            console.log(data);
             _this.flash.success('Registration successful. You can no sign in.');
             _this.loginForm.get('username').setValue(_this.registerForm.get('username').value);
             _this.registerForm.reset();
+            _this.loading = false;
         })
             .catch(function (error) {
+            console.log(error);
             if (error.username && error.username.kind === 'unique')
                 _this.registerFormErrors.username = 'Username already used.';
             if (error.email && error.email.kind === 'unique')

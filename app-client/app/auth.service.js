@@ -63,7 +63,7 @@ var AuthService = (function () {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        resolve(JSON.parse(xhr.response));
+                        resolve(xhr.response);
                     }
                     else {
                         reject(xhr.response);
@@ -74,7 +74,7 @@ var AuthService = (function () {
             xhr.send(formData);
         })
             .then(function (response) {
-            return response.json();
+            return JSON.parse(response);
         })
             .catch(this.handleError);
         /*return this.http.post(this.config.apiUrl + '/register', user)

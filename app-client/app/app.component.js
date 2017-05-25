@@ -22,6 +22,7 @@ var AppComponent = (function () {
         this.router = router;
         this.flash = flash;
         this.route = '';
+        this.navbar = false;
         router.events.subscribe(function (val) {
             if (authService.isLoggedIn()) {
                 _this.currentUser = _this.authService.currentUser();
@@ -38,6 +39,7 @@ var AppComponent = (function () {
         var _this = this;
         if (['fre', 'eng'].indexOf(lang) === -1)
             return false;
+        console.log(lang);
         this.userService.updateLang(lang)
             .subscribe(function (result) {
             _this.currentUser.lang = lang;
@@ -48,6 +50,9 @@ var AppComponent = (function () {
         if (this.currentUser) {
             this._refresh._unsubscribe();
         }
+    };
+    AppComponent.prototype.toggleNavBar = function () {
+        this.navbar = !this.navbar;
     };
     return AppComponent;
 }());
