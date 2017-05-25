@@ -17,6 +17,7 @@ const OS = require('opensubtitles-api');
 const OpenSubtitles = new OS('OSTestUserAgentTemp');
 const config = require('../config/config');
 const Transcoder = require('stream-transcoder');
+const Promise = require('bluebird');
 
 module.exports.movieStream = function(req, res, next){
     if (!req.params.torrentid)
@@ -189,15 +190,12 @@ module.exports.movieSubtitles = function(req, res, next) {
         .exec(function(err, torrent){
         if (err) return res.status(500).json(err);
 
-        console.log(torrent_id);
-
         if (!torrent) return res.status(400).json('no torrent');
 
         req.torrent = {
             torrent_id: torrent._id,
             imdb_code: torrent.id_movie.imdb_code
         };
-        console.log(req.torrent);
         next();
     })
 };
@@ -235,8 +233,10 @@ module.exports.subtitles = function(req, res) {
         if (err) return res.status(500).json(err);
 
         if (exist) {
-            subtitlesUrl.fre = '/subtitle/' + torrent.torrent_id + '/fre.vtt';
-            subtitlesUrl.eng = '/subtitle/' + torrent.torrent_id + '/eng.vtt';
+            if (fs.existsSync(subpath + '/fre.vtt'))
+                subtitlesUrl.fre = '/subtitle/' + torrent.torrent_id + '/fre.vtt';
+            if (fs.existsSync(subpath + '/eng.vtt'))
+                subtitlesUrl.eng = '/subtitle/' + torrent.torrent_id + '/eng.vtt';
             return res.status(200).json(subtitlesUrl);
         }
         OpenSubtitles.search({imdbid: torrent.imdb_code, sublanguageid: 'fre, eng'})
@@ -247,18 +247,32 @@ module.exports.subtitles = function(req, res) {
                 fse.mkdirs(subpath, function(err){
                     if (err) return res.status(500).json(err);
 
-                    if (subtitles['fr']) {
-                        request(subtitles['fr'].url).pipe(srt2vtt())
-                            .pipe(fs.createWriteStream(subpath + '/fre.vtt'));
-                        subtitlesUrl.fre = '/subtitle/' + torrent.torrent_id + '/fre.vtt';
-                    }
+                    console.log(subtitles);
+                    const langs = ['fr', 'en'];
+                    const langstag = { 'fr': 'fre', 'en': 'eng'};
 
-                    if (subtitles['en']) {
-                        request(subtitles['en'].url).pipe(srt2vtt())
-                            .pipe(fs.createWriteStream(subpath + '/eng.vtt'));
-                        subtitlesUrl.eng = '/subtitle/' + torrent.torrent_id + '/eng.vtt';
-                    }
-                    return res.status(200).json(subtitlesUrl);
+                    Promise.each(langs, function(lang){
+                        return new Promise(function(resolve, reject){
+                            if (!subtitles[lang])
+                                return resolve(false);
+
+                            let stream = request(subtitles[lang].url)
+                                .pipe(srt2vtt())
+                                .pipe(fs.createWriteStream(subpath + '/' + langstag[lang] + '.vtt'));
+
+                            stream.on('finish', function(){
+                                resolve(true);
+                            })
+
+                        }).then(function(ok){
+                            if (ok)
+                                subtitlesUrl[langstag[lang]] = '/subtitle/' + torrent.torrent_id + '/' + langstag[lang] + '.vtt';
+                        })
+                    })
+                        .then(function(){
+                            console.log(subtitlesUrl);
+                            return res.status(200).json(subtitlesUrl);
+                        });
                 });
             })
             .catch(function(err){
@@ -268,6 +282,5 @@ module.exports.subtitles = function(req, res) {
 };
 
 module.exports.getSubtitleFile = function(req, res) {
-    console.log(config.FOLDER_SAVE + '/' + req.params.folder + '/subtitles/' + req.params.file);
     res.sendFile(config.FOLDER_SAVE + '/' + req.params.folder + '/subtitles/' + req.params.file);
 };

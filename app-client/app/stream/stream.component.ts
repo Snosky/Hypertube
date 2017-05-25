@@ -63,11 +63,10 @@ export class StreamComponent implements OnInit {
 
                 if (!isNaN(percent) && percent >= 85 && this.viewSend === false){
                     this.viewSend = true;
-                    console.log('Movie view');
                     if (this.type === 'movie')
-                        this.movieService.updateViewTime(this.id).then(() => { console.log('Movie set to view') }).catch((error) => console.warn(error));
+                        this.movieService.updateViewTime(this.id).then(() => { }).catch((error) => console.warn(error));
                     else if (this.type === 'show')
-                        this.showService.updateViewTime(this.id).then(() => { console.log('Movie set to view') }).catch((error) => console.warn(error));
+                        this.showService.updateViewTime(this.id).then(() => { }).catch((error) => console.warn(error));
                 }
             }
         );

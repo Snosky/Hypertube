@@ -43,11 +43,10 @@ var StreamComponent = (function () {
             var percent = (progress.srcElement.currentTime / progress.srcElement.duration) * 100;
             if (!isNaN(percent) && percent >= 85 && _this.viewSend === false) {
                 _this.viewSend = true;
-                console.log('Movie view');
                 if (_this.type === 'movie')
-                    _this.movieService.updateViewTime(_this.id).then(function () { console.log('Movie set to view'); }).catch(function (error) { return console.warn(error); });
+                    _this.movieService.updateViewTime(_this.id).then(function () { }).catch(function (error) { return console.warn(error); });
                 else if (_this.type === 'show')
-                    _this.showService.updateViewTime(_this.id).then(function () { console.log('Movie set to view'); }).catch(function (error) { return console.warn(error); });
+                    _this.showService.updateViewTime(_this.id).then(function () { }).catch(function (error) { return console.warn(error); });
             }
         });
     };
