@@ -18,7 +18,8 @@ export class UserService {
     constructor(
         private config: AppConfig,
         private authHttp: AuthHttp,
-        private authService: AuthService
+        private authService: AuthService,
+        private http: Http
     ) { }
 
     update(user: User): Promise<any> {
@@ -73,7 +74,11 @@ export class UserService {
             .catch(this.handleErrorObs);
     }
 
-
+    askPasswordReset(email: string): Observable<any> {
+        return this.http.post(this.config.apiUrl + '/user/forgotPassword', { email: email })
+            .map(res => res.json())
+            .catch(this.handleErrorObs);
+    }
 
     private handleError(error: Response | any) {
         let err;

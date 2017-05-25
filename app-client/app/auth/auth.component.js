@@ -14,15 +14,19 @@ var forms_1 = require("@angular/forms");
 var auth_service_1 = require("../auth.service");
 var flash_service_1 = require("../flash.service");
 var router_1 = require("@angular/router");
+var user_service_1 = require("../user.service");
 var AuthComponent = (function () {
-    function AuthComponent(fb, authService, flash, router, route) {
+    function AuthComponent(fb, authService, userService, flash, router, route) {
         this.fb = fb;
         this.authService = authService;
+        this.userService = userService;
         this.flash = flash;
         this.router = router;
         this.route = route;
         this.loading = false;
+        this.forget = false;
         this.loginModel = {};
+        this.forgetModel = {};
         this.registerModel = {};
         this.registerFormValid = false;
         this.imageValid = false;
@@ -66,6 +70,9 @@ var AuthComponent = (function () {
                 'size': 'File is too big. 5Mo max.'
             }
         };
+        this.forgetFormErrors = {
+            'email': ''
+        };
         this.loginFormErrors = {
             'username': '',
             'password': ''
@@ -73,6 +80,15 @@ var AuthComponent = (function () {
     }
     AuthComponent.prototype.buildForm = function () {
         var _this = this;
+        this.forgetForm = this.fb.group({
+            'email': [this.forgetModel.email, [
+                    forms_1.Validators.required,
+                    forms_1.Validators.email,
+                ]]
+        });
+        this.forgetForm.valueChanges
+            .subscribe(function (data) { return _this.forgetOnValueChange(data); });
+        this.forgetOnValueChange();
         this.loginForm = this.fb.group({
             'username': [this.loginModel.username, [
                     forms_1.Validators.required
@@ -152,6 +168,24 @@ var AuthComponent = (function () {
         }
         this.registerFormValid = this.registerForm.valid && this.imageValid;
     };
+    AuthComponent.prototype.forgetOnValueChange = function (data) {
+        if (!this.forgetForm) {
+            return;
+        }
+        var form = this.forgetForm;
+        for (var field in this.forgetFormErrors) {
+            // Clear previous error message
+            this.forgetFormErrors[field] = '';
+            var control = form.get(field);
+            if (control && control.dirty && !control.valid) {
+                var messages = this.registerValidationMessages[field];
+                for (var key in control.errors) {
+                    if (this.forgetFormErrors[field] === '')
+                        this.forgetFormErrors[field] = messages[key];
+                }
+            }
+        }
+    };
     AuthComponent.prototype.loginOnValueChange = function (data) {
         if (!this.loginForm) {
             return;
@@ -227,6 +261,26 @@ var AuthComponent = (function () {
             }
         });
     };
+    AuthComponent.prototype.forgetPassword = function () {
+        this.forget = true;
+    };
+    AuthComponent.prototype.closeForget = function () {
+        this.forget = false;
+    };
+    AuthComponent.prototype.forgetSubmit = function () {
+        var _this = this;
+        this.loading = true;
+        this.forgetModel = this.forgetForm.value;
+        this.userService.askPasswordReset(this.forgetModel.email)
+            .subscribe(function (result) {
+            _this.flash.success('An email with a reset password link has been sent to you.');
+            _this.forget = false;
+            _this.loading = false;
+        }, function (error) {
+            _this.flash.error(error);
+            _this.loading = false;
+        });
+    };
     return AuthComponent;
 }());
 AuthComponent = __decorate([
@@ -237,6 +291,7 @@ AuthComponent = __decorate([
     }),
     __metadata("design:paramtypes", [forms_1.FormBuilder,
         auth_service_1.AuthService,
+        user_service_1.UserService,
         flash_service_1.FlashService,
         router_1.Router,
         router_1.ActivatedRoute])

@@ -225,41 +225,41 @@ module.exports.forgotPassword = function (req, res) {
 
     User.findOne({email : req.body.email}, function (err, result) {
         if (err)
-            return;
-        if (result)
-        {
-            let token = sha256(req.body.email + Date.now()).toString();
-            result.token = token;
-            result.save(function (err) {
-                if(err)
-                    return res.status(500).json(err);
-                let transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: 'matcha.4242@gmail.com',
-                        pass: 'matcha42'
-                    }
-                });
+            return res.status(500).json(err);
 
-                let link = "http://localhost:3001/password/update/"+token;
+        if (!result)
+            return res.status(200).json('ok');
 
-                let mailOptions = {
-                    from: 'Hypertube', // sender address
-                    to: email, // list of receivers
-                    subject: 'Hypertube - Reset Password', // Subject line
-                    text: 'To reset your password, please click the link below or copy/paste to your browser :\n\n' +link
-                };
-
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) {
-                        return console.log(error);
-                    }
-                    console.log('Message %s sent: %s', info.messageId, info.response);
-                });
+        let token = sha256(req.body.email + Date.now()).toString();
+        result.token = token;
+        result.save(function (err) {
+            if(err)
+                return res.status(500).json(err);
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'matcha.4242@gmail.com',
+                    pass: 'matcha42'
+                }
             });
-        }
-        else
-            return;
+
+            let link = "http://localhost:3001/password/update/"+token;
+
+            let mailOptions = {
+                from: 'Hypertube', // sender address
+                to: email, // list of receivers
+                subject: 'Hypertube - Reset Password', // Subject line
+                text: 'To reset your password, please click the link below or copy/paste to your browser :\n\n' +link
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return res.status(500).json(err);
+                }
+                console.log('Message %s sent: %s', info.messageId, info.response);
+                return res.status(200).json('ok');
+            });
+        });
     });
 };
 

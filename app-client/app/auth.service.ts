@@ -29,9 +29,20 @@ export class AuthService {
     currentUser(): User {
         //return this.logout();
         const token = this.getToken();
+
+        if (!token) {
+            this.logout();
+            return null;
+        }
+
         let payload;
         payload = token.split('.')[1];
-        payload = atob(payload);
+        try {
+            payload = atob(payload);
+        } catch (err){
+            this.logout();
+            return null;
+        }
         payload = JSON.parse(payload);
         const user = new User();
         user.username = payload.username;

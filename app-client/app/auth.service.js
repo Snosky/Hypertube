@@ -32,9 +32,19 @@ var AuthService = (function () {
     AuthService.prototype.currentUser = function () {
         //return this.logout();
         var token = this.getToken();
+        if (!token) {
+            this.logout();
+            return null;
+        }
         var payload;
         payload = token.split('.')[1];
-        payload = atob(payload);
+        try {
+            payload = atob(payload);
+        }
+        catch (err) {
+            this.logout();
+            return null;
+        }
         payload = JSON.parse(payload);
         var user = new user_1.User();
         user.username = payload.username;

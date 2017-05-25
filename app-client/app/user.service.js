@@ -20,10 +20,11 @@ require("rxjs/add/observable/throw");
 require("rxjs/add/operator/catch");
 require("rxjs/add/operator/map");
 var UserService = (function () {
-    function UserService(config, authHttp, authService) {
+    function UserService(config, authHttp, authService, http) {
         this.config = config;
         this.authHttp = authHttp;
         this.authService = authService;
+        this.http = http;
     }
     UserService.prototype.update = function (user) {
         var _this = this;
@@ -73,6 +74,11 @@ var UserService = (function () {
             .map(function (res) { return res.json(); })
             .catch(this.handleErrorObs);
     };
+    UserService.prototype.askPasswordReset = function (email) {
+        return this.http.post(this.config.apiUrl + '/user/forgotPassword', { email: email })
+            .map(function (res) { return res.json(); })
+            .catch(this.handleErrorObs);
+    };
     UserService.prototype.handleError = function (error) {
         var err;
         if (error instanceof http_1.Response) {
@@ -105,7 +111,8 @@ UserService = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [app_config_1.AppConfig,
         angular2_jwt_1.AuthHttp,
-        auth_service_1.AuthService])
+        auth_service_1.AuthService,
+        http_1.Http])
 ], UserService);
 exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map
