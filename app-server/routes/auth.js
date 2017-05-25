@@ -15,7 +15,7 @@ module.exports.facebook = function(req, res) {
     // Ask for token
     request.get({url: accessTokenUrl, qs: params, json: true}, function(err, response, token){
         if (response.statusCode !== 200)
-            return res.status(500).json({ errors: { message: token.error.message }});
+            return res.status(400).json({ errors: { message: token.error.message }});
 
         // Get user profile information
         const fields = ['id', 'email', 'name','picture.type(large)', 'last_name', 'first_name'];

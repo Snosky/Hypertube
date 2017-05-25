@@ -44,6 +44,7 @@ var comment_component_1 = require("./comment/comment.component");
 var comment_service_1 = require("./comment.service");
 var profile_component_1 = require("./profile/profile.component");
 var subtitles_service_1 = require("./subtitles.service");
+var reset_password_component_1 = require("./reset-password/reset-password.component");
 function authHttpServiceFactory(http, options) {
     return new angular2_jwt_1.AuthHttp(new angular2_jwt_1.AuthConfig({
         tokenName: 'meanToken',
@@ -86,7 +87,8 @@ AppModule = __decorate([
             show_component_1.ShowComponent,
             stream_component_1.StreamComponent,
             comment_component_1.CommentComponent,
-            profile_component_1.ProfileComponent
+            profile_component_1.ProfileComponent,
+            reset_password_component_1.ResetPasswordComponent
         ],
         providers: [
             app_config_1.AppConfig,

@@ -16,6 +16,7 @@ var movie_component_1 = require("../movie/movie.component");
 var shows_component_1 = require("../shows/shows.component");
 var show_component_1 = require("../show/show.component");
 var profile_component_1 = require("../profile/profile.component");
+var reset_password_component_1 = require("../reset-password/reset-password.component");
 var routes = [
     { path: '', component: home_component_1.HomeComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'auth', component: auth_component_1.AuthComponent },
@@ -25,6 +26,7 @@ var routes = [
     { path: 'movie/:slug', component: movie_component_1.MovieComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'shows', component: shows_component_1.ShowsComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'show/:slug', component: show_component_1.ShowComponent, canActivate: [auth_guard_1.AuthGuard] },
+    { path: 'password/update/:token', component: reset_password_component_1.ResetPasswordComponent },
     { path: '**', redirectTo: '' }
 ];
 var AppRoutingModule = (function () {

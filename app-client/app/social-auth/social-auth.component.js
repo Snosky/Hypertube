@@ -35,6 +35,10 @@ var SocialAuthComponent = (function () {
                     _this.flash.success('You are now logged in.', true);
                     _this.router.navigate([_this.returnUrl]);
                 }
+                else {
+                    _this.loading = false;
+                    _this.flash.error('An error occurred. Please retry.');
+                }
             })
                 .catch(function (error) {
                 _this.loading = false;

@@ -36,7 +36,8 @@ export class SocialAuthService {
                 return false;
             })
             .catch((error: Response | any) => {
-                console.log(error.json())
+                console.log(error.json());
+                return false;
             });
     }
 

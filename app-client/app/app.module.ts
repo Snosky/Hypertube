@@ -37,6 +37,7 @@ import {CommentComponent} from "./comment/comment.component";
 import {CommentService} from "./comment.service";
 import {ProfileComponent} from "./profile/profile.component";
 import {SubtitlesService} from "./subtitles.service";
+import {ResetPasswordComponent} from "./reset-password/reset-password.component";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     return new AuthHttp(new AuthConfig({
@@ -74,7 +75,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         ShowComponent,
         StreamComponent,
         CommentComponent,
-        ProfileComponent
+        ProfileComponent,
+        ResetPasswordComponent
     ],
     providers: [
         AppConfig,

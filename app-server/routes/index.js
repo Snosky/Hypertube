@@ -25,7 +25,7 @@ router.get('/user/me', jwtauth, user.me);
 router.get('/user/profile/:uid', jwtauth, user.uid);
 router.get('/user/lang/:lang', jwtauth, user.updateLang);
 router.post('/user/forgotPassword', user.forgotPassword);
-router.get('/user/verifyToken', user.verifyToken);
+router.get('/user/verifyToken/:token', user.verifyToken);
 router.post('/user/updatePassword', user.updatePassword);
 
 // Movies

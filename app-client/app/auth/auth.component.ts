@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../auth.service";
 import {FlashService} from "../flash.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-auth',
@@ -13,8 +14,13 @@ export class AuthComponent implements OnInit {
     loading = false;
     returnUrl: string;
 
+    forget = false;
+
     loginModel: any = {};
     loginForm: FormGroup;
+
+    forgetModel: any = {};
+    forgetForm: FormGroup;
 
     registerModel: any = {};
     registerForm: FormGroup;
@@ -25,12 +31,23 @@ export class AuthComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private authService: AuthService,
+        private userService: UserService,
         private flash: FlashService,
         private router: Router,
         private route: ActivatedRoute
     ) { }
 
     buildForm(): void {
+        this.forgetForm = this.fb.group({
+            'email': [this.forgetModel.email, [
+                Validators.required,
+                Validators.email,
+            ]]
+        });
+        this.forgetForm.valueChanges
+            .subscribe(data => this.forgetOnValueChange(data));
+        this.forgetOnValueChange();
+
         this.loginForm = this.fb.group({
             'username': [this.loginModel.username, [
                 Validators.required
@@ -154,6 +171,28 @@ export class AuthComponent implements OnInit {
         this.registerFormValid = this.registerForm.valid && this.imageValid;
     }
 
+    forgetFormErrors = {
+        'email': ''
+    };
+
+    forgetOnValueChange(data?: any) {
+        if (!this.forgetForm) { return; }
+        const form = this.forgetForm;
+        for (const field in this.forgetFormErrors) {
+            // Clear previous error message
+            this.forgetFormErrors[field] = '';
+            const control = form.get(field);
+
+            if (control && control.dirty && !control.valid) {
+                const messages = this.registerValidationMessages[field];
+                for (const key in control.errors) {
+                    if (this.forgetFormErrors[field] === '')
+                        this.forgetFormErrors[field] = messages[key];
+                }
+            }
+        }
+    }
+
     loginFormErrors = {
         'username': '',
         'password': ''
@@ -237,6 +276,31 @@ export class AuthComponent implements OnInit {
                     this.loginFormErrors.password = 'Password not valid. Or wrong username.';
                 }
             });
+    }
+
+    forgetPassword() {
+        this.forget = true;
+    }
+
+    closeForget() {
+        this.forget = false;
+    }
+
+    forgetSubmit(){
+        this.loading = true;
+        this.forgetModel = this.forgetForm.value;
+        this.userService.askPasswordReset(this.forgetModel.email)
+            .subscribe(
+                result => {
+                    this.flash.success('An email with a reset password link has been sent to you.');
+                    this.forget = false;
+                    this.loading = false
+                },
+                error => {
+                    this.flash.error(error);
+                    this.loading = false
+                }
+            )
     }
 
 }

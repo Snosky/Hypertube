@@ -1,5 +1,6 @@
 <div class="row">
-    <div class="auth align-self-center col col-xs-12 col-md-4 col-lg-2 offset-md-4 offset-lg-5">
+    <div class="auth align-self-center col-xs-12 col-md-4 col-lg-2 offset-md-4 offset-lg-5">
+        <!-- Register / Login -->
         <h1 class="text-center display-4">Sign in with</h1>
             <app-social-auth></app-social-auth>
 
@@ -7,7 +8,34 @@
             <span>OR</span>
         </div>
 
-        <ngb-tabset class="nav-fill">
+        <!-- Forget -->
+        <div *ngIf="forget">
+            <div class="col-xs-12">
+                <h4>Password forget</h4>
+                <form [formGroup]="forgetForm" (ngSubmit)="forgetSubmit()">
+                    <div class="form-group"
+                         [class.has-success]="forgetForm.get('email').dirty && forgetForm.get('email').valid"
+                         [class.has-danger]="forgetForm.get('email').dirty && !forgetForm.get('email').valid"
+                    >
+                        <label for="forget" class="form-control-label">Email adress</label>
+                        <input type="email" id="forget" formControlName="email" required class="form-control"
+                               [class.form-control-success]="forgetForm.get('email').dirty && forgetForm.get('email').valid"
+                               [class.form-control-danger]="forgetForm.get('email').dirty && !forgetForm.get('email').valid"
+                        >
+                        <div class="form-control-feedback" *ngIf="forgetFormErrors.email">
+                            {{ forgetFormErrors.email }}
+                        </div>
+                    </div>
+                    <button [disabled]="!forgetForm.valid" class="btn btn-block">
+                        <span *ngIf="!loading">Reset password</span>
+                        <span *ngIf="loading">Loading...</span>
+                    </button>
+                </form>
+                <a (click)="closeForget()">Back to login</a>
+            </div>
+        </div>
+
+        <ngb-tabset class="nav-fill" *ngIf="!forget">
             <ngb-tab title="SIGN IN">
                 <ng-template ngbTabContent>
                     <div class="col-xs-12">

@@ -20,10 +20,11 @@ require("rxjs/add/observable/throw");
 require("rxjs/add/operator/catch");
 require("rxjs/add/operator/map");
 var UserService = (function () {
-    function UserService(config, authHttp, authService) {
+    function UserService(config, authHttp, authService, http) {
         this.config = config;
         this.authHttp = authHttp;
         this.authService = authService;
+        this.http = http;
     }
     UserService.prototype.update = function (user) {
         var _this = this;
@@ -73,6 +74,21 @@ var UserService = (function () {
             .map(function (res) { return res.json(); })
             .catch(this.handleErrorObs);
     };
+    UserService.prototype.askPasswordReset = function (email) {
+        return this.http.post(this.config.apiUrl + '/user/forgotPassword', { email: email })
+            .map(function (res) { return res.json(); })
+            .catch(this.handleErrorObs);
+    };
+    UserService.prototype.verifyToken = function (token) {
+        return this.http.get(this.config.apiUrl + '/user/verifyToken/' + token)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleErrorObs);
+    };
+    UserService.prototype.resetPassword = function (user) {
+        return this.http.post(this.config.apiUrl + '/user/updatePassword', user)
+            .map(function (res) { return res.json(); })
+            .catch(this.handleErrorObs);
+    };
     UserService.prototype.handleError = function (error) {
         var err;
         if (error instanceof http_1.Response) {
@@ -87,17 +103,16 @@ var UserService = (function () {
     };
     UserService.prototype.handleErrorObs = function (error) {
         // In a real world app, you might use a remote logging infrastructure
-        var errMsg;
+        var err;
         if (error instanceof http_1.Response) {
-            var body = error.json() || '';
-            var err = body.error || JSON.stringify(body);
-            errMsg = error.status + " - " + (error.statusText || '') + " " + err;
+            var body = error.json();
+            err = body.errors || JSON.stringify(body);
         }
         else {
-            errMsg = error.message ? error.message : error.toString();
+            err = JSON.parse(error).errors;
         }
-        console.error(errMsg);
-        return Observable_1.Observable.throw(errMsg);
+        console.error(err);
+        return Observable_1.Observable.throw(err);
     };
     return UserService;
 }());
@@ -105,7 +120,8 @@ UserService = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [app_config_1.AppConfig,
         angular2_jwt_1.AuthHttp,
-        auth_service_1.AuthService])
+        auth_service_1.AuthService,
+        http_1.Http])
 ], UserService);
 exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map
