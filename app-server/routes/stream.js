@@ -282,5 +282,14 @@ module.exports.subtitles = function(req, res) {
 };
 
 module.exports.getSubtitleFile = function(req, res) {
-    res.sendFile(config.FOLDER_SAVE + '/' + req.params.folder + '/subtitles/' + req.params.file);
+    let fileName = config.FOLDER_SAVE + '/' + req.params.folder + '/subtitles/' + req.params.file;
+    res.sendFile(fileName, function (err) {
+        if (err) {
+            console.log(err);
+            res.status(err.status).end();
+        }
+        else {
+            console.log('Sent:', fileName);
+        }
+    });
 };
