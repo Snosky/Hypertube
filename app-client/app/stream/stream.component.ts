@@ -49,7 +49,6 @@ export class StreamComponent implements OnInit {
                 subtitles => {
                     this.subtitles = subtitles;
                     this.loadPlayer = true;
-                    console.log(this.subtitles);
                 },
                 error => this.flash.error(error)
             )

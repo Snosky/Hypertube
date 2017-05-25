@@ -34,7 +34,6 @@ var StreamComponent = (function () {
             .subscribe(function (subtitles) {
             _this.subtitles = subtitles;
             _this.loadPlayer = true;
-            console.log(_this.subtitles);
         }, function (error) { return _this.flash.error(error); });
     };
     StreamComponent.prototype.onPlayerReady = function (api) {
