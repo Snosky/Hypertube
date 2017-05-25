@@ -282,7 +282,7 @@ module.exports.updatePassword = function (req, res) {
 
     req.checkBody('password', 'Invalid password').notEmpty().matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/);
     req.checkBody('password', 'Password do not match').equals(req.body.passwordConf);
-    req.checkBody('token', "token not found");
+    req.checkBody('token', "token not found").notEmpty();
 
     req.getValidationResult().then(function(result) {
         if (!result.isEmpty()) {
@@ -296,6 +296,7 @@ module.exports.updatePassword = function (req, res) {
                 if (!user)
                     return res.status(400).json({message : "user not found"});
                 user.password = req.body.password;
+                user.token = '';
                 user.hashPassword().then(function () {
                     user.save(function(err) {
                         if (err) {

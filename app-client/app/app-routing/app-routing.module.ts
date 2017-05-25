@@ -9,6 +9,7 @@ import {ShowsComponent} from "../shows/shows.component";
 import {ShowComponent} from "../show/show.component";
 import {StreamComponent} from "../stream/stream.component";
 import {ProfileComponent} from "../profile/profile.component";
+import {ResetPasswordComponent} from "../reset-password/reset-password.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -19,6 +20,7 @@ const routes: Routes = [
     { path: 'movie/:slug', component: MovieComponent, canActivate: [AuthGuard] },
     { path: 'shows', component: ShowsComponent, canActivate: [AuthGuard] },
     { path: 'show/:slug', component: ShowComponent, canActivate: [AuthGuard] },
+    { path: 'password/update/:token', component: ResetPasswordComponent },
     { path: '**', redirectTo: '' }
 ];
 

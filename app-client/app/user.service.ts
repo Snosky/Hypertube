@@ -80,6 +80,18 @@ export class UserService {
             .catch(this.handleErrorObs);
     }
 
+    verifyToken(token: string): Observable<any> {
+        return this.http.get(this.config.apiUrl + '/user/verifyToken/' + token)
+            .map(res => res.json())
+            .catch(this.handleErrorObs);
+    }
+
+    resetPassword(user: any): Observable<any> {
+        return this.http.post(this.config.apiUrl + '/user/updatePassword', user)
+            .map((res:any) => res.json())
+            .catch(this.handleErrorObs)
+    }
+
     private handleError(error: Response | any) {
         let err;
         if (error instanceof Response) {
@@ -94,15 +106,14 @@ export class UserService {
 
     private handleErrorObs (error: Response | any) {
         // In a real world app, you might use a remote logging infrastructure
-        let errMsg: string;
+        let err: string;
         if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+            const body = error.json();
+            err = body.errors || JSON.stringify(body);
         } else {
-            errMsg = error.message ? error.message : error.toString();
+            err = JSON.parse(error).errors;
         }
-        console.error(errMsg);
-        return Observable.throw(errMsg);
+        console.error(err);
+        return Observable.throw(err);
     }
 }
