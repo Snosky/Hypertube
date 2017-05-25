@@ -25,7 +25,7 @@
     </vg-controls>
 
     <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin [src]="source">
-        <track *ngIf="subtitles && subtitles.eng" kind="subtitles" label="English" [src]="'http://localhost:3000' + subtitles.eng" srclang="en" [default]="currentUser.lang === 'eng'">
-        <track *ngIf="subtitles && subtitles.fre" kind="subtitles" label="Français" [src]="'http://localhost:3000' + subtitles.fre" srclang="fr" [default]="currentUser.lang === 'fre'">
+        <track *ngIf="subtitles && subtitles.eng" kind="subtitles" label="English" [src]="'http://localhost:3000' + subtitles.eng" srclang="en">
+        <track *ngIf="subtitles && subtitles.fre" kind="subtitles" label="Français" [src]="'http://localhost:3000' + subtitles.fre" srclang="fr">
     </video>
 </vg-player>
