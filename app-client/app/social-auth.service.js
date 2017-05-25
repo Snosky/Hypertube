@@ -42,6 +42,7 @@ var SocialAuthService = (function () {
         })
             .catch(function (error) {
             console.log(error.json());
+            return false;
         });
     };
     SocialAuthService.prototype.fortytwo = function (code) {

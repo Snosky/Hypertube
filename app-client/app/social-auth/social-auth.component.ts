@@ -33,6 +33,9 @@ export class SocialAuthComponent implements OnInit {
                         this.loading = false;
                         this.flash.success('You are now logged in.', true);
                         this.router.navigate([this.returnUrl]);
+                    } else {
+                        this.loading = false;
+                        this.flash.error('An error occurred. Please retry.');
                     }
                 })
                 .catch((error) => {
