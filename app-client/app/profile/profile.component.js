@@ -14,8 +14,9 @@ var user_service_1 = require("../user.service");
 var flash_service_1 = require("../flash.service");
 var router_1 = require("@angular/router");
 var ProfileComponent = (function () {
-    function ProfileComponent(route, userService, flash) {
+    function ProfileComponent(route, router, userService, flash) {
         this.route = route;
+        this.router = router;
         this.userService = userService;
         this.flash = flash;
     }
@@ -23,7 +24,10 @@ var ProfileComponent = (function () {
         var _this = this;
         this.id = this.route.snapshot.params['id'];
         this.userService.profile(this.id)
-            .subscribe(function (user) { return _this.user = user; }, function (error) { return _this.flash.error(error); });
+            .subscribe(function (user) { return _this.user = user; }, function (error) {
+            _this.flash.error('An error occurred', true);
+            _this.router.navigate(['']);
+        });
     };
     return ProfileComponent;
 }());
@@ -34,6 +38,7 @@ ProfileComponent = __decorate([
         styleUrls: ['./profile.component.css']
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute,
+        router_1.Router,
         user_service_1.UserService,
         flash_service_1.FlashService])
 ], ProfileComponent);

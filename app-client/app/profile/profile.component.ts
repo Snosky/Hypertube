@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {UserService} from "../user.service";
 import {User} from "../_models/user";
 import {FlashService} from "../flash.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-profile',
@@ -15,6 +15,7 @@ export class ProfileComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private userService: UserService,
         private flash: FlashService
     ) { }
@@ -25,7 +26,10 @@ export class ProfileComponent implements OnInit {
         this.userService.profile(this.id)
             .subscribe(
                 (user: User) => this.user = user,
-                error => this.flash.error(error)
+                error => {
+                    this.flash.error('An error occurred', true);
+                    this.router.navigate([''])
+                }
             );
     }
 }

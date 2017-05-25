@@ -41,7 +41,6 @@ export class SocialAuthComponent implements OnInit {
                 .catch((error) => {
                     this.loading = false;
                     this.flash.error('An error occurred. Please retry.');
-                    console.log('error', error);
                 });
         }
     }

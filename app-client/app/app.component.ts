@@ -41,8 +41,6 @@ export class AppComponent implements OnInit, OnDestroy {
         if (['fre', 'eng'].indexOf(lang) === -1)
             return false;
 
-        console.log(lang);
-
         this.userService.updateLang(lang)
             .subscribe(
                 result => {

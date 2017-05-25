@@ -167,7 +167,6 @@ var MyProfileComponent = (function () {
     };
     MyProfileComponent.prototype.profilePicChange = function (e) {
         //console.log(e.target.files);
-        console.log(this.registerForm.value);
         // TODO : Profile Pics
     };
     return MyProfileComponent;

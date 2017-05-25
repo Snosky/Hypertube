@@ -41,7 +41,6 @@ var SocialAuthService = (function () {
             return false;
         })
             .catch(function (error) {
-            console.log(error.json());
             return false;
         });
     };
@@ -58,7 +57,6 @@ var SocialAuthService = (function () {
             return false;
         })
             .catch(function (error) {
-            console.log(error);
         });
     };
     return SocialAuthService;

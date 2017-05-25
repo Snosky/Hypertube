@@ -99,9 +99,7 @@ export class CommentComponent implements OnInit {
                     this.comments.unshift(comment);
                     this.commentForm.reset();
                 },
-                error => {
-                    console.log(error);
-                }
+                error => { }
             )
     }
 

@@ -39,7 +39,6 @@ var AppComponent = (function () {
         var _this = this;
         if (['fre', 'eng'].indexOf(lang) === -1)
             return false;
-        console.log(lang);
         this.userService.updateLang(lang)
             .subscribe(function (result) {
             _this.currentUser.lang = lang;

@@ -43,7 +43,6 @@ var SocialAuthComponent = (function () {
                 .catch(function (error) {
                 _this.loading = false;
                 _this.flash.error('An error occurred. Please retry.');
-                console.log('error', error);
             });
         }
     };

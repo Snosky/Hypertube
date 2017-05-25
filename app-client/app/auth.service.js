@@ -53,6 +53,7 @@ var AuthService = (function () {
         user.email = payload.email;
         user.lastname = payload.lastname;
         user.firstname = payload.firstname;
+        user._id = payload._id;
         user.lang = payload.lang;
         user.pic = payload.pic;
         return user;

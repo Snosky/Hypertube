@@ -235,14 +235,12 @@ export class AuthComponent implements OnInit {
 
         this.authService.register(this.registerModel)
             .then(data => {
-                console.log(data);
                 this.flash.success('Registration successful. You can no sign in.');
                 this.loginForm.get('username').setValue(this.registerForm.get('username').value);
                 this.registerForm.reset();
                 this.loading = false;
             })
             .catch(error => {
-                console.log(error);
                 if (error.username && error.username.kind === 'unique')
                     this.registerFormErrors.username = 'Username already used.';
                 if (error.email && error.email.kind === 'unique')
