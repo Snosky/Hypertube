@@ -16,6 +16,7 @@ const Show = require('../models/show');
 const OS = require('opensubtitles-api');
 const OpenSubtitles = new OS('OSTestUserAgentTemp');
 const config = require('../config/config');
+const Transcoder = require('stream-transcoder');
 
 module.exports.movieStream = function(req, res, next){
     if (!req.params.torrentid)
@@ -137,10 +138,20 @@ module.exports.streamFile = function(req, res) {
 
             if (['.webm', '.mp4'].indexOf(videoExt) === -1) { // If not one of this ext
                 try {
-                    ffmpeg(stream).videoCodec('libvpx').audioCode('libvorbis').format('mp4')
-                        .audioBitrate(128)
-                        .videoBitrate(1024)
-                        .outputOptions(['-threads 8', '-deadline realtime', '-error-resilient 1']);
+
+                    new Transcoder(stream)
+                        .videoCodec('h264')
+                        .audioCodec('aac')
+                        .format('mp4')
+                        .on('finish', () => {
+                            console.log('LA CONVERSION EST FINI');
+                        })
+                        .stream().pipe(res);
+
+                    // ffmpeg(stream).videoCodec('libvpx').audioCode('libvorbis').format('mp4')
+                    //     .audioBitrate(128)
+                    //     .videoBitrate(1024)
+                    //     .outputOptions(['-threads 8', '-deadline realtime', '-error-resilient 1']);
                 } catch (err) {
                     return res.status(500).json(err);
                 }

@@ -1,6 +1,6 @@
 module.exports = {
     // MongoDB settings
-    MONGO_URI: process.env.MONGO_URI || 'mongodb://localhost/hypertube',
+    MONGO_URI: process.env.MONGO_URI || 'mongodb://e2r7p12.42.fr/hypertube',
     TOKEN_SECRET: process.env.TOKEN_SECRET || 'SUPER_SECRET',
 
     // OAuth
