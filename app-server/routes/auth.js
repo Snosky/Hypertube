@@ -47,7 +47,7 @@ module.exports.facebook = function(req, res) {
                 else {
                     let user = new User();
                     user.facebookId = profile.id;
-                    user.username = profile.name;
+                    user.username = profile.name.replace(/\W+/g, '');
                     user.email = profile.email;
                     user.pic = profile.picture.data.url;
                     user.lastname = profile.last_name;
@@ -103,7 +103,7 @@ module.exports.fortytwo = function(req, res) {
                 else {
                     let user = new User();
                     user.fortytwoId = body.access_token;
-                    user.username = profile.login;
+                    user.username = profile.login.replace(/\W+/g, '');
                     user.email = profile.email;
                     user.pic = profile.image_url;
                     user.lastname = profile.last_name;

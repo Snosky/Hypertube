@@ -247,7 +247,6 @@ module.exports.subtitles = function(req, res) {
                 fse.mkdirs(subpath, function(err){
                     if (err) return res.status(500).json(err);
 
-                    console.log(subtitles);
                     const langs = ['fr', 'en'];
                     const langstag = { 'fr': 'fre', 'en': 'eng'};
 
@@ -270,7 +269,6 @@ module.exports.subtitles = function(req, res) {
                         })
                     })
                         .then(function(){
-                            console.log(subtitlesUrl);
                             return res.status(200).json(subtitlesUrl);
                         });
                 });

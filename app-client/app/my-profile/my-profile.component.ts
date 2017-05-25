@@ -157,6 +157,8 @@ export class MyProfileComponent implements OnInit {
                 this.registerForm.get('passwordConf').reset();
             })
             .catch(error => {
+                if (error.username && error.username.msg === 'Invalid username')
+                    this.registerFormErrors.username = 'Invalid username. Must be alphanumeric (no space allowed)';
                 if (error.username && error.username.kind === 'unique')
                     this.registerFormErrors.username = 'Username already used.';
                 if (error.email && error.email.kind === 'unique')

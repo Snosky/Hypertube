@@ -82,6 +82,7 @@ var CommentComponent = (function () {
             _this.commentModel = new comment_1.Comment();
             comment.user_id = _this.currentUser;
             _this.comments.unshift(comment);
+            _this.commentForm.reset();
         }, function (error) {
             console.log(error);
         });

@@ -132,6 +132,7 @@ module.exports.update = function(req, res) {
                 fs.unlink(req.file.path, function(err) {
                     if (err) console.error('FS', err);
                 });
+            console.log(result.useFirstErrorOnly().mapped());
             return res.status(400).json({errors: result.useFirstErrorOnly().mapped()});
         }
 
