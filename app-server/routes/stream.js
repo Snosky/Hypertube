@@ -144,8 +144,8 @@ module.exports.streamFile = function(req, res) {
                         .videoCodec('h264')
                         .audioCodec('aac')
                         .format('mp4')
-                        .on('finish', () => {
-                            console.log('LA CONVERSION EST FINI');
+                        .on('finish', function() {
+                            console.log('stream converted');
                         })
                         .stream().pipe(res);
 
