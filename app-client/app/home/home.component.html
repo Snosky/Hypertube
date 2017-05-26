@@ -71,7 +71,7 @@
                  [class.seen]="movie.seen"
                  *ngFor="let movie of movies">
                 <a href="#" [routerLink]="['movie', movie.slug]">
-                    <img [src]="movie.large_cover_image || movie.medium_cover_image || small_cover_image" [default]="'assets/img/poster.png'"class="img-fluid">
+                    <img [src]="movie.large_cover_image || movie.medium_cover_image || small_cover_image" [default]="'assets/img/poster.png'" class="img-fluid">
                     <div class="movie-info">
                         {{movie.title}}
                         <span>({{movie.year}})</span>

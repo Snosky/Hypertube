@@ -15,8 +15,9 @@ var show_service_1 = require("../show.service");
 var omdb_service_1 = require("../omdb.service");
 var flash_service_1 = require("../flash.service");
 var ShowComponent = (function () {
-    function ShowComponent(route, showService, omdbService, flash) {
+    function ShowComponent(route, router, showService, omdbService, flash) {
         this.route = route;
+        this.router = router;
         this.showService = showService;
         this.omdbService = omdbService;
         this.flash = flash;
@@ -32,12 +33,20 @@ var ShowComponent = (function () {
             _this.show = show;
             _this.omdbService.getMoreInfo(_this.show.imdb_code)
                 .then(function (info) { return _this.info = info; });
+            _this.showService.getEpisodesObs(_this.slug)
+                .subscribe(function (episodes) { return _this.episodes = episodes; }, function (error) {
+                _this.flash.error(error);
+            });
+        })
+            .catch(function (error) {
+            if (error.status === 404) {
+                _this.flash.error('Show not found', true);
+            }
+            else {
+                _this.flash.error('An error occurred. Please retry', true);
+            }
+            _this.router.navigate(['/shows']);
         });
-    };
-    ShowComponent.prototype.ngAfterViewInit = function () {
-        var _this = this;
-        this.showService.getEpisodesObs(this.slug)
-            .subscribe(function (episodes) { return _this.episodes = episodes; }, function (error) { return _this.flash.error(error); });
     };
     ShowComponent.prototype.launchStream = function () {
         this.openVideo = true;
@@ -54,6 +63,7 @@ ShowComponent = __decorate([
         styleUrls: ['./show.component.css']
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute,
+        router_1.Router,
         show_service_1.ShowService,
         omdb_service_1.OmdbService,
         flash_service_1.FlashService])

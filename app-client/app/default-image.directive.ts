@@ -14,5 +14,4 @@ export class DefaultImageDirective {
     updateUrl() {
         this.src = this.default;
     }
-
 }

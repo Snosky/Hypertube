@@ -15,9 +15,12 @@ var platform_browser_1 = require("@angular/platform-browser");
 var movie_service_1 = require("../movie.service");
 var movie_torrent_service_1 = require("../movie-torrent.service");
 var omdb_service_1 = require("../omdb.service");
+var flash_service_1 = require("../flash.service");
 var MovieComponent = (function () {
-    function MovieComponent(route, sanitizer, movieService, omdbService, movieTorrentService) {
+    function MovieComponent(route, router, flash, sanitizer, movieService, omdbService, movieTorrentService) {
         this.route = route;
+        this.router = router;
+        this.flash = flash;
         this.sanitizer = sanitizer;
         this.movieService = movieService;
         this.omdbService = omdbService;
@@ -33,12 +36,22 @@ var MovieComponent = (function () {
             _this.movie = movie;
             _this.omdbService.getMoreInfo(movie.imdb_code)
                 .then(function (info) { return _this.info = info; });
+            _this.movieTorrentService.getMovieTorrents(_this.slug)
+                .then(function (torrents) { return _this.torrents = torrents; })
+                .catch(function (error) {
+                _this.flash.error('No torrents found');
+                _this.torrents = [];
+            });
+        })
+            .catch(function (error) {
+            if (error.status === 404) {
+                _this.flash.error('Movie not found', true);
+            }
+            else {
+                _this.flash.error('An error occurred. Please retry', true);
+            }
+            _this.router.navigate(['']);
         });
-    };
-    MovieComponent.prototype.ngAfterViewInit = function () {
-        var _this = this;
-        this.movieTorrentService.getMovieTorrents(this.slug)
-            .then(function (torrents) { return _this.torrents = torrents; });
     };
     MovieComponent.prototype.youtubeTrailer = function () {
         return this.sanitizer.bypassSecurityTrustResourceUrl('//www.youtube.com/embed/' + this.movie.yt_trailer_code + '?rel=0');
@@ -60,6 +73,8 @@ MovieComponent = __decorate([
         styleUrls: ['./movie.component.css']
     }),
     __metadata("design:paramtypes", [router_1.ActivatedRoute,
+        router_1.Router,
+        flash_service_1.FlashService,
         platform_browser_1.DomSanitizer,
         movie_service_1.MovieService,
         omdb_service_1.OmdbService,

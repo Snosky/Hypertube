@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Show} from "../_models/show";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ShowService} from "../show.service";
 import {OmdbService} from "../omdb.service";
 import {Episode} from "../_models/episode";
@@ -11,7 +11,7 @@ import {FlashService} from "../flash.service";
   templateUrl: './show.component.html',
   styleUrls: ['./show.component.css']
 })
-export class ShowComponent implements OnInit, AfterViewInit {
+export class ShowComponent implements OnInit {
     slug: string;
     show: Show;
     info: any;
@@ -21,6 +21,7 @@ export class ShowComponent implements OnInit, AfterViewInit {
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private showService: ShowService,
         private omdbService: OmdbService,
         private flash: FlashService
@@ -34,16 +35,24 @@ export class ShowComponent implements OnInit, AfterViewInit {
                 this.show = show;
 
                 this.omdbService.getMoreInfo(this.show.imdb_code)
-                    .then( (info:any) => this.info = info )
-            })
-    }
+                    .then( (info:any) => this.info = info );
 
-    ngAfterViewInit() {
-        this.showService.getEpisodesObs(this.slug)
-            .subscribe(
-                episodes => this.episodes = episodes,
-                error => this.flash.error(error)
-            )
+                this.showService.getEpisodesObs(this.slug)
+                    .subscribe(
+                        episodes => this.episodes = episodes,
+                        error => {
+                            this.flash.error(error)
+                        }
+                    )
+            })
+            .catch((error) => {
+                if (error.status === 404) {
+                    this.flash.error('Show not found', true);
+                } else {
+                    this.flash.error('An error occurred. Please retry', true);
+                }
+                this.router.navigate(['/shows']);
+            })
     }
 
     launchStream() {

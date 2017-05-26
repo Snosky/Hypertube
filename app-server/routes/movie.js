@@ -60,6 +60,8 @@ module.exports.getOne = function(req, res) {
         if (err)
             return res.status(500).json(err);
 
+        if (!movie) return res.status(404).json('no movie found');
+
         return res.status(200).json(movie);
     });
 };
@@ -72,7 +74,7 @@ module.exports.getTorrents = function(req, res) {
             return res.status(500).json(err);
 
         if (!movie)
-            return res.status(401).json('movie not found');
+            return res.status(404).json('movie not found');
 
         MovieTorrent.find({id_movie: movie._id}, function(err, torrents){
             if (err)

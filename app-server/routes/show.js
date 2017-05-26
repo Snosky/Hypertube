@@ -48,6 +48,8 @@ module.exports.getOne = function(req, res){
     Show.findOne({ slug: slug }, function(err, show){
         if (err) return res.status(500).json(err);
 
+        if (!show) return res.status(404).json('show not found');
+
         return res.status(200).json(show);
     })
 };
@@ -57,13 +59,13 @@ module.exports.yearsRange = function(req, res){
         if (err)
             return res.status(500).json(err);
 
-        if (!max) return res.status(401).json('no movies');
+        if (!max) return res.status(404).json('no shows');
 
         Show.findOne().where('year').ne(null).sort({year: 1}).exec(function(err, min){
             if (err)
                 return res.status(500).json(err);
 
-            if (!min) return res.status(401).json('no movies');
+            if (!min) return res.status(404).json('no shows');
 
             return res.status(200).json({max: max.year, min: min.year});
         });
@@ -76,7 +78,7 @@ module.exports.getEpisodes = function(req, res){
     Show.findOne({ slug: slug }, function(err, show){
         if (err) return res.status(500).json(err);
 
-        if (!show) return res.status(401).json('Show not found');
+        if (!show) return res.status(404).json('Show not found');
 
         Episode.find({ show_id: show._id })
             .sort({season: 1, episode: 1})

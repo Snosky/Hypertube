@@ -76,10 +76,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.orderTerm.next(term);
     }
 
-    constructor(
-        private authService: AuthService,
-        private movieService: MovieService
-    ) {
+    constructor(private authService: AuthService,
+                private movieService: MovieService) {
         this.scrollCallback = this.getNextPage.bind(this);
     }
 
@@ -88,7 +86,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
         // Get years range
         this.movieService.yearsRange()
-            .then( range => {
+            .then(range => {
                 this.yearsRange = range;
                 this.yearsRangeFormat = [range.min, range.max]
             });
@@ -96,31 +94,66 @@ export class HomeComponent implements OnInit, AfterViewInit {
         const pageSource = this.pageStream
             .map(pageNumber => {
                 this.page = pageNumber;
-                return { query_term: this.term, page: pageNumber, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat, order: this.order };
+                return {
+                    query_term: this.term,
+                    page: pageNumber,
+                    genres: this.genres,
+                    years: this.yearsRangeFormat,
+                    rating: this.ratingRangeFormat,
+                    order: this.order
+                };
             });
 
         const genreSource = this.genreTerm
             .map(genres => {
                 this.genres = genres;
-                return { query_term: this.term, page: 1, genres: genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat, order: this.order };
+                return {
+                    query_term: this.term,
+                    page: 1,
+                    genres: genres,
+                    years: this.yearsRangeFormat,
+                    rating: this.ratingRangeFormat,
+                    order: this.order
+                };
             });
 
         const yearsSource = this.years
             .map(range => {
                 this.yearsRangeFormat = range;
-                return { query_term: this.term, page: 1, genres: this.genres, years: range, rating: this.ratingRangeFormat, order: this.order }
+                return {
+                    query_term: this.term,
+                    page: 1,
+                    genres: this.genres,
+                    years: range,
+                    rating: this.ratingRangeFormat,
+                    order: this.order
+                }
             });
 
         const ratingSource = this.rating
             .map(range => {
                 this.ratingRangeFormat = range;
-                return { query_term: this.term, page: 1, genres: this.genres, years: this.yearsRangeFormat, rating: range, order: this.order }
+                return {
+                    query_term: this.term,
+                    page: 1,
+                    genres: this.genres,
+                    years: this.yearsRangeFormat,
+                    rating: range,
+                    order: this.order
+                }
             });
 
         const orderSource = this.orderTerm
             .map(order => {
                 this.order = order;
-                return { query_term: this.term, page: 1, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat, order: order };
+                return {
+                    query_term: this.term,
+                    page: 1,
+                    genres: this.genres,
+                    years: this.yearsRangeFormat,
+                    rating: this.ratingRangeFormat,
+                    order: order
+                };
             });
 
         const searchSource = this.searchTerms
@@ -128,12 +161,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
             .distinctUntilChanged()
             .map(term => {
                 this.term = term;
-                return { query_term: term, page: 1, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat, order: this.order };
+                return {
+                    query_term: term,
+                    page: 1,
+                    genres: this.genres,
+                    years: this.yearsRangeFormat,
+                    rating: this.ratingRangeFormat,
+                    order: this.order
+                };
             });
 
         const source = pageSource
             .merge(searchSource, genreSource, yearsSource, ratingSource, orderSource)
-            .startWith({ query_term: this.term, page: this.page, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat, order: this.order })
+            .startWith({
+                query_term: this.term,
+                page: this.page,
+                genres: this.genres,
+                years: this.yearsRangeFormat,
+                rating: this.ratingRangeFormat,
+                order: this.order
+            })
             .switchMap((params: { query_term: string, page: number, genres: Array<string>, years: Array<number>, rating: Array<number>, order: string }) => {
                 return this.movieService.search(params);
             })
@@ -158,7 +205,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     private getNextPage() {
         this.pageStream.next(this.page + 1);
-        return this.movieService.search({ query_term: this.term, page: this.page + 1, genres: this.genres, years: this.yearsRangeFormat, rating: this.ratingRangeFormat })
+        return this.movieService.search({
+            query_term: this.term,
+            page: this.page + 1,
+            genres: this.genres,
+            years: this.yearsRangeFormat,
+            rating: this.ratingRangeFormat
+        })
         // TODO : Change this to someting better
     }
 
@@ -166,6 +219,3 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.moviesContainerHeight = document.documentElement.clientHeight - 56;
     }
 }
-
-
-
